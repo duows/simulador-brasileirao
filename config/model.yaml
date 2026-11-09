@@ -1,0 +1,68 @@
+# Configuração do modelo futdados.
+# Todo número aqui é explícito e editável. Mudanças relevantes devem ser
+# registradas em docs/DECISIONS.md.
+
+paths:
+  db: data/futdados.sqlite
+  raw: data/raw
+  historical_repo: data/external/Brasileirao_Dataset
+  weights: data/model/weights.json
+  videos: out/videos
+  reports: reports
+  teams: config/teams.csv
+  coach_changes: config/coach_changes.csv
+
+api:
+  base_url: https://api.football-data.org/v4
+  competition: BSA
+  requests_per_minute: 10   # limite do plano grátis
+
+historical:
+  repo_url: https://github.com/adaoduque/Brasileirao_Dataset
+  first_season: 2003
+  last_season_csv: 2024    # 2003-2024 vêm do CSV consolidado
+  json_seasons: [2025]     # 2025 só existe nos JSONs por temporada do repositório
+
+model:
+  # a. Força de longo prazo (ataque e defesa) com decaimento temporal.
+  half_life_days: 180          # escolhida no backtest (ver reports/backtest.md)
+  half_life_grid: [90, 180, 365, 730]
+  prior_matches: 5             # jogos "fictícios" que puxam a força para o valor a priori
+  prior_attack_ratio: 0.85     # time sem histórico recente: ataque 15% abaixo da média da liga
+  prior_defense_ratio: 1.15    # ... e sofre 15% a mais que a média
+  # b. Forma recente
+  form_matches: 5
+  # d. Descanso e calendário
+  rest_clip_days: [2, 10]      # dias de descanso são limitados a este intervalo
+  midweek_days: [1, 2, 3]      # terça, quarta, quinta (0 = segunda)
+  # e. Troca de técnico
+  new_coach_matches: 5         # técnico é "novo" nos primeiros N jogos dele no clube
+  # Estimação
+  ridge_alpha: 1.0             # força da regularização (escala padronizada)
+  train_first_season: 2006     # 2003-2005 servem só de aquecimento das forças
+  bootstrap: 200               # reamostragens para o intervalo de incerteza
+  max_goals: 10                # tamanho da matriz de placares
+  dixon_coles: true            # ajuste de placares baixos (ver DECISIONS.md)
+
+backtest:
+  tune_seasons: [2010, 2011, 2012, 2013, 2014]   # escolha da meia-vida
+  test_seasons: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+  calibration_bins: 10
+
+simulation:
+  n_sims: 10000
+  seed: 20260101
+  # Critérios de desempate, em ordem. Fonte: imprensa sobre o Regulamento
+  # Específico da Série A 2026 (Art. 15). TODO: confirmar no PDF oficial da CBF.
+  # red_cards e yellow_cards não estão disponíveis no plano grátis da API e são
+  # ignorados (cai no sorteio).
+  tiebreakers: [points, wins, goal_difference, goals_for, head_to_head, red_cards, yellow_cards, draw_lots]
+  zones:
+    titulo: [1, 1]
+    g4: [1, 4]
+    g6: [1, 6]
+    rebaixamento: [17, 20]
+
+output:
+  focus_team: sao-paulo
+  aviso: "Projeção estatística baseada em dados históricos. Não é recomendação de aposta."

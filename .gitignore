@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# Dados externos e brutos são baixados de novo pelo CLI (não versionamos cópia de terceiros)
+data/external/
+data/raw/
+data/*.sqlite
+data/*.sqlite-*
+.env

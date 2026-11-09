@@ -291,3 +291,23 @@ rodada 35.
   BIC) e comparação de eras (Kruskal-Wallis). Rótulo só com p < 0,05. Resultado em
   `reports/tendencias.md`: liga mais desigual (Gini e desvio dos pontos em alta), menos gols
   por jogo e vantagem de mando em queda; pontos do campeão sem tendência clara.
+
+## D23 · 2026-11-09 · Fase D: placar entre modelos (walk-forward 2015-2026)
+- `futdados backtest` compara 10 modelos fora da amostra (detalhes em reports/backtest.md):
+  baselines (frequência, sempre mandante, Elo puro), Poisson de 7 fatores, Poisson + Dixon-Coles,
+  forças por time (MAP com prior gaussiano e decaimento, reajustado a cada rodada), logística
+  ordinal com fatores, gradient boosting, conjunto e conjunto calibrado. RPS como métrica
+  principal, IC 90% por bootstrap de temporadas inteiras.
+- **Resultado**: conjunto 0,2069, forças por time 0,2071, Elo puro 0,2071, Poisson 0,2084,
+  frequência 0,2184. O Poisson de produção **perde do Elo puro em todas as 12 temporadas**
+  (diferença +0,0013, IC +0,0009 a +0,0017). O conjunto ganha do Elo em 8 de 12, mas o IC cruza
+  o zero (-0,0006 a +0,0001).
+- Desligados por não melhorarem: Dixon-Coles, boosting, temperatura. Sem sobredispersão (razão
+  de Pearson 0,95): Binomial Negativa não entra. Bayesiano completo (PyMC) não instalado; o
+  modelo de forças por time é a versão MAP (prior gaussiano = ridge).
+- **Ablação do Poisson**: mando, ataque e defesa ajudam; forma, descanso e meio de semana são
+  neutros (IC cruza o zero); técnico novo sem dados.
+- Treino do Poisson agora começa em 2007 (2006 aquece as forças).
+- **TODO (próximo passo de maior valor)**: trocar o modelo de produção (rodada, simulação, JSON)
+  pelo conjunto Elo + forças por time, mantendo a explicação por fatores (ataque, defesa e
+  mando do modelo de forças, mais a nota Elo) e mostrando "o Elo diz X, as forças dizem Y".

@@ -249,3 +249,86 @@ def trends_markdown(lt: dict) -> str:
         lines.append(f"| {v['nome']} | {v['rotulo']} | {num(ts['inclinacao'], 3)} ({num(ts['ic90'][0], 3)} a {num(ts['ic90'][1], 3)}) | "
                      f"{num(v['mann_kendall']['p'], 3)} | {mud_txt} | {eras} | {'sim' if v['eras']['diferenca_clara'] else 'não'} (p={num(v['eras']['kruskal_p'], 3)}) |")
     return "\n".join(lines) + "\n"
+
+
+MODEL_NAMES = {
+    "conjunto": "Conjunto (média ponderada)", "conjunto_calibrado": "Conjunto calibrado (temperatura)",
+    "forcas_map": "Forças por time (MAP, reajuste por rodada)", "base_elo": "Baseline: Elo puro",
+    "ordinal": "Logística ordinal com fatores", "poisson": "Poisson de 7 fatores",
+    "dixon_coles": "Poisson + Dixon-Coles", "boosting": "Gradient boosting", "base_freq": "Baseline: frequência histórica",
+    "base_mandante": "Baseline: sempre mandante",
+}
+
+
+def _signed(x: float, d: int = 4) -> str:
+    return f"{x:+.{d}f}".replace(".", ",")
+
+
+def models_markdown(tab, per, diffs, wins, extra, ensemble_info, eval_seasons, phases, eras_tab, calib) -> str:
+    lines = ["# Backtest walk-forward: placar entre modelos", "",
+             f"Temporadas avaliadas: {eval_seasons[0]}–{eval_seasons[-1]} ({extra['n']} jogos; 2026 só com jogos já disputados). "
+             "Para prever cada temporada, cada modelo só usou temporadas anteriores para estimar parâmetros; ratings e "
+             "fatores de cada jogo usam só o que aconteceu antes dele. O conjunto e a calibração usam só previsões fora da "
+             "amostra de temporadas anteriores. Métrica principal: **RPS** (ranked probability score, menor é melhor), que "
+             "respeita a ordem vitória do mandante < empate < vitória do visitante.", "",
+             "## Placar geral", "",
+             "| Modelo | RPS | Log loss | Brier | Acerto | Diferença de RPS para o Elo (IC 90%) | Temporadas melhor que o Elo |",
+             "|---|---|---|---|---|---|---|"]
+    for r in tab.itertuples():
+        d = diffs.get(r.modelo)
+        dtxt = "—" if d is None else f"{_signed(d[0])} ({_signed(d[1])} a {_signed(d[2])})"
+        ll = num(r.log_loss, 4) if r.log_loss < 5 else "infinito"
+        lines.append(f"| {MODEL_NAMES.get(r.modelo, r.modelo)} | {num(r.rps, 4)} | {ll} | {num(r.brier, 4)} | "
+                     f"{p1(r.acerto)} | {dtxt} | {wins.get(r.modelo, '—')} |")
+    best = tab.iloc[0].modelo
+    b = diffs[best]
+    lines += ["", "## Conclusão honesta", "",
+              f"- O melhor resultado é do **{MODEL_NAMES[best]}**, mas a vantagem sobre o **Elo puro** (um baseline) é "
+              f"minúscula e o intervalo cruza o zero: {_signed(b[0])} ({_signed(b[1])} a {_signed(b[2])}).",
+              f"- O **Poisson de 7 fatores** que estava em produção perde do Elo puro (melhor que o Elo em "
+              f"{wins['poisson']} temporadas) e a diferença é clara. Ele continua bem melhor que a frequência histórica.",
+              "- Todos os modelos (menos \"sempre mandante\") ganham com folga da frequência histórica: cerca de 5% no RPS.",
+              "- Dixon-Coles, gradient boosting e calibração por temperatura **não melhoram**: ficam desligados.",
+              f"- Sem sobredispersão: razão de Pearson {num(extra['dispersao']['dispersao_pearson'], 2)} (≈ 1 é Poisson). "
+              "Binomial Negativa não foi adotada.",
+              f"- Erro médio absoluto de gols por time: Poisson {num(extra['mae']['poisson'], 3)}, forças por time "
+              f"{num(extra['mae']['forcas_map'], 3)}.", "",
+              "## Por fase da temporada (RPS)", "",
+              "| Fase | " + " | ".join(MODEL_NAMES[m] for m in phases.columns) + " |",
+              "|---" * (len(phases.columns) + 1) + "|"]
+    for idx, r in phases.iterrows():
+        lines.append(f"| {idx} | " + " | ".join(num(v, 4) for v in r) + " |")
+    lines += ["", "## Por era (RPS)", "", "| Era | " + " | ".join(MODEL_NAMES[m] for m in eras_tab.columns) + " |",
+              "|---" * (len(eras_tab.columns) + 1) + "|"]
+    for idx, r in eras_tab.iterrows():
+        lines.append(f"| {idx} | " + " | ".join(num(v, 4) for v in r) + " |")
+    show = ["conjunto", "base_elo", "forcas_map", "poisson", "base_freq"]
+    lines += ["", "## Por temporada (RPS)", "", "| Temporada | " + " | ".join(MODEL_NAMES[m] for m in show) + " |",
+              "|---" * (len(show) + 1) + "|"]
+    pv = per.pivot(index="season", columns="modelo", values="rps")
+    for s, r in pv.iterrows():
+        lines.append(f"| {s} | " + " | ".join(num(r[m], 4) for m in show) + " |")
+    last_season = max(ensemble_info)
+    last = ensemble_info[last_season]
+    lines += ["", "## Conjunto", "",
+              f"Pesos estimados nas 5 temporadas anteriores, minimizando RPS. Pesos usados em {last_season}: "
+              + ", ".join(f"{MODEL_NAMES[k]} {p1(v)}" for k, v in last["pesos"].items()) + ".", "",
+              "## Calibração do conjunto", "", "| Resultado | Faixa | Jogos | Estimado | Observado |", "|---|---|---|---|---|"]
+    for r in calib.itertuples():
+        if r.n >= 30:
+            lines.append(f"| {r.resultado} | {r.faixa} | {r.n} | {p1(r.estimado)} | {p1(r.observado)} |")
+    lines += ["", "## Ablação dos fatores do Poisson", "", "Ver [ablacao.md](ablacao.md).", ""]
+    return "\n".join(lines)
+
+
+def ablation_markdown(ab) -> str:
+    lines = ["# Ablação dos fatores (modelo Poisson)", "",
+             "Para cada fator: quanto o RPS fora da amostra piora quando ele é retirado (positivo = o fator ajuda), com "
+             "IC 90% por bootstrap de temporadas. Fator sem ganho fica documentado como neutro, não é apagado.", "",
+             "| Fator | Δ RPS sem o fator | IC 90% | Decisão |", "|---|---|---|---|"]
+    for r in ab.itertuples():
+        if r.delta_rps != r.delta_rps:
+            lines.append(f"| {r.fator} | — | — | {r.decisao} |")
+        else:
+            lines.append(f"| {r.fator} | {_signed(r.delta_rps, 5)} | {_signed(r.ic90[0], 5)} a {_signed(r.ic90[1], 5)} | {r.decisao} |")
+    return "\n".join(lines) + "\n"

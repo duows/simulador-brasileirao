@@ -45,7 +45,7 @@ model:
   # Estimação
   opponent_adjust: true        # gols ajustados pela força do adversário
   ridge_alpha: 1.0             # força da regularização (escala padronizada)
-  train_first_season: 2011     # 2010 serve só de aquecimento das forças
+  train_first_season: 2007     # 2006 serve só de aquecimento das forças
   bootstrap: 200               # reamostragens para o intervalo de incerteza
   max_goals: 10                # tamanho da matriz de placares
   dixon_coles: false           # ajuste de placares baixos; rho estimado ~ -0,01 (ver DECISIONS.md D09)

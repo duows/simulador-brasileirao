@@ -91,47 +91,69 @@ def cmd_project(args, cfg) -> None:
 
 
 def cmd_backtest(args, cfg) -> None:
+    """Placar entre modelos (walk-forward por temporada), ablação e relatórios."""
+    import json
+    from pathlib import Path
+
     import pandas as pd
 
-    from .backtest.walkforward import brier, calibration_table, log_loss, outcome_index, score, walk_forward
+    from .backtest.models import (
+        ALL_MODELS,
+        ablation,
+        add_ensemble,
+        all_oos,
+        goal_mae,
+        overdispersion,
+        probs,
+        scoreboard,
+        season_bootstrap_diff,
+    )
+    from .backtest.walkforward import calibration_table
     from .model.poisson import Weights
-    from .model.predict import features_for
-    from .reports import backtest_markdown, write
+    from .ratings.elo import EloParams
+    from .reports import ablation_markdown, models_markdown, write
 
     repo = _repo(cfg)
+    m = repo.matches()
+    ep = repo.get_json("elo_params")
+    if ep is None:
+        raise SystemExit("Rode `futdados build-ratings` antes.")
+    elo = EloParams(**{k: ep[k] for k in ("k", "home", "regression", "promoted")})
     try:
         hl = Weights.load(cfg["paths"]["weights"]).half_life_days
     except FileNotFoundError:
         hl = cfg["model"]["half_life_days"]
-    seasons = cfg["backtest"]["test_seasons"]
-    feat = features_for(repo, cfg, hl)
-    pred = walk_forward(repo.matches(), cfg, seasons, hl, feat=feat)
-    sc = score(pred)
-    rows = []
-    for s, g in pred.groupby("season"):
-        y = outcome_index(g.home_goals, g.away_goals)
-        p, f = g[["p_h", "p_d", "p_a"]].to_numpy(), g[["f_h", "f_d", "f_a"]].to_numpy()
-        rows.append({"temporada": s, "n": len(g), "brier_modelo": brier(p, y), "brier_freq": brier(f, y),
-                     "ll_modelo": log_loss(p, y), "ll_freq": log_loss(f, y)})
-    y = outcome_index(pred.home_goals, pred.away_goals)
-    p = pred[["p_h", "p_d", "p_a"]].to_numpy()
-    calib = calibration_table(p, y, cfg["backtest"]["calibration_bins"])
-    md = backtest_markdown(sc, pd.DataFrame(rows), calib, hl, seasons, len(pred),
-                           (float(p[:, 1].mean()), float((y == 1).mean())))
-    write(f"{cfg['paths']['reports']}/backtest.md", md)
-    # versão estruturada para o site (página Modelo)
-    import json
-    from pathlib import Path
-
-    summary = {"meia_vida_dias": hl, "temporadas": seasons, "n": int(len(pred)), "metricas": sc,
-               "por_temporada": pd.DataFrame(rows).to_dict("records"),
-               "calibracao": calib.to_dict("records"),
-               "empate_estimado": float(p[:, 1].mean()), "empate_observado": float((y == 1).mean())}
+    first_train = int(cfg["model"]["train_first_season"])
+    eval_seasons = cfg["backtest"]["test_seasons"]
+    oos_seasons = list(range(min(eval_seasons) - 4, max(eval_seasons) + 1))
+    df = all_oos(m, cfg, oos_seasons, elo, hl, first_train)
+    df, ens = add_ensemble(df)
+    tab, per, d = scoreboard(df, eval_seasons)
+    diffs = {mm: season_bootstrap_diff(d, mm, "base_elo") for mm in ALL_MODELS if mm not in ("base_elo", "base_mandante")}
+    pv = per.pivot(index="season", columns="modelo", values="rps")
+    wins = {mm: f"{int((pv[mm] < pv['base_elo']).sum())} de {len(pv)}" for mm in ALL_MODELS if mm != "base_elo"}
+    show = ["conjunto", "base_elo", "forcas_map", "poisson", "base_freq"]
+    d["fase"] = pd.cut(d["round"], [0, 10, 28, 38], labels=["rodadas 1-10", "rodadas 11-28", "rodadas 29-38"])
+    d["era"] = pd.cut(d.season, [2014, 2019, 2026], labels=["2015-2019", "2020-2026"])
+    phases = d.groupby("fase", observed=True)[[f"rps_{x}" for x in show]].mean().set_axis(show, axis=1)
+    eras_tab = d.groupby("era", observed=True)[[f"rps_{x}" for x in show]].mean().set_axis(show, axis=1)
+    calib = calibration_table(probs(d, "conjunto"), d.y.to_numpy(), cfg["backtest"]["calibration_bins"])
+    extra = {"n": len(d), "mae": goal_mae(d), "dispersao": overdispersion(d)}
+    ab = ablation(m, cfg, eval_seasons, hl, first_train)
+    write(f"{cfg['paths']['reports']}/backtest.md",
+          models_markdown(tab, per, diffs, wins, extra, ens, eval_seasons, phases, eras_tab, calib))
+    write(f"{cfg['paths']['reports']}/ablacao.md", ablation_markdown(ab))
+    summary = {"temporadas": eval_seasons, "n": len(d), "placar": tab.to_dict("records"),
+               "por_temporada": per.to_dict("records"), "diferenca_vs_elo": diffs, "temporadas_melhor_que_elo": wins,
+               "por_fase": phases.reset_index().astype({"fase": str}).to_dict("records"),
+               "por_era": eras_tab.reset_index().astype({"era": str}).to_dict("records"),
+               "calibracao": calib.to_dict("records"), "extra": extra, "conjunto": ens,
+               "ablacao": ab.to_dict("records"), "elo": ep}
     Path(cfg["paths"]["weights"]).with_name("backtest.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=1, default=float), encoding="utf-8")
-    for k, v in sc.items():
-        print(f"{k:<22} Brier {v['brier']:.4f}  log loss {v['log_loss']:.4f}  acerto {v['acerto']:.1%}")
-    print("Relatório: reports/backtest.md")
+    print(tab.round(4).to_string(index=False))
+    print(ab[["fator", "delta_rps", "decisao"]].to_string(index=False))
+    print("Relatórios: reports/backtest.md e reports/ablacao.md")
 
 
 def cmd_update(args, cfg) -> None:

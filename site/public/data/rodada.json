@@ -1,7 +1,7 @@
 {
  "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
  "atribuicao": "Football data provided by the Football-Data.org API",
- "gerado_em": "2026-11-09T02:13:46Z",
+ "gerado_em": "2026-11-09T02:35:03Z",
  "versao_modelo": "futdados-0.1.0+21d22b71",
  "temporada": 2026,
  "rodada": 35,
@@ -32,9 +32,9 @@
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.4605,
+    "mandante": 0.4604,
     "empate": 0.2686,
-    "visitante": 0.2709
+    "visitante": 0.271
    },
    "placar_mais_provavel": {
     "mandante": 1,
@@ -47,14 +47,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": -0.009,
-      "efeito_gols": -0.008,
-      "multiplicador": 0.993
-     },
-     "visitante": {
-      "valor": -0.008,
+      "valor": -0.007,
       "efeito_gols": -0.006,
       "multiplicador": 0.995
+     },
+     "visitante": {
+      "valor": -0.006,
+      "efeito_gols": -0.004,
+      "multiplicador": 0.996
      }
     },
     {
@@ -62,14 +62,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": -0.155,
-      "efeito_gols": -0.123,
-      "multiplicador": 0.904
+      "valor": -0.158,
+      "efeito_gols": -0.125,
+      "multiplicador": 0.903
      },
      "visitante": {
-      "valor": -0.04,
-      "efeito_gols": -0.027,
-      "multiplicador": 0.974
+      "valor": -0.043,
+      "efeito_gols": -0.028,
+      "multiplicador": 0.973
      }
     },
     {
@@ -185,14 +185,14 @@
    "rodada": 35,
    "inicio_utc": "2026-11-18T22:30:00Z",
    "gols_esperados": {
-    "mandante": 1.473,
-    "visitante": 1.294
+    "mandante": 1.474,
+    "visitante": 1.293
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.414,
-    "empate": 0.2534,
-    "visitante": 0.3326
+    "mandante": 0.4146,
+    "empate": 0.2533,
+    "visitante": 0.3321
    },
    "placar_mais_provavel": {
     "mandante": 1,
@@ -205,14 +205,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": -0.148,
-      "efeito_gols": -0.131,
-      "multiplicador": 0.9
+      "valor": -0.144,
+      "efeito_gols": -0.128,
+      "multiplicador": 0.903
      },
      "visitante": {
-      "valor": 0.101,
-      "efeito_gols": 0.084,
-      "multiplicador": 1.074
+      "valor": 0.103,
+      "efeito_gols": 0.085,
+      "multiplicador": 1.076
      }
     },
     {
@@ -220,14 +220,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": 0.008,
-      "efeito_gols": 0.006,
-      "multiplicador": 1.005
+      "valor": 0.005,
+      "efeito_gols": 0.004,
+      "multiplicador": 1.003
      },
      "visitante": {
-      "valor": 0.132,
-      "efeito_gols": 0.1,
-      "multiplicador": 1.089
+      "valor": 0.129,
+      "efeito_gols": 0.098,
+      "multiplicador": 1.087
      }
     },
     {
@@ -343,19 +343,19 @@
    "rodada": 35,
    "inicio_utc": "2026-11-18T23:00:00Z",
    "gols_esperados": {
-    "mandante": 1.874,
-    "visitante": 1.033
+    "mandante": 1.876,
+    "visitante": 1.034
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.5703,
-    "empate": 0.2241,
+    "mandante": 0.5705,
+    "empate": 0.2239,
     "visitante": 0.2056
    },
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1058
+    "probabilidade": 0.1057
    },
    "fatores": [
     {
@@ -363,14 +363,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": -0.163,
-      "efeito_gols": -0.164,
-      "multiplicador": 0.891
+      "valor": -0.159,
+      "efeito_gols": -0.16,
+      "multiplicador": 0.893
      },
      "visitante": {
-      "valor": -0.248,
-      "efeito_gols": -0.183,
-      "multiplicador": 0.839
+      "valor": -0.244,
+      "efeito_gols": -0.18,
+      "multiplicador": 0.841
      }
     },
     {
@@ -378,14 +378,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": 0.391,
-      "efeito_gols": 0.36,
-      "multiplicador": 1.288
+      "valor": 0.388,
+      "efeito_gols": 0.358,
+      "multiplicador": 1.286
      },
      "visitante": {
-      "valor": 0.171,
-      "efeito_gols": 0.115,
-      "multiplicador": 1.117
+      "valor": 0.168,
+      "efeito_gols": 0.114,
+      "multiplicador": 1.115
      }
     },
     {
@@ -394,7 +394,7 @@
      "peso": 0.3961,
      "mandante": {
       "valor": 1.0,
-      "efeito_gols": 0.563,
+      "efeito_gols": 0.564,
       "multiplicador": 1.486
      },
      "visitante": {
@@ -501,13 +501,13 @@
    "rodada": 35,
    "inicio_utc": "2026-11-18T23:30:00Z",
    "gols_esperados": {
-    "mandante": 1.358,
+    "mandante": 1.359,
     "visitante": 1.312
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.3809,
-    "empate": 0.2598,
+    "mandante": 0.381,
+    "empate": 0.2597,
     "visitante": 0.3593
    },
    "placar_mais_provavel": {
@@ -521,14 +521,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": 0.207,
-      "efeito_gols": 0.175,
-      "multiplicador": 1.158
+      "valor": 0.209,
+      "efeito_gols": 0.177,
+      "multiplicador": 1.16
      },
      "visitante": {
-      "valor": 0.302,
-      "efeito_gols": 0.252,
-      "multiplicador": 1.239
+      "valor": 0.305,
+      "efeito_gols": 0.254,
+      "multiplicador": 1.241
      }
     },
     {
@@ -536,14 +536,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": -0.505,
-      "efeito_gols": -0.392,
-      "multiplicador": 0.721
+      "valor": -0.507,
+      "efeito_gols": -0.394,
+      "multiplicador": 0.72
      },
      "visitante": {
-      "valor": -0.067,
-      "efeito_gols": -0.051,
-      "multiplicador": 0.958
+      "valor": -0.069,
+      "efeito_gols": -0.053,
+      "multiplicador": 0.956
      }
     },
     {
@@ -660,18 +660,18 @@
    "inicio_utc": "2026-11-18T23:30:00Z",
    "gols_esperados": {
     "mandante": 2.357,
-    "visitante": 0.862
+    "visitante": 0.863
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.7069,
-    "empate": 0.1731,
-    "visitante": 0.12
+    "mandante": 0.7065,
+    "empate": 0.1732,
+    "visitante": 0.1202
    },
    "placar_mais_provavel": {
     "mandante": 2,
     "visitante": 0,
-    "probabilidade": 0.1111
+    "probabilidade": 0.111
    },
    "fatores": [
     {
@@ -679,14 +679,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": 0.421,
-      "efeito_gols": 0.483,
-      "multiplicador": 1.348
+      "valor": 0.424,
+      "efeito_gols": 0.486,
+      "multiplicador": 1.35
      },
      "visitante": {
-      "valor": 0.074,
-      "efeito_gols": 0.05,
-      "multiplicador": 1.054
+      "valor": 0.077,
+      "efeito_gols": 0.052,
+      "multiplicador": 1.056
      }
     },
     {
@@ -694,14 +694,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": 0.024,
-      "efeito_gols": 0.025,
-      "multiplicador": 1.016
+      "valor": 0.021,
+      "efeito_gols": 0.022,
+      "multiplicador": 1.014
      },
      "visitante": {
-      "valor": -0.379,
-      "efeito_gols": -0.234,
-      "multiplicador": 0.782
+      "valor": -0.38,
+      "efeito_gols": -0.235,
+      "multiplicador": 0.781
      }
     },
     {
@@ -822,9 +822,9 @@
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.4774,
+    "mandante": 0.4773,
     "empate": 0.255,
-    "visitante": 0.2676
+    "visitante": 0.2677
    },
    "placar_mais_provavel": {
     "mandante": 1,
@@ -837,14 +837,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": -0.09,
-      "efeito_gols": -0.081,
-      "multiplicador": 0.938
+      "valor": -0.088,
+      "efeito_gols": -0.079,
+      "multiplicador": 0.94
      },
      "visitante": {
-      "valor": 0.008,
-      "efeito_gols": 0.006,
-      "multiplicador": 1.005
+      "valor": 0.01,
+      "efeito_gols": 0.007,
+      "multiplicador": 1.007
      }
     },
     {
@@ -852,14 +852,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": 0.015,
-      "efeito_gols": 0.012,
-      "multiplicador": 1.01
+      "valor": 0.012,
+      "efeito_gols": 0.01,
+      "multiplicador": 1.008
      },
      "visitante": {
-      "valor": -0.049,
-      "efeito_gols": -0.034,
-      "multiplicador": 0.969
+      "valor": -0.051,
+      "efeito_gols": -0.035,
+      "multiplicador": 0.968
      }
     },
     {
@@ -975,14 +975,14 @@
    "rodada": 35,
    "inicio_utc": "2026-11-19T00:30:00Z",
    "gols_esperados": {
-    "mandante": 1.546,
-    "visitante": 1.15
+    "mandante": 1.545,
+    "visitante": 1.151
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.4643,
+    "mandante": 0.4642,
     "empate": 0.2526,
-    "visitante": 0.2832
+    "visitante": 0.2833
    },
    "placar_mais_provavel": {
     "mandante": 1,
@@ -995,14 +995,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": -0.085,
-      "efeito_gols": -0.077,
-      "multiplicador": 0.942
+      "valor": -0.082,
+      "efeito_gols": -0.075,
+      "multiplicador": 0.943
      },
      "visitante": {
-      "valor": 0.068,
-      "efeito_gols": 0.053,
-      "multiplicador": 1.05
+      "valor": 0.071,
+      "efeito_gols": 0.055,
+      "multiplicador": 1.051
      }
     },
     {
@@ -1010,14 +1010,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": 0.005,
-      "efeito_gols": 0.004,
-      "multiplicador": 1.003
+      "valor": 0.003,
+      "efeito_gols": 0.002,
+      "multiplicador": 1.002
      },
      "visitante": {
-      "valor": -0.006,
-      "efeito_gols": -0.005,
-      "multiplicador": 0.996
+      "valor": -0.009,
+      "efeito_gols": -0.006,
+      "multiplicador": 0.994
      }
     },
     {
@@ -1139,7 +1139,7 @@
    "gols_base": 1.05,
    "probabilidade_estimada": {
     "mandante": 0.5186,
-    "empate": 0.2414,
+    "empate": 0.2413,
     "visitante": 0.24
    },
    "placar_mais_provavel": {
@@ -1153,14 +1153,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": 0.077,
-      "efeito_gols": 0.073,
-      "multiplicador": 1.056
+      "valor": 0.079,
+      "efeito_gols": 0.075,
+      "multiplicador": 1.058
      },
      "visitante": {
-      "valor": -0.098,
-      "efeito_gols": -0.073,
-      "multiplicador": 0.933
+      "valor": -0.095,
+      "efeito_gols": -0.072,
+      "multiplicador": 0.935
      }
     },
     {
@@ -1168,14 +1168,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": -0.05,
-      "efeito_gols": -0.043,
-      "multiplicador": 0.968
+      "valor": -0.052,
+      "efeito_gols": -0.045,
+      "multiplicador": 0.967
      },
      "visitante": {
-      "valor": 0.075,
-      "efeito_gols": 0.051,
-      "multiplicador": 1.05
+      "valor": 0.073,
+      "efeito_gols": 0.05,
+      "multiplicador": 1.048
      }
     },
     {
@@ -1298,7 +1298,7 @@
    "probabilidade_estimada": {
     "mandante": 0.3865,
     "empate": 0.2737,
-    "visitante": 0.3398
+    "visitante": 0.3397
    },
    "placar_mais_provavel": {
     "mandante": 1,
@@ -1311,14 +1311,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": -0.231,
-      "efeito_gols": -0.189,
-      "multiplicador": 0.849
+      "valor": -0.229,
+      "efeito_gols": -0.188,
+      "multiplicador": 0.85
      },
      "visitante": {
-      "valor": -0.011,
-      "efeito_gols": -0.008,
-      "multiplicador": 0.993
+      "valor": -0.008,
+      "efeito_gols": -0.007,
+      "multiplicador": 0.994
      }
     },
     {
@@ -1326,14 +1326,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": -0.083,
-      "efeito_gols": -0.062,
-      "multiplicador": 0.947
+      "valor": -0.086,
+      "efeito_gols": -0.064,
+      "multiplicador": 0.946
      },
      "visitante": {
-      "valor": 0.049,
-      "efeito_gols": 0.035,
-      "multiplicador": 1.032
+      "valor": 0.047,
+      "efeito_gols": 0.033,
+      "multiplicador": 1.031
      }
     },
     {
@@ -1449,12 +1449,12 @@
    "rodada": 35,
    "inicio_utc": "2026-11-20T00:30:00Z",
    "gols_esperados": {
-    "mandante": 1.411,
-    "visitante": 1.144
+    "mandante": 1.41,
+    "visitante": 1.145
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.4308,
+    "mandante": 0.4307,
     "empate": 0.2638,
     "visitante": 0.3055
    },
@@ -1469,14 +1469,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": -0.099,
-      "efeito_gols": -0.086,
-      "multiplicador": 0.932
+      "valor": -0.097,
+      "efeito_gols": -0.084,
+      "multiplicador": 0.933
      },
      "visitante": {
-      "valor": 0.157,
-      "efeito_gols": 0.122,
-      "multiplicador": 1.118
+      "valor": 0.16,
+      "efeito_gols": 0.124,
+      "multiplicador": 1.12
      }
     },
     {
@@ -1484,14 +1484,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": -0.134,
-      "efeito_gols": -0.106,
-      "multiplicador": 0.917
+      "valor": -0.136,
+      "efeito_gols": -0.108,
+      "multiplicador": 0.915
      },
      "visitante": {
-      "valor": -0.098,
-      "efeito_gols": -0.069,
-      "multiplicador": 0.939
+      "valor": -0.1,
+      "efeito_gols": -0.071,
+      "multiplicador": 0.937
      }
     },
     {
@@ -1609,19 +1609,19 @@
    "rodada": 21,
    "inicio_utc": "2026-11-14T23:30:00Z",
    "gols_esperados": {
-    "mandante": 1.348,
+    "mandante": 1.351,
     "visitante": 1.456
    },
    "gols_base": 1.05,
    "probabilidade_estimada": {
-    "mandante": 0.3495,
-    "empate": 0.2522,
-    "visitante": 0.3984
+    "mandante": 0.3501,
+    "empate": 0.2521,
+    "visitante": 0.3978
    },
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1189
+    "probabilidade": 0.1188
    },
    "fatores": [
     {
@@ -1629,14 +1629,14 @@
      "rotulo": "Força de ataque (longo prazo)",
      "peso": 0.7092,
      "mandante": {
-      "valor": -0.248,
-      "efeito_gols": -0.21,
-      "multiplicador": 0.838
+      "valor": -0.244,
+      "efeito_gols": -0.207,
+      "multiplicador": 0.841
      },
      "visitante": {
-      "valor": 0.077,
-      "efeito_gols": 0.068,
-      "multiplicador": 1.056
+      "valor": 0.079,
+      "efeito_gols": 0.07,
+      "multiplicador": 1.058
      }
     },
     {
@@ -1644,14 +1644,14 @@
      "rotulo": "Defesa do adversário (longo prazo)",
      "peso": 0.6481,
      "mandante": {
-      "valor": 0.075,
-      "efeito_gols": 0.058,
-      "multiplicador": 1.05
+      "valor": 0.073,
+      "efeito_gols": 0.056,
+      "multiplicador": 1.048
      },
      "visitante": {
-      "valor": 0.392,
-      "efeito_gols": 0.315,
-      "multiplicador": 1.289
+      "valor": 0.389,
+      "efeito_gols": 0.313,
+      "multiplicador": 1.287
      }
     },
     {

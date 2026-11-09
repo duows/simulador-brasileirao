@@ -1,5 +1,4 @@
 {
- "meia_vida_dias": 180.0,
  "temporadas": [
   2015,
   2016,
@@ -15,242 +14,1142 @@
   2026
  ],
  "n": 4518,
- "metricas": {
-  "modelo": {
-   "brier": 0.6121867635294683,
-   "log_loss": 1.0210023372657753,
-   "acerto": 0.4953519256308101
+ "placar": [
+  {
+   "modelo": "conjunto",
+   "rps": 0.2068580061784182,
+   "log_loss": 1.016546040976353,
+   "brier": 0.6091693462816263,
+   "acerto": 0.4995573262505533
   },
-  "frequencia_historica": {
-   "brier": 0.6332321959311981,
-   "log_loss": 1.0510937209522324,
+  {
+   "modelo": "conjunto_calibrado",
+   "rps": 0.20703410234944358,
+   "log_loss": 1.0171441752617092,
+   "brier": 0.6095804300478503,
+   "acerto": 0.4995573262505533
+  },
+  {
+   "modelo": "forcas_map",
+   "rps": 0.20708557763465435,
+   "log_loss": 1.0171201181367961,
+   "brier": 0.6095913441682906,
+   "acerto": 0.4997786631252767
+  },
+  {
+   "modelo": "base_elo",
+   "rps": 0.2071033694246403,
+   "log_loss": 1.0173325188045763,
+   "brier": 0.6097902131019133,
+   "acerto": 0.49756529437804337
+  },
+  {
+   "modelo": "ordinal",
+   "rps": 0.20721368899754455,
+   "log_loss": 1.0176986385041762,
+   "brier": 0.609975507898093,
+   "acerto": 0.50066401062417
+  },
+  {
+   "modelo": "poisson",
+   "rps": 0.20843565354479934,
+   "log_loss": 1.0213943157218714,
+   "brier": 0.6125091337923724,
+   "acerto": 0.4962372731297034
+  },
+  {
+   "modelo": "dixon_coles",
+   "rps": 0.2084503190772239,
+   "log_loss": 1.0214711576831406,
+   "brier": 0.6125971269869195,
+   "acerto": 0.4962372731297034
+  },
+  {
+   "modelo": "boosting",
+   "rps": 0.2115029692302414,
+   "log_loss": 1.038359388529402,
+   "brier": 0.6229469302940079,
+   "acerto": 0.4867197875166003
+  },
+  {
+   "modelo": "base_freq",
+   "rps": 0.21840229186388765,
+   "log_loss": 1.0512505830787582,
+   "brier": 0.6333315466992192,
    "acerto": 0.48295706064630367
   },
-  "sempre_mandante": {
-   "brier": 1.0340858787073925,
+  {
+   "modelo": "base_mandante",
+   "rps": 0.38269145639663565,
    "log_loss": 17.858030468904683,
+   "brier": 1.0340858787073925,
    "acerto": 0.48295706064630367
   }
- },
+ ],
  "por_temporada": [
   {
-   "temporada": 2015,
-   "n": 380,
-   "brier_modelo": 0.6007293150255844,
-   "brier_freq": 0.6128912742382271,
-   "ll_modelo": 1.0056915244133107,
-   "ll_freq": 1.0230255296825872
+   "modelo": "base_freq",
+   "season": 2015,
+   "rps": 0.21466629155124659
   },
   {
-   "temporada": 2016,
-   "n": 379,
-   "brier_modelo": 0.5979191004512655,
-   "brier_freq": 0.608197526659309,
-   "ll_modelo": 0.9993266097835091,
-   "ll_freq": 1.0161200566157085
+   "modelo": "base_freq",
+   "season": 2016,
+   "rps": 0.21048470171775108
   },
   {
-   "temporada": 2017,
-   "n": 380,
-   "brier_modelo": 0.6539759840679814,
-   "brier_freq": 0.6569828571956672,
-   "ll_modelo": 1.08164174863961,
-   "ll_freq": 1.0846479686575534
+   "modelo": "base_freq",
+   "season": 2017,
+   "rps": 0.2300154292998168
   },
   {
-   "temporada": 2018,
-   "n": 380,
-   "brier_modelo": 0.5805644684445005,
-   "brier_freq": 0.6076506391218472,
-   "ll_modelo": 0.9758935429179033,
-   "ll_freq": 1.0143996585295993
+   "modelo": "base_freq",
+   "season": 2018,
+   "rps": 0.20004834339616084
   },
   {
-   "temporada": 2019,
-   "n": 380,
-   "brier_modelo": 0.5899680788205297,
-   "brier_freq": 0.6333859271803883,
-   "ll_modelo": 0.9887864519358719,
-   "ll_freq": 1.0516856415192586
+   "modelo": "base_freq",
+   "season": 2019,
+   "rps": 0.2211120148274393
   },
   {
-   "temporada": 2020,
-   "n": 380,
-   "brier_modelo": 0.6343595516919492,
-   "brier_freq": 0.6495972148501602,
-   "ll_modelo": 1.0510216685861065,
-   "ll_freq": 1.0738355305333107
+   "modelo": "base_freq",
+   "season": 2020,
+   "rps": 0.22319260623623077
   },
   {
-   "temporada": 2021,
-   "n": 380,
-   "brier_modelo": 0.6267922838675547,
-   "brier_freq": 0.6442129180832693,
-   "ll_modelo": 1.040572424050107,
-   "ll_freq": 1.0658237721845478
+   "modelo": "base_freq",
+   "season": 2021,
+   "rps": 0.2173771905668375
   },
   {
-   "temporada": 2022,
-   "n": 380,
-   "brier_modelo": 0.6236965262726506,
-   "brier_freq": 0.652493831844471,
-   "ll_modelo": 1.039663580986307,
-   "ll_freq": 1.0780702192446285
+   "modelo": "base_freq",
+   "season": 2022,
+   "rps": 0.22483929681966036
   },
   {
-   "temporada": 2023,
-   "n": 380,
-   "brier_modelo": 0.623197638527495,
-   "brier_freq": 0.6405887896029634,
-   "ll_modelo": 1.0381747046023901,
-   "ll_freq": 1.061876693033461
+   "modelo": "base_freq",
+   "season": 2023,
+   "rps": 0.22479626207819667
   },
   {
-   "temporada": 2024,
-   "n": 380,
-   "brier_modelo": 0.6152846135674553,
-   "brier_freq": 0.6374727377806081,
-   "ll_modelo": 1.025615661956433,
-   "ll_freq": 1.0571645596575416
+   "modelo": "base_freq",
+   "season": 2024,
+   "rps": 0.2213257973215
   },
   {
-   "temporada": 2025,
-   "n": 380,
-   "brier_modelo": 0.5959451764258293,
-   "brier_freq": 0.623918381639167,
-   "ll_modelo": 0.9972376132261181,
-   "ll_freq": 1.038020850607213
+   "modelo": "base_freq",
+   "season": 2025,
+   "rps": 0.21546655538435006
   },
   {
-   "temporada": 2026,
-   "n": 339,
-   "brier_modelo": 0.6027530283325278,
-   "brier_freq": 0.6310981163106264,
-   "ll_modelo": 1.006814703715168,
-   "ll_freq": 1.0480317664246206
+   "modelo": "base_freq",
+   "season": 2026,
+   "rps": 0.21737089512410024
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2015,
+   "rps": 0.3539473684210526
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2016,
+   "rps": 0.34300791556728233
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2017,
+   "rps": 0.425
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2018,
+   "rps": 0.3236842105263158
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2019,
+   "rps": 0.3868421052631579
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2020,
+   "rps": 0.40789473684210525
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2021,
+   "rps": 0.39342105263157895
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2022,
+   "rps": 0.41578947368421054
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2023,
+   "rps": 0.4026315789473684
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2024,
+   "rps": 0.39342105263157895
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2025,
+   "rps": 0.3671052631578947
+  },
+  {
+   "modelo": "base_mandante",
+   "season": 2026,
+   "rps": 0.37905604719764013
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2015,
+   "rps": 0.20682898901274674
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2016,
+   "rps": 0.20446470623002735
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2017,
+   "rps": 0.22766810005822466
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2018,
+   "rps": 0.18719089601603292
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2019,
+   "rps": 0.1980208423471863
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2020,
+   "rps": 0.212853720601434
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2021,
+   "rps": 0.20863184001177973
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2022,
+   "rps": 0.20930176761769687
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2023,
+   "rps": 0.21682095885477978
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2024,
+   "rps": 0.2101231433805774
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2025,
+   "rps": 0.20155004378319327
+  },
+  {
+   "modelo": "base_elo",
+   "season": 2026,
+   "rps": 0.20113446831727724
+  },
+  {
+   "modelo": "poisson",
+   "season": 2015,
+   "rps": 0.20830911498685575
+  },
+  {
+   "modelo": "poisson",
+   "season": 2016,
+   "rps": 0.205622657694401
+  },
+  {
+   "modelo": "poisson",
+   "season": 2017,
+   "rps": 0.22868081300977147
+  },
+  {
+   "modelo": "poisson",
+   "season": 2018,
+   "rps": 0.18869150378744937
+  },
+  {
+   "modelo": "poisson",
+   "season": 2019,
+   "rps": 0.20078549490744602
+  },
+  {
+   "modelo": "poisson",
+   "season": 2020,
+   "rps": 0.21510312039685842
+  },
+  {
+   "modelo": "poisson",
+   "season": 2021,
+   "rps": 0.20865799040209876
+  },
+  {
+   "modelo": "poisson",
+   "season": 2022,
+   "rps": 0.21163500329446955
+  },
+  {
+   "modelo": "poisson",
+   "season": 2023,
+   "rps": 0.21733193008675838
+  },
+  {
+   "modelo": "poisson",
+   "season": 2024,
+   "rps": 0.21075550728232284
+  },
+  {
+   "modelo": "poisson",
+   "season": 2025,
+   "rps": 0.20202011521302768
+  },
+  {
+   "modelo": "poisson",
+   "season": 2026,
+   "rps": 0.20304563412903645
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2015,
+   "rps": 0.20851224280399733
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2016,
+   "rps": 0.20571177011255484
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2017,
+   "rps": 0.22866930304399571
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2018,
+   "rps": 0.18866892720300885
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2019,
+   "rps": 0.20080820220063603
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2020,
+   "rps": 0.21508677869854378
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2021,
+   "rps": 0.20860944454198782
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2022,
+   "rps": 0.211607977890962
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2023,
+   "rps": 0.21733669336475642
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2024,
+   "rps": 0.21074938765180667
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2025,
+   "rps": 0.20202154981806425
+  },
+  {
+   "modelo": "dixon_coles",
+   "season": 2026,
+   "rps": 0.2030294630545452
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2015,
+   "rps": 0.20936722580096367
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2016,
+   "rps": 0.2059276293380354
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2017,
+   "rps": 0.22591667506578195
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2018,
+   "rps": 0.18748878818092615
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2019,
+   "rps": 0.19698448421518944
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2020,
+   "rps": 0.21158330745761822
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2021,
+   "rps": 0.20871418898462
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2022,
+   "rps": 0.20897121213456574
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2023,
+   "rps": 0.2149553935611337
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2024,
+   "rps": 0.21112990440665583
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2025,
+   "rps": 0.20036109641041017
+  },
+  {
+   "modelo": "forcas_map",
+   "season": 2026,
+   "rps": 0.2032053193848506
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2015,
+   "rps": 0.20597273396078947
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2016,
+   "rps": 0.20441127120551889
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2017,
+   "rps": 0.22962039076052307
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2018,
+   "rps": 0.18722822285926113
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2019,
+   "rps": 0.19706884922732557
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2020,
+   "rps": 0.2133373421801188
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2021,
+   "rps": 0.20879299789292458
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2022,
+   "rps": 0.20954085008324086
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2023,
+   "rps": 0.2174523410255237
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2024,
+   "rps": 0.20978151774920184
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2025,
+   "rps": 0.20168412679855346
+  },
+  {
+   "modelo": "ordinal",
+   "season": 2026,
+   "rps": 0.2009953201763387
+  },
+  {
+   "modelo": "boosting",
+   "season": 2015,
+   "rps": 0.20995222443398107
+  },
+  {
+   "modelo": "boosting",
+   "season": 2016,
+   "rps": 0.21277462673355996
+  },
+  {
+   "modelo": "boosting",
+   "season": 2017,
+   "rps": 0.2333323247399755
+  },
+  {
+   "modelo": "boosting",
+   "season": 2018,
+   "rps": 0.1926081146334026
+  },
+  {
+   "modelo": "boosting",
+   "season": 2019,
+   "rps": 0.19952597474504633
+  },
+  {
+   "modelo": "boosting",
+   "season": 2020,
+   "rps": 0.22402672063934703
+  },
+  {
+   "modelo": "boosting",
+   "season": 2021,
+   "rps": 0.21143335196544075
+  },
+  {
+   "modelo": "boosting",
+   "season": 2022,
+   "rps": 0.21568236768520813
+  },
+  {
+   "modelo": "boosting",
+   "season": 2023,
+   "rps": 0.21880226306494005
+  },
+  {
+   "modelo": "boosting",
+   "season": 2024,
+   "rps": 0.21201282848085515
+  },
+  {
+   "modelo": "boosting",
+   "season": 2025,
+   "rps": 0.20263211433139847
+  },
+  {
+   "modelo": "boosting",
+   "season": 2026,
+   "rps": 0.2045005405804283
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2015,
+   "rps": 0.20737036438159617
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2016,
+   "rps": 0.20446016668050185
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2017,
+   "rps": 0.2281968962814487
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2018,
+   "rps": 0.18710094438065358
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2019,
+   "rps": 0.19802084234718614
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2020,
+   "rps": 0.2120752759344407
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2021,
+   "rps": 0.2079010945486935
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2022,
+   "rps": 0.20855946709153347
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2023,
+   "rps": 0.21535536170449338
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2024,
+   "rps": 0.21030751141807955
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2025,
+   "rps": 0.20040665293720147
+  },
+  {
+   "modelo": "conjunto",
+   "season": 2026,
+   "rps": 0.20201236741167874
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2015,
+   "rps": 0.20743609406780644
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2016,
+   "rps": 0.204500962733554
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2017,
+   "rps": 0.22904894970024636
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2018,
+   "rps": 0.18752155547742713
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2019,
+   "rps": 0.19786236456743392
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2020,
+   "rps": 0.21269063792191223
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2021,
+   "rps": 0.20787612152238885
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2022,
+   "rps": 0.20855595060790236
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2023,
+   "rps": 0.21567645218271206
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2024,
+   "rps": 0.21022982109122537
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2025,
+   "rps": 0.2006948396198854
+  },
+  {
+   "modelo": "conjunto_calibrado",
+   "season": 2026,
+   "rps": 0.2017373173167312
+  }
+ ],
+ "diferenca_vs_elo": {
+  "base_freq": [
+   0.01129892243924733,
+   0.008944792321475022,
+   0.013705514025733036
+  ],
+  "poisson": [
+   0.0013322841201590246,
+   0.0009374769350037094,
+   0.001711069865625461
+  ],
+  "dixon_coles": [
+   0.0013469496525835513,
+   0.0009417644810881251,
+   0.0017337275414679913
+  ],
+  "forcas_map": [
+   -1.7791789985962872e-05,
+   -0.0006638116483858915,
+   0.0007068314119601593
+  ],
+  "ordinal": [
+   0.00011031957290420994,
+   -0.00021613683092418945,
+   0.0004667981591015344
+  ],
+  "boosting": [
+   0.004399599805601053,
+   0.0030738029666929566,
+   0.005858626216739724
+  ],
+  "conjunto": [
+   -0.00024536324622212544,
+   -0.0005736130610448153,
+   9.002280298250907e-05
+  ],
+  "conjunto_calibrado": [
+   -6.926707519674573e-05,
+   -0.0003959455850043377,
+   0.00026305762795172526
+  ]
+ },
+ "temporadas_melhor_que_elo": {
+  "base_freq": "0 de 12",
+  "base_mandante": "0 de 12",
+  "poisson": "0 de 12",
+  "dixon_coles": "1 de 12",
+  "forcas_map": "6 de 12",
+  "ordinal": "5 de 12",
+  "boosting": "0 de 12",
+  "conjunto": "8 de 12",
+  "conjunto_calibrado": "6 de 12"
+ },
+ "por_fase": [
+  {
+   "fase": "rodadas 1-10",
+   "conjunto": 0.20499362709675223,
+   "base_elo": 0.20518078657731728,
+   "forcas_map": 0.20587466485215541,
+   "poisson": 0.20774317324818148,
+   "base_freq": 0.21459580315858706
+  },
+  {
+   "fase": "rodadas 11-28",
+   "conjunto": 0.20920220081628285,
+   "base_elo": 0.20976721897124165,
+   "forcas_map": 0.2089854299847308,
+   "poisson": 0.2098852375998513,
+   "base_freq": 0.22050969799855882
+  },
+  {
+   "fase": "rodadas 29-38",
+   "conjunto": 0.20442154256741685,
+   "base_elo": 0.20413171131046898,
+   "forcas_map": 0.20480025763049883,
+   "poisson": 0.206452326867564,
+   "base_freq": 0.21841773328028602
+  }
+ ],
+ "por_era": [
+  {
+   "era": "2015-2019",
+   "conjunto": 0.20503014280170953,
+   "base_elo": 0.2048349015724975,
+   "forcas_map": 0.20513654415955906,
+   "poisson": 0.20641833565505874,
+   "base_freq": 0.21526787361737743
+  },
+  {
+   "era": "2020-2026",
+   "conjunto": 0.20818336415946817,
+   "base_elo": 0.20874820350299814,
+   "forcas_map": 0.20849879434683685,
+   "poisson": 0.20989838232395835,
+   "base_freq": 0.2206750143725256
   }
  ],
  "calibracao": [
   {
    "resultado": "mandante",
    "faixa": "10%-20%",
-   "n": 2,
-   "estimado": 0.19352287904251378,
+   "n": 8,
+   "estimado": 0.1857354261783257,
    "observado": 0.0
   },
   {
    "resultado": "mandante",
    "faixa": "20%-30%",
-   "n": 74,
-   "estimado": 0.27238012357163777,
-   "observado": 0.1891891891891892
+   "n": 181,
+   "estimado": 0.2711037439008031,
+   "observado": 0.2154696132596685
   },
   {
    "resultado": "mandante",
    "faixa": "30%-40%",
-   "n": 740,
-   "estimado": 0.3628304347684299,
-   "observado": 0.3162162162162162
+   "n": 835,
+   "estimado": 0.3589498431433994,
+   "observado": 0.3652694610778443
   },
   {
    "resultado": "mandante",
    "faixa": "40%-50%",
-   "n": 1847,
-   "estimado": 0.4540178552812939,
-   "observado": 0.4482945316729832
+   "n": 1502,
+   "estimado": 0.45148620410269613,
+   "observado": 0.43209054593874835
   },
   {
    "resultado": "mandante",
    "faixa": "50%-60%",
-   "n": 1436,
-   "estimado": 0.5436439747976038,
-   "observado": 0.575208913649025
+   "n": 1295,
+   "estimado": 0.5469551934748523,
+   "observado": 0.5567567567567567
   },
   {
    "resultado": "mandante",
    "faixa": "60%-70%",
-   "n": 393,
-   "estimado": 0.633612980866478,
-   "observado": 0.6590330788804071
+   "n": 604,
+   "estimado": 0.6398121260443356,
+   "observado": 0.6589403973509934
   },
   {
    "resultado": "mandante",
    "faixa": "70%-80%",
-   "n": 25,
-   "estimado": 0.7234935515851874,
-   "observado": 0.8
+   "n": 91,
+   "estimado": 0.7353997998501649,
+   "observado": 0.7472527472527473
   },
   {
    "resultado": "mandante",
    "faixa": "80%-90%",
-   "n": 1,
-   "estimado": 0.8109985486295762,
+   "n": 2,
+   "estimado": 0.8415202479947008,
    "observado": 1.0
   },
   {
    "resultado": "empate",
+   "faixa": "0%-10%",
+   "n": 1,
+   "estimado": 0.08456425449680523,
+   "observado": 0.0
+  },
+  {
+   "resultado": "empate",
    "faixa": "10%-20%",
-   "n": 69,
-   "estimado": 0.18591213902679357,
-   "observado": 0.18840579710144928
+   "n": 184,
+   "estimado": 0.18101807115729446,
+   "observado": 0.16847826086956522
   },
   {
    "resultado": "empate",
    "faixa": "20%-30%",
-   "n": 4144,
-   "estimado": 0.2635980579694243,
-   "observado": 0.26375482625482627
+   "n": 4188,
+   "estimado": 0.26683995354122136,
+   "observado": 0.271251193887297
   },
   {
    "resultado": "empate",
    "faixa": "30%-40%",
-   "n": 305,
-   "estimado": 0.30970155666396443,
-   "observado": 0.3540983606557377
+   "n": 145,
+   "estimado": 0.30672979281126406,
+   "observado": 0.32413793103448274
   },
   {
    "resultado": "visitante",
    "faixa": "0%-10%",
-   "n": 12,
-   "estimado": 0.08596184636502774,
-   "observado": 0.16666666666666666
+   "n": 53,
+   "estimado": 0.08624218441665717,
+   "observado": 0.1320754716981132
   },
   {
    "resultado": "visitante",
    "faixa": "10%-20%",
-   "n": 1052,
-   "estimado": 0.1679764752089597,
-   "observado": 0.1473384030418251
+   "n": 1325,
+   "estimado": 0.16223783053911123,
+   "observado": 0.14943396226415095
   },
   {
    "resultado": "visitante",
    "faixa": "20%-30%",
-   "n": 2379,
-   "estimado": 0.24816398117906463,
-   "observado": 0.23455233291298866
+   "n": 1954,
+   "estimado": 0.24727022885990638,
+   "observado": 0.24820880245649948
   },
   {
    "resultado": "visitante",
    "faixa": "30%-40%",
-   "n": 954,
-   "estimado": 0.336718483764877,
-   "observado": 0.36792452830188677
+   "n": 941,
+   "estimado": 0.33916591245814154,
+   "observado": 0.3368756641870351
   },
   {
    "resultado": "visitante",
    "faixa": "40%-50%",
-   "n": 114,
-   "estimado": 0.43122490036244454,
-   "observado": 0.45614035087719296
+   "n": 221,
+   "estimado": 0.43477092218452845,
+   "observado": 0.45248868778280543
   },
   {
    "resultado": "visitante",
    "faixa": "50%-60%",
-   "n": 7,
-   "estimado": 0.5227279973452988,
-   "observado": 0.5714285714285714
+   "n": 24,
+   "estimado": 0.5373374500921423,
+   "observado": 0.625
   }
  ],
- "empate_estimado": 0.2655239629483516,
- "empate_observado": 0.2687029659141213
+ "extra": {
+  "n": 4518,
+  "mae": {
+   "poisson": 0.8275017738231114,
+   "forcas_map": 0.8246827007305185
+  },
+  "dispersao": {
+   "dispersao_pearson": 0.9454601937688745,
+   "zero_gols_observado": 0.29902611775121735,
+   "zero_gols_poisson": 0.3205980113523298
+  }
+ },
+ "conjunto": {
+  "2011": {
+   "pesos": {
+    "poisson": 0.25,
+    "base_elo": 0.25,
+    "ordinal": 0.25,
+    "forcas_map": 0.25
+   },
+   "temperatura": 1.0
+  },
+  "2012": {
+   "pesos": {
+    "poisson": 0.4433854185015775,
+    "base_elo": 6.283749091066375e-15,
+    "ordinal": 8.692606935968313e-26,
+    "forcas_map": 0.5566145814984162
+   },
+   "temperatura": 1.091510481716247
+  },
+  "2013": {
+   "pesos": {
+    "poisson": 0.16209522749356087,
+    "base_elo": 0.5286196702314956,
+    "ordinal": 1.8931137212038665e-13,
+    "forcas_map": 0.30928510227475425
+   },
+   "temperatura": 1.0702984127375081
+  },
+  "2014": {
+   "pesos": {
+    "poisson": 0.15422515286864844,
+    "base_elo": 0.5006384567804542,
+    "ordinal": 6.470808055662785e-14,
+    "forcas_map": 0.34513639035083277
+   },
+   "temperatura": 1.0557485062922616
+  },
+  "2015": {
+   "pesos": {
+    "poisson": 1.928280052711584e-13,
+    "base_elo": 0.7344892934136574,
+    "ordinal": 2.5627622485051963e-29,
+    "forcas_map": 0.2655107065861497
+   },
+   "temperatura": 1.0140350797654285
+  },
+  "2016": {
+   "pesos": {
+    "poisson": 2.3472068917759966e-13,
+    "base_elo": 0.7002585401394653,
+    "ordinal": 0.2238754808413104,
+    "forcas_map": 0.0758659790189895
+   },
+   "temperatura": 1.0091036887835523
+  },
+  "2017": {
+   "pesos": {
+    "poisson": 1.0962016832907137e-33,
+    "base_elo": 0.6967045097944203,
+    "ordinal": 0.3032954902055644,
+    "forcas_map": 1.5229280530672754e-14
+   },
+   "temperatura": 0.9627731123303431
+  },
+  "2018": {
+   "pesos": {
+    "poisson": 1.3477554141964355e-13,
+    "base_elo": 0.8765741423005557,
+    "ordinal": 0.006647692851835114,
+    "forcas_map": 0.11677816484747434
+   },
+   "temperatura": 1.0259561427733428
+  },
+  "2019": {
+   "pesos": {
+    "poisson": 7.642175368823724e-111,
+    "base_elo": 0.9999999999998535,
+    "ordinal": 1.4656443000502226e-13,
+    "forcas_map": 2.1230015770733023e-39
+   },
+   "temperatura": 0.9606093080203035
+  },
+  "2020": {
+   "pesos": {
+    "poisson": 9.811909493652619e-14,
+    "base_elo": 0.3156853820580436,
+    "ordinal": 0.3471653025320491,
+    "forcas_map": 0.33714931540980914
+   },
+   "temperatura": 0.9392369393762865
+  },
+  "2021": {
+   "pesos": {
+    "poisson": 2.3808033411248763e-28,
+    "base_elo": 0.3295990086529861,
+    "ordinal": 3.8219804634727106e-14,
+    "forcas_map": 0.6704009913469757
+   },
+   "temperatura": 0.9600691172274459
+  },
+  "2022": {
+   "pesos": {
+    "poisson": 3.4588843112300494e-41,
+    "base_elo": 0.3077824016061003,
+    "ordinal": 2.510555602147428e-13,
+    "forcas_map": 0.6922175983936486
+   },
+   "temperatura": 0.9760416688368561
+  },
+  "2023": {
+   "pesos": {
+    "poisson": 2.0263341647875417e-14,
+    "base_elo": 0.11898109621452083,
+    "ordinal": 0.28326335320034673,
+    "forcas_map": 0.5977555505851122
+   },
+   "temperatura": 0.9233471543230224
+  },
+  "2024": {
+   "pesos": {
+    "poisson": 1.0099501742443397e-29,
+    "base_elo": 0.30843199837010615,
+    "ordinal": 8.774343780856923e-13,
+    "forcas_map": 0.6915680016290164
+   },
+   "temperatura": 0.9816087221294139
+  },
+  "2025": {
+   "pesos": {
+    "poisson": 2.5597961354503425e-77,
+    "base_elo": 0.4061585382566865,
+    "ordinal": 4.920105197561875e-14,
+    "forcas_map": 0.5938414617432642
+   },
+   "temperatura": 1.0283314116996922
+  },
+  "2026": {
+   "pesos": {
+    "poisson": 3.892732714033666e-14,
+    "base_elo": 0.40745568428278517,
+    "ordinal": 2.2576150407961388e-13,
+    "forcas_map": 0.5925443157169501
+   },
+   "temperatura": 0.9476097666768883
+  }
+ },
+ "ablacao": [
+  {
+   "fator": "ataque",
+   "delta_rps": 0.003594730132254555,
+   "ic90": [
+    0.0027511165189326656,
+    0.004443266561201238
+   ],
+   "decisao": "mantém (ajuda)"
+  },
+  {
+   "fator": "defesa_adversario",
+   "delta_rps": 0.0028759597717264752,
+   "ic90": [
+    0.0021267270173000786,
+    0.0036356182855910666
+   ],
+   "decisao": "mantém (ajuda)"
+  },
+  {
+   "fator": "mando",
+   "delta_rps": 0.014446322722868025,
+   "ic90": [
+    0.010995336592209732,
+    0.0180287797296839
+   ],
+   "decisao": "mantém (ajuda)"
+  },
+  {
+   "fator": "forma",
+   "delta_rps": -5.104744181189161e-06,
+   "ic90": [
+    -0.00026826233464067895,
+    0.00028043222077967216
+   ],
+   "decisao": "neutro"
+  },
+  {
+   "fator": "descanso",
+   "delta_rps": -0.00013778379830187978,
+   "ic90": [
+    -0.0003031132447191842,
+    1.6051274395855487e-05
+   ],
+   "decisao": "neutro"
+  },
+  {
+   "fator": "meio_de_semana",
+   "delta_rps": 6.9697157475678085e-06,
+   "ic90": [
+    -1.1488858841274004e-05,
+    2.305039171621188e-05
+   ],
+   "decisao": "neutro"
+  },
+  {
+   "fator": "tecnico_novo",
+   "delta_rps": NaN,
+   "ic90": [
+    NaN,
+    NaN
+   ],
+   "decisao": "sem dados (fator constante)"
+  }
+ ],
+ "elo": {
+  "k": 10.0,
+  "home": 97.29219361037342,
+  "regression": 0.3,
+  "promoted": -25.0,
+  "rps_ajuste": 0.206680273916265,
+  "temporadas_ajuste": [
+   2008,
+   2009,
+   2010,
+   2011,
+   2012,
+   2013,
+   2014
+  ]
+ }
 }

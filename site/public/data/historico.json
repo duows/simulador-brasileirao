@@ -1,7 +1,7 @@
 {
  "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
  "atribuicao": "Football data provided by the Football-Data.org API",
- "gerado_em": "2026-11-09T02:13:46Z",
+ "gerado_em": "2026-11-09T02:35:03Z",
  "versao_modelo": "futdados-0.1.0+21d22b71",
  "temporada": 2026,
  "rodadas": [
@@ -13,16 +13,16 @@
     0.0
    ],
    "g4": [
-    0.1216
+    0.1222
    ],
    "g6": [
-    0.8664
+    0.8659
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    59.3076
+    59.3092
    ]
   },
   "atletico-mg": {
@@ -30,16 +30,16 @@
     0.0
    ],
    "g4": [
-    0.0141
+    0.014
    ],
    "g6": [
-    0.317
+    0.3169
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    55.7928
+    55.7922
    ]
   },
   "bahia": {
@@ -47,16 +47,16 @@
     0.0
    ],
    "g4": [
-    0.0824
+    0.0827
    ],
    "g6": [
-    0.7145
+    0.715
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    58.7478
+    58.7476
    ]
   },
   "botafogo": {
@@ -73,7 +73,7 @@
     0.019
    ],
    "pontos_esperados": [
-    47.4151
+    47.4143
    ]
   },
   "bragantino": {
@@ -84,13 +84,13 @@
     0.0004
    ],
    "g6": [
-    0.0545
+    0.0544
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    52.6972
+    52.6959
    ]
   },
   "chapecoense": {
@@ -107,7 +107,7 @@
     1.0
    ],
    "pontos_esperados": [
-    25.4423
+    25.4463
    ]
   },
   "corinthians": {
@@ -121,10 +121,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.4454
+    0.445
    ],
    "pontos_esperados": [
-    42.5588
+    42.5598
    ]
   },
   "coritiba": {
@@ -138,10 +138,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.0448
+    0.0446
    ],
    "pontos_esperados": [
-    45.9222
+    45.9266
    ]
   },
   "cruzeiro": {
@@ -149,7 +149,7 @@
     0.0
    ],
    "g4": [
-    0.9765
+    0.9763
    ],
    "g6": [
     1.0
@@ -158,12 +158,12 @@
     0.0
    ],
    "pontos_esperados": [
-    65.9597
+    65.9594
    ]
   },
   "flamengo": {
    "titulo": [
-    0.8511
+    0.8506
    ],
    "g4": [
     1.0
@@ -175,7 +175,7 @@
     0.0
    ],
    "pontos_esperados": [
-    83.59
+    83.5859
    ]
   },
   "fluminense": {
@@ -183,16 +183,16 @@
     0.0
    ],
    "g4": [
-    0.8047
+    0.8041
    ],
    "g6": [
-    0.9937
+    0.9938
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    62.9674
+    62.9675
    ]
   },
   "gremio": {
@@ -206,10 +206,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.5309
+    0.5311
    ],
    "pontos_esperados": [
-    42.2575
+    42.2567
    ]
   },
   "internacional": {
@@ -223,10 +223,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.3753
+    0.3755
    ],
    "pontos_esperados": [
-    43.2779
+    43.2781
    ]
   },
   "mirassol": {
@@ -240,15 +240,15 @@
     0.0
    ],
    "rebaixamento": [
-    0.1374
+    0.137
    ],
    "pontos_esperados": [
-    45.3053
+    45.3041
    ]
   },
   "palmeiras": {
    "titulo": [
-    0.1489
+    0.1494
    ],
    "g4": [
     1.0
@@ -260,7 +260,7 @@
     0.0
    ],
    "pontos_esperados": [
-    80.2409
+    80.2402
    ]
   },
   "remo": {
@@ -288,13 +288,13 @@
     0.0003
    ],
    "g6": [
-    0.0494
+    0.0493
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    53.1472
+    53.148
    ]
   },
   "sao-paulo": {
@@ -305,13 +305,13 @@
     0.0
    ],
    "g6": [
-    0.0029
+    0.003
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    49.4433
+    49.4405
    ]
   },
   "vasco": {
@@ -322,13 +322,13 @@
     0.0
    ],
    "g6": [
-    0.0015
+    0.0016
    ],
    "rebaixamento": [
-    0.0182
+    0.0183
    ],
    "pontos_esperados": [
-    48.083
+    48.0808
    ]
   },
   "vitoria": {
@@ -342,10 +342,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.429
+    0.4295
    ],
    "pontos_esperados": [
-    42.6994
+    42.6989
    ]
   }
  }

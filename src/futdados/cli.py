@@ -50,6 +50,26 @@ def cmd_fit(args, cfg) -> None:
     print(f"Pesos salvos ({w.model_version}) em {cfg['paths']['weights']} e reports/pesos.md")
 
 
+def _print_projection(table, meta) -> None:
+    from .teams import display_name
+
+    print(f"Tabela projetada depois da rodada {meta['target_round']} "
+          f"(resultados reais até a rodada {meta['based_on_round']}, {meta['n_sims']} simulações)")
+    print(f"{'#':>2} {'Time':<16}{'Pts':>4}{'Pts esp.':>9}{'Faixa':>8}{'Título':>8}{'G4':>7}{'G6':>7}{'Reb.':>7}")
+    for i, r in enumerate(table.itertuples(), start=1):
+        faixa = f"{r.pos_p10:.0f}-{r.pos_p90:.0f}"
+        print(f"{i:>2} {display_name(r.team_id):<16}{r.pontos_atuais:>4}{r.exp_points:>9.1f}{faixa:>8}"
+              f"{r.p_titulo:>8.1%}{r.p_g4:>7.1%}{r.p_g6:>7.1%}{r.p_rebaixamento:>7.1%}")
+
+
+def cmd_project(args, cfg) -> None:
+    from .pipeline import project, projection_json
+
+    table, meta = project(_repo(cfg), cfg, args.season, args.round, args.as_of_round, args.sims)
+    _print_projection(table, meta)
+    print(f"JSON: {projection_json(cfg, table, meta)}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -60,6 +80,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--season", type=int, required=True)
     s = sub.add_parser("fit", help="estima os pesos e gera reports/pesos.md")
     s.add_argument("--half-life", type=float, help="pula a escolha automática da meia-vida")
+    s = sub.add_parser("project", help="tabela projetada depois da rodada X (padrão: fim do campeonato)")
+    s.add_argument("--season", type=int, required=True)
+    s.add_argument("--round", type=int, help="rodada X da tabela projetada (padrão: última)")
+    s.add_argument("--as-of-round", type=int,
+                   help="reconstitui a projeção escondendo resultados depois desta rodada (demonstração)")
+    s.add_argument("--sims", type=int, help="número de simulações (padrão no YAML)")
     return p
 
 
@@ -67,6 +93,7 @@ COMMANDS = {
     "ingest-historical": cmd_ingest_historical,
     "ingest-api": cmd_ingest_api,
     "fit": cmd_fit,
+    "project": cmd_project,
 }
 
 

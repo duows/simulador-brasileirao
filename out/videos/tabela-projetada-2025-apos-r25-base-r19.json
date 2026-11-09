@@ -1,0 +1,458 @@
+{
+  "tipo": "tabela_projetada",
+  "gerado_em": "2026-11-09T01:17:28Z",
+  "versao_modelo": "futdados-0.1.0+dbe414fa",
+  "meia_vida_dias": 365.0,
+  "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
+  "linguagem": "Os números são probabilidades estimadas pelo modelo e projeções. Descrevem o que é provável com base no desempenho recente e no histórico; não dizem o que vai acontecer.",
+  "fontes": [
+    {
+      "nome": "football-data.org (API v4, competição BSA)",
+      "url": "https://www.football-data.org",
+      "uso": "jogos e classificação da temporada corrente"
+    },
+    {
+      "nome": "Brasileirao_Dataset, de Adão Duque",
+      "url": "https://github.com/adaoduque/Brasileirao_Dataset",
+      "uso": "resultados históricos 2003-2025"
+    }
+  ],
+  "titulo": "Tabela projetada depois da rodada 25",
+  "temporada": 2025,
+  "resultados_reais_ate_rodada": 19,
+  "rodada_alvo": 25,
+  "simulacoes": 5000,
+  "metodo": "Simulação Monte Carlo do restante do campeonato a partir da matriz de placares de cada jogo. Ordem pelos pontos esperados; a faixa de posição vai do percentil 10 ao 90. As chances de título, G4, G6 e rebaixamento referem-se ao fim do campeonato.",
+  "criterios_desempate": [
+    "points",
+    "wins",
+    "goal_difference",
+    "goals_for",
+    "head_to_head",
+    "red_cards",
+    "yellow_cards",
+    "draw_lots"
+  ],
+  "tabela": [
+    {
+      "posicao_projetada": 1,
+      "time": {
+        "id": "flamengo",
+        "nome": "Flamengo"
+      },
+      "jogos": 19,
+      "pontos_atuais": 43,
+      "saldo_atual": 29,
+      "pontos_esperados": 53.7,
+      "faixa_posicao": {
+        "p10": 1,
+        "mediana": 1,
+        "p90": 2
+      },
+      "pontos_esperados_fim": 74.7,
+      "chance_titulo": 0.6538,
+      "chance_g4": 0.9874,
+      "chance_g6": 0.9974,
+      "chance_rebaixamento": 0.0
+    },
+    {
+      "posicao_projetada": 2,
+      "time": {
+        "id": "palmeiras",
+        "nome": "Palmeiras"
+      },
+      "jogos": 19,
+      "pontos_atuais": 39,
+      "saldo_atual": 10,
+      "pontos_esperados": 48.9,
+      "faixa_posicao": {
+        "p10": 1,
+        "mediana": 2,
+        "p90": 3
+      },
+      "pontos_esperados_fim": 70.0,
+      "chance_titulo": 0.2326,
+      "chance_g4": 0.9118,
+      "chance_g6": 0.9842,
+      "chance_rebaixamento": 0.0
+    },
+    {
+      "posicao_projetada": 3,
+      "time": {
+        "id": "cruzeiro",
+        "nome": "Cruzeiro"
+      },
+      "jogos": 19,
+      "pontos_atuais": 37,
+      "saldo_atual": 18,
+      "pontos_esperados": 45.8,
+      "faixa_posicao": {
+        "p10": 2,
+        "mediana": 3,
+        "p90": 5
+      },
+      "pontos_esperados_fim": 65.1,
+      "chance_titulo": 0.0658,
+      "chance_g4": 0.6884,
+      "chance_g6": 0.8994,
+      "chance_rebaixamento": 0.0
+    },
+    {
+      "posicao_projetada": 4,
+      "time": {
+        "id": "mirassol",
+        "nome": "Mirassol"
+      },
+      "jogos": 19,
+      "pontos_atuais": 32,
+      "saldo_atual": 11,
+      "pontos_esperados": 41.6,
+      "faixa_posicao": {
+        "p10": 3,
+        "mediana": 5,
+        "p90": 7
+      },
+      "pontos_esperados_fim": 62.4,
+      "chance_titulo": 0.0196,
+      "chance_g4": 0.4558,
+      "chance_g6": 0.7706,
+      "chance_rebaixamento": 0.0004
+    },
+    {
+      "posicao_projetada": 5,
+      "time": {
+        "id": "bahia",
+        "nome": "Bahia"
+      },
+      "jogos": 19,
+      "pontos_atuais": 33,
+      "saldo_atual": 6,
+      "pontos_esperados": 40.9,
+      "faixa_posicao": {
+        "p10": 3,
+        "mediana": 5,
+        "p90": 8
+      },
+      "pontos_esperados_fim": 58.6,
+      "chance_titulo": 0.0054,
+      "chance_g4": 0.218,
+      "chance_g6": 0.5292,
+      "chance_rebaixamento": 0.0008
+    },
+    {
+      "posicao_projetada": 6,
+      "time": {
+        "id": "botafogo",
+        "nome": "Botafogo"
+      },
+      "jogos": 19,
+      "pontos_atuais": 31,
+      "saldo_atual": 13,
+      "pontos_esperados": 40.7,
+      "faixa_posicao": {
+        "p10": 4,
+        "mediana": 5,
+        "p90": 8
+      },
+      "pontos_esperados_fim": 62.3,
+      "chance_titulo": 0.02,
+      "chance_g4": 0.4692,
+      "chance_g6": 0.7706,
+      "chance_rebaixamento": 0.0002
+    },
+    {
+      "posicao_projetada": 7,
+      "time": {
+        "id": "sao-paulo",
+        "nome": "São Paulo"
+      },
+      "jogos": 19,
+      "pontos_atuais": 28,
+      "saldo_atual": 2,
+      "pontos_esperados": 36.7,
+      "faixa_posicao": {
+        "p10": 5,
+        "mediana": 8,
+        "p90": 11
+      },
+      "pontos_esperados_fim": 54.7,
+      "chance_titulo": 0.001,
+      "chance_g4": 0.0708,
+      "chance_g6": 0.2434,
+      "chance_rebaixamento": 0.0072
+    },
+    {
+      "posicao_projetada": 8,
+      "time": {
+        "id": "atletico-mg",
+        "nome": "Atlético-MG"
+      },
+      "jogos": 19,
+      "pontos_atuais": 28,
+      "saldo_atual": 3,
+      "pontos_esperados": 36.3,
+      "faixa_posicao": {
+        "p10": 6,
+        "mediana": 8,
+        "p90": 12
+      },
+      "pontos_esperados_fim": 55.2,
+      "chance_titulo": 0.0006,
+      "chance_g4": 0.0812,
+      "chance_g6": 0.2762,
+      "chance_rebaixamento": 0.0068
+    },
+    {
+      "posicao_projetada": 9,
+      "time": {
+        "id": "bragantino",
+        "nome": "Bragantino"
+      },
+      "jogos": 19,
+      "pontos_atuais": 27,
+      "saldo_atual": -3,
+      "pontos_esperados": 35.2,
+      "faixa_posicao": {
+        "p10": 6,
+        "mediana": 9,
+        "p90": 12
+      },
+      "pontos_esperados_fim": 52.0,
+      "chance_titulo": 0.0004,
+      "chance_g4": 0.033,
+      "chance_g6": 0.1362,
+      "chance_rebaixamento": 0.0244
+    },
+    {
+      "posicao_projetada": 10,
+      "time": {
+        "id": "fluminense",
+        "nome": "Fluminense"
+      },
+      "jogos": 19,
+      "pontos_atuais": 27,
+      "saldo_atual": -2,
+      "pontos_esperados": 35.1,
+      "faixa_posicao": {
+        "p10": 6,
+        "mediana": 9,
+        "p90": 12
+      },
+      "pontos_esperados_fim": 52.8,
+      "chance_titulo": 0.0002,
+      "chance_g4": 0.0438,
+      "chance_g6": 0.1686,
+      "chance_rebaixamento": 0.0166
+    },
+    {
+      "posicao_projetada": 11,
+      "time": {
+        "id": "internacional",
+        "nome": "Internacional"
+      },
+      "jogos": 19,
+      "pontos_atuais": 24,
+      "saldo_atual": -3,
+      "pontos_esperados": 32.3,
+      "faixa_posicao": {
+        "p10": 8,
+        "mediana": 12,
+        "p90": 15
+      },
+      "pontos_esperados_fim": 51.6,
+      "chance_titulo": 0.0004,
+      "chance_g4": 0.0238,
+      "chance_g6": 0.111,
+      "chance_rebaixamento": 0.0366
+    },
+    {
+      "posicao_projetada": 12,
+      "time": {
+        "id": "santos",
+        "nome": "Santos"
+      },
+      "jogos": 19,
+      "pontos_atuais": 24,
+      "saldo_atual": -2,
+      "pontos_esperados": 31.5,
+      "faixa_posicao": {
+        "p10": 9,
+        "mediana": 12,
+        "p90": 15
+      },
+      "pontos_esperados_fim": 47.6,
+      "chance_titulo": 0.0,
+      "chance_g4": 0.0048,
+      "chance_g6": 0.0304,
+      "chance_rebaixamento": 0.1174
+    },
+    {
+      "posicao_projetada": 13,
+      "time": {
+        "id": "ceara",
+        "nome": "Ceará"
+      },
+      "jogos": 19,
+      "pontos_atuais": 22,
+      "saldo_atual": -2,
+      "pontos_esperados": 30.4,
+      "faixa_posicao": {
+        "p10": 10,
+        "mediana": 13,
+        "p90": 16
+      },
+      "pontos_esperados_fim": 47.2,
+      "chance_titulo": 0.0,
+      "chance_g4": 0.0042,
+      "chance_g6": 0.0316,
+      "chance_rebaixamento": 0.1366
+    },
+    {
+      "posicao_projetada": 14,
+      "time": {
+        "id": "corinthians",
+        "nome": "Corinthians"
+      },
+      "jogos": 19,
+      "pontos_atuais": 22,
+      "saldo_atual": -5,
+      "pontos_esperados": 30.0,
+      "faixa_posicao": {
+        "p10": 10,
+        "mediana": 14,
+        "p90": 17
+      },
+      "pontos_esperados_fim": 48.1,
+      "chance_titulo": 0.0,
+      "chance_g4": 0.0054,
+      "chance_g6": 0.0372,
+      "chance_rebaixamento": 0.12
+    },
+    {
+      "posicao_projetada": 15,
+      "time": {
+        "id": "gremio",
+        "nome": "Grêmio"
+      },
+      "jogos": 19,
+      "pontos_atuais": 21,
+      "saldo_atual": -8,
+      "pontos_esperados": 28.2,
+      "faixa_posicao": {
+        "p10": 12,
+        "mediana": 15,
+        "p90": 17
+      },
+      "pontos_esperados_fim": 44.9,
+      "chance_titulo": 0.0002,
+      "chance_g4": 0.0018,
+      "chance_g6": 0.008,
+      "chance_rebaixamento": 0.2654
+    },
+    {
+      "posicao_projetada": 16,
+      "time": {
+        "id": "vasco",
+        "nome": "Vasco"
+      },
+      "jogos": 19,
+      "pontos_atuais": 19,
+      "saldo_atual": -5,
+      "pontos_esperados": 26.4,
+      "faixa_posicao": {
+        "p10": 13,
+        "mediana": 16,
+        "p90": 18
+      },
+      "pontos_esperados_fim": 42.0,
+      "chance_titulo": 0.0,
+      "chance_g4": 0.0004,
+      "chance_g6": 0.0024,
+      "chance_rebaixamento": 0.4458
+    },
+    {
+      "posicao_projetada": 17,
+      "time": {
+        "id": "vitoria",
+        "nome": "Vitória"
+      },
+      "jogos": 19,
+      "pontos_atuais": 18,
+      "saldo_atual": -6,
+      "pontos_esperados": 25.7,
+      "faixa_posicao": {
+        "p10": 14,
+        "mediana": 17,
+        "p90": 19
+      },
+      "pontos_esperados_fim": 42.2,
+      "chance_titulo": 0.0,
+      "chance_g4": 0.0,
+      "chance_g6": 0.0022,
+      "chance_rebaixamento": 0.4766
+    },
+    {
+      "posicao_projetada": 18,
+      "time": {
+        "id": "fortaleza",
+        "nome": "Fortaleza"
+      },
+      "jogos": 19,
+      "pontos_atuais": 16,
+      "saldo_atual": -11,
+      "pontos_esperados": 24.0,
+      "faixa_posicao": {
+        "p10": 15,
+        "mediana": 18,
+        "p90": 19
+      },
+      "pontos_esperados_fim": 40.9,
+      "chance_titulo": 0.0,
+      "chance_g4": 0.0,
+      "chance_g6": 0.0012,
+      "chance_rebaixamento": 0.5624
+    },
+    {
+      "posicao_projetada": 19,
+      "time": {
+        "id": "juventude",
+        "nome": "Juventude"
+      },
+      "jogos": 19,
+      "pontos_atuais": 17,
+      "saldo_atual": -24,
+      "pontos_esperados": 22.9,
+      "faixa_posicao": {
+        "p10": 16,
+        "mediana": 18,
+        "p90": 19
+      },
+      "pontos_esperados_fim": 37.1,
+      "chance_titulo": 0.0,
+      "chance_g4": 0.0002,
+      "chance_g6": 0.0002,
+      "chance_rebaixamento": 0.7884
+    },
+    {
+      "posicao_projetada": 20,
+      "time": {
+        "id": "sport",
+        "nome": "Sport"
+      },
+      "jogos": 19,
+      "pontos_atuais": 9,
+      "saldo_atual": -21,
+      "pontos_esperados": 14.8,
+      "faixa_posicao": {
+        "p10": 20,
+        "mediana": 20,
+        "p90": 20
+      },
+      "pontos_esperados_fim": 27.6,
+      "chance_titulo": 0.0,
+      "chance_g4": 0.0,
+      "chance_g6": 0.0,
+      "chance_rebaixamento": 0.9944
+    }
+  ]
+}

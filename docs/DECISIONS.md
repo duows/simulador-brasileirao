@@ -108,3 +108,17 @@ que atenua um pouco o peso estimado). Na temporada corrente o plano grátis da A
 traz técnico por jogo: o comando de ingestão guarda o técnico de cada time e marca a
 troca quando ele muda; `config/coach_changes.csv` permite registrar a troca à mão com
 fonte. Interinos e grafias diferentes do mesmo nome contam como troca (limitação).
+
+## D12 · 2026-11-08 · Simulação da tabela
+- Cada jogo restante é sorteado da matriz de placares (10 mil simulações por padrão).
+- "Tabela depois da rodada X": jogos já disputados (inclusive adiantados) + jogos
+  simulados com rodada ≤ X. Ordenada pelos pontos esperados, com faixa de posição
+  p10-p90. Chances de título, G4, G6 e rebaixamento são sempre do fim do campeonato.
+- Forma e técnico novo só valem para a próxima rodada; nas seguintes ficam neutros
+  (não sabemos a forma futura). Descanso e meio de semana usam o calendário marcado.
+- As forças não são atualizadas dentro da simulação (simplificação; tende a deixar a
+  distribuição um pouco estreita demais no longo prazo).
+- Zonas configuráveis. G4 = 1º-4º, G6 = 1º-6º, rebaixamento = 17º-20º.
+- `--as-of-round` reconstitui uma projeção histórica escondendo os resultados
+  seguintes. Os pesos usados são os atuais (podem ter sido ajustados com dados daquela
+  temporada), então serve para demonstração, não para avaliação.

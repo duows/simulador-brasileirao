@@ -95,6 +95,10 @@ cartola:
   captain_multiplier: 1.5   # capitão ×1,5 desde 2023 (imprensa)
   vice_capitao: false       # matéria de 2023 citava vice; no app atual não existe (relato do usuário, 2026-11-09)
   registro_orcamentos: [100, 120, 140, 160]   # times sugeridos gravados a cada rodada
+  # Técnico pontua soma dos atletas do time que jogaram / 11 + 1 se vencer (conferido: 95% exato).
+  # Prever pela regra (soma esperada/11 + P(vitória)) errou 1,79 x 1,756 da regressão por posição
+  # no backtest de 2026: fica desligado.
+  tecnico_pela_regra: false
   reservas:                 # banco: 1 por posição (sem técnico); entra se um titular da posição não jogar
     ativo: true
     preco_maximo: titular_mais_barato   # TODO confirmar a regra vigente; "livre" = sem limite de preço

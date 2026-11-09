@@ -23,7 +23,8 @@ import numpy as np
 import pandas as pd
 
 FEATURES = ["media_ajustada", "p_sg", "gols_time", "mando", "p_vitoria"]
-LABELS = {"base": "Base da posição", "media_ajustada": "Média do atleta (ajustada)", "p_sg": "Chance de não sofrer gol",
+LABELS = {"soma_time_11": "Soma esperada do time ÷ 11",
+          "base": "Base da posição", "media_ajustada": "Média do atleta (ajustada)", "p_sg": "Chance de não sofrer gol",
           "gols_time": "Gols esperados do time", "mando": "Jogar em casa", "p_vitoria": "Chance de vitória"}
 
 
@@ -104,7 +105,8 @@ def training_table(pontos: pd.DataFrame, ctx: pd.DataFrame, shrink: float,
     return df.merge(ctx, on=["rodada", "team_id"], how="inner").dropna(subset=FEATURES)
 
 
-def walk_forward(table: pd.DataFrame, first_round: int, alpha: float) -> pd.DataFrame:
+def walk_forward(table: pd.DataFrame, first_round: int, alpha: float, sums: pd.DataFrame | None = None,
+                 ctx: pd.DataFrame | None = None) -> pd.DataFrame:
     """Previsão fora da amostra de cada rodada >= first_round."""
     out = []
     for r in sorted(table.rodada.unique()):
@@ -113,6 +115,10 @@ def walk_forward(table: pd.DataFrame, first_round: int, alpha: float) -> pd.Data
         train, test = table[table.rodada < r], table[table.rodada == r].copy()
         coefs = fit_position_models(train, alpha)
         test["previsto"] = predict(test, coefs)
+        if sums is not None and ctx is not None and (test.posicao == "tec").any():
+            tc = fit_team_sum(sums[sums.rodada < r], ctx, alpha)
+            sel = test.posicao == "tec"
+            test.loc[sel, "previsto"] = coach_prediction(test[sel], tc)
         out.append(test)
     return pd.concat(out, ignore_index=True)
 
@@ -168,3 +174,30 @@ def production_context(partidas: pd.DataFrame, matches: pd.DataFrame, season: in
     ctx = pd.DataFrame(rows)
     ctx["p_sg"] = np.exp(-ctx.gols_adv)
     return ctx
+
+
+# ----------------------------------------------------------------- técnico
+# Regra conferida nos dados de 2026 (95% exato em 642 pontuações): técnico = soma dos pontos dos
+# jogadores do time dele que entraram em campo / 11 + 1 ponto se o time vencer (scout V).
+TEAM_FEATURES = ["gols_time", "p_sg", "mando"]
+
+
+def team_sums(pontos: pd.DataFrame) -> pd.DataFrame:
+    pl = pontos[(pontos.posicao != "tec") & pontos.jogou]
+    return pl.groupby(["rodada", "team_id"]).pontos.sum().rename("soma_time").reset_index()
+
+
+def fit_team_sum(sums: pd.DataFrame, ctx: pd.DataFrame, alpha: float = 1.0) -> np.ndarray:
+    d = sums.merge(ctx, on=["rodada", "team_id"]).dropna(subset=TEAM_FEATURES)
+    return _fit(d[TEAM_FEATURES].to_numpy(float), d.soma_time.to_numpy(float), alpha)
+
+
+def coach_prediction(rows: pd.DataFrame, coef: np.ndarray) -> np.ndarray:
+    """Pontuação prevista do técnico = soma esperada do time / 11 + chance de vitória."""
+    soma = coef[0] + rows[TEAM_FEATURES].to_numpy(float) @ coef[1:]
+    return soma / 11 + rows.p_vitoria.to_numpy(float)
+
+
+def coach_decompose(row: pd.Series, coef: np.ndarray) -> dict[str, float]:
+    soma = coef[0] + sum(coef[i + 1] * row[f] for i, f in enumerate(TEAM_FEATURES))
+    return {"soma_time_11": float(soma / 11), "p_vitoria": float(row["p_vitoria"])}

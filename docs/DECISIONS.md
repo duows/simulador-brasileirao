@@ -415,3 +415,12 @@ rodada 35.
   API usa **desarme (DS) +1,5** e **defesa difícil (DE) +1,3** (a página diz 1,2 e 1,0), e o
   scout "passe incompleto" (PE) não aparece mais. Com esses valores, 100% batem. O modelo prevê a
   pontuação direto, então não depende dessa tabela, mas fica registrada a versão que vale.
+
+- **Regras confirmadas pela matéria da Sporting News (Cartola 2026), enviada pelo usuário**: tabela de
+  scouts igual à que tiramos dos dados (DS +1,5, DE +1,3; "passe incompleto" −0,1 citado, mas ausente
+  nos dados de 2026); o reserva **não entra se pontuar zero ou negativo**; prioridade de substituição:
+  horário do jogo, capitão, valor do atleta, ordem alfabética (implementado: capitão primeiro, e o
+  reserva que entra no lugar dele leva o ×1,5, leitura nossa a confirmar); **técnico pontua a média
+  dos atletas**. Nos dados, a conta exata é soma dos atletas do time que jogaram ÷ 11 + 1 se vencer
+  (95% exato em 642 casos). Prever o técnico por essa fórmula errou um pouco mais (1,79) que a
+  regressão por posição (1,756), que continua em uso (`cartola.tecnico_pela_regra: false`).

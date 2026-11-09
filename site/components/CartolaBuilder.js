@@ -6,11 +6,12 @@ import { num, pct, signed } from "../lib/format";
 
 const POS = { gol: "Goleiro", lat: "Lateral", zag: "Zagueiro", mei: "Meia", ata: "Atacante", tec: "Técnico" };
 const FACTORS = ["base", "media_ajustada", "p_sg", "gols_time", "mando", "p_vitoria"];
+const COACH_FACTORS = ["soma_time_11", "p_vitoria"];
 
 function Factors({ p, labels }) {
   return (
     <div className="small" style={{ display: "grid", gap: 2, marginTop: 6 }}>
-      {FACTORS.map((f) => (
+      {(p.fatores.soma_time_11 != null ? COACH_FACTORS : FACTORS).map((f) => (
         <div key={f} style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
           <span className="muted">{labels[f]}</span><span>{signed(p.fatores[f], 2)}</span>
         </div>
@@ -108,7 +109,7 @@ export default function CartolaBuilder({ data, photos = false }) {
                       </tr>
                     ))}
                   </tbody>
-                  <caption>Banco: o reserva entra no lugar de um titular da posição que não jogar, se ele jogar e não pontuar negativo. Reserva de Luxo (um só): substitui o titular da posição que pontuou menos, se fizer mais que ele; o sistema indica a posição onde ele mais rende. Valores por simulação. Preço do reserva: no máximo o do titular mais barato da posição (a confirmar no Cartola).</caption>
+                  <caption>Banco: o reserva entra no lugar de um titular da posição que não jogar, se ele pontuar mais que zero; o capitão tem prioridade e, nesse caso, o reserva herda o ×1,5. Reserva de Luxo (um só): substitui o titular da posição que pontuou menos, se fizer mais que ele; o sistema indica a posição onde ele mais rende. Valores por simulação. Preço do reserva: no máximo o do titular mais barato da posição (a confirmar no Cartola).</caption>
                 </table>
               </div>
             </>

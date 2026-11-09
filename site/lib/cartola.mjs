@@ -139,7 +139,7 @@ export function viceCaptain(team) {
 }
 
 /** Valor do banco e do Reserva de Luxo por posição, por simulação (mesmas regras do Python). */
-export function benchSimulation(team, reservas, sd = {}, n = 4000, seed = 0) {
+export function benchSimulation(team, reservas, sd = {}, n = 4000, seed = 0, mult = 1.5) {
   const r = seeded(seed + 1);
   const out = {};
   for (const res of reservas) {
@@ -147,17 +147,17 @@ export function benchSimulation(team, reservas, sd = {}, n = 4000, seed = 0) {
     const s = { ...DEFAULT_SD, ...sd }[res.posicao] || 4;
     let bench = 0, lux = 0;
     for (let k = 0; k < n; k++) {
-      let anyMissing = false, low = Infinity;
+      let anyMissing = false, capMissing = false, low = Infinity;
       for (const p of st) {
         const plays = r() < (p.p_jogar ?? 1);
-        if (!plays) { anyMissing = true; continue; }
+        if (!plays) { anyMissing = true; if (p.capitao) capMissing = true; continue; }
         const pts = p.previsto_se_jogar + s * normal(r);
         if (pts < low) low = pts;
       }
       const rPlays = r() < (res.p_jogar ?? 1);
       const rPts = rPlays ? res.previsto_se_jogar + s * normal(r) : 0;
-      const usedBench = anyMissing && rPlays && rPts >= 0;
-      if (usedBench) bench += rPts;
+      const usedBench = anyMissing && rPlays && rPts > 0;
+      if (usedBench) bench += rPts * (capMissing ? mult : 1);
       else if (rPlays && Number.isFinite(low) && rPts > low) lux += rPts - low;
     }
     out[res.posicao] = { banco: bench / n, luxo: lux / n };
@@ -185,7 +185,7 @@ export function addReserves(team, players, rules = { ativo: true, preco_maximo: 
     reservas.push({ ...best, chance_de_entrar: q, valor_reserva: q * best.esperado, valor_luxo: 0, luxo: false });
   }
   if (reservas.length && reservas.every((x) => x.previsto_se_jogar != null)) {
-    const sim = benchSimulation(team, reservas, rules.desvio_por_posicao);
+    const sim = benchSimulation(team, reservas, rules.desvio_por_posicao, 4000, 0, rules.multiplicador_capitao ?? 1.5);
     for (const x of reservas) { x.valor_reserva = sim[x.posicao].banco; x.valor_luxo = sim[x.posicao].luxo; }
     if (rules.reserva_de_luxo !== false) {
       const best = reservas.reduce((a, b) => (b.valor_luxo > a.valor_luxo ? b : a));

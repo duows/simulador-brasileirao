@@ -34,7 +34,9 @@ def backtest(repo: Repository, cfg: dict, data: dict, prev_means: dict | None) -
     season = int(data["status"]["temporada"])
     ctx = cm.production_context(data["partidas"], repo.matches(), season)
     table = cm.training_table(data["pontos"], ctx, c["shrink"], prev_means)
-    pred = cm.walk_forward(table, c["first_backtest_round"], c["alpha"])
+    rule = bool(c.get("tecnico_pela_regra", False))
+    pred = cm.walk_forward(table, c["first_backtest_round"], c["alpha"], cm.team_sums(data["pontos"]) if rule else None,
+                           ctx if rule else None)
     return cm.evaluate(pred), pred
 
 
@@ -59,6 +61,7 @@ def project(repo: Repository, cfg: dict) -> dict:
     ctx = cm.production_context(data["partidas"], repo.matches(), season)
     tables.append(cm.training_table(data["pontos"], ctx, c["shrink"], prev_means))
     coefs = cm.fit_position_models(pd.concat(tables, ignore_index=True), c["alpha"])
+    coach_coef = cm.fit_team_sum(cm.team_sums(data["pontos"]), ctx, c["alpha"])
 
     played = data["pontos"][data["pontos"].jogou]
     agg = played.groupby("atleta_id").pontos.agg(["sum", "count"])
@@ -72,11 +75,15 @@ def project(repo: Repository, cfg: dict) -> dict:
     a = a.merge(ctx[ctx.rodada == rnd], on="team_id", how="inner")
     a = a[a.valida]
     a["previsto"] = cm.predict(a, coefs)
+    use_rule = bool(c.get("tecnico_pela_regra", False))
+    if use_rule:
+        is_tec = a.posicao == "tec"
+        a.loc[is_tec, "previsto"] = cm.coach_prediction(a[is_tec], coach_coef)
     a["p_jogar"] = a.status.map(c["p_jogar"]).astype(float)
     a["esperado"] = a.p_jogar * a.previsto
     players = []
     for _, r in a.iterrows():
-        dec = cm.decompose(r, coefs[r.posicao])
+        dec = cm.coach_decompose(r, coach_coef) if (use_rule and r.posicao == "tec") else cm.decompose(r, coefs[r.posicao])
         players.append({
             "id": int(r.atleta_id), "apelido": r.apelido, "time": r.team_id, "time_nome": display_name(r.team_id),
             "adversario": display_name(r.adversario), "adversario_id": r.adversario, "mando": bool(r.mando),
@@ -100,7 +107,8 @@ def project(repo: Repository, cfg: dict) -> dict:
         "fechamento": fech, "fechamento_utc": fech_utc, "cartoletas_iniciais": status.get("cartoleta_inicial"),
         "multiplicador_capitao": c["captain_multiplier"], "vice_capitao": bool(c.get("vice_capitao", False)),
         "p_jogar": c["p_jogar"],
-        "reservas": {**c["reservas"], "desvio_por_posicao": played.groupby("posicao").pontos.std().round(2).to_dict()},
+        "reservas": {**c["reservas"], "multiplicador_capitao": c["captain_multiplier"],
+                     "desvio_por_posicao": played.groupby("posicao").pontos.std().round(2).to_dict()},
         "esquemas": schemes, "atletas": sorted(players, key=lambda x: -x["esperado"]),
         "escudos": data["escudos"],
         "coeficientes": {pos: dict(zip(["base", *cm.FEATURES], map(float, v), strict=True)) for pos, v in coefs.items()},
@@ -177,8 +185,8 @@ def live_record(repo: Repository, cfg: dict, season: int, current_round: int) ->
 def team_real_points(t: dict, real: pd.DataFrame, mult: float) -> float:
     """Pontos reais do time sugerido com as regras do Cartola (imprensa, ver D29):
     - capitão ×mult; se não jogou, o vice herda;
-    - banco: o reserva entra no lugar de um titular da posição que não jogou, se jogou e não
-      pontuou negativo;
+    - banco: o reserva entra no lugar de um titular da posição que não jogou, se jogou e pontuou
+      mais que zero; prioridade para o capitão (o reserva herda o multiplicador);
     - Reserva de Luxo: se não foi usado no banco, substitui o titular da posição que pontuou menos,
       se pontuou mais que ele."""
     def played(aid: int) -> bool:
@@ -190,11 +198,16 @@ def team_real_points(t: dict, real: pd.DataFrame, mult: float) -> float:
     lineup = {int(a): pts(int(a)) for a in t["atletas"]}
     pos_of = {int(a): p for a, p in (t.get("posicoes") or {}).items()}
     used = set()
+    cap_id = int(t["capitao"])
+    cap_replaced_by = None
     for pos, rid in (t.get("reservas") or {}).items():
         missing = [a for a in lineup if pos_of.get(a) == pos and not played(a)]
-        if missing and played(rid) and pts(rid) >= 0:
+        missing.sort(key=lambda a: a != cap_id)  # capitão primeiro (critério de prioridade)
+        if missing and played(rid) and pts(rid) > 0:
             lineup[missing[0]] = pts(rid)
             used.add(rid)
+            if missing[0] == cap_id:
+                cap_replaced_by = missing[0]
     lux = t.get("luxo")
     if lux is not None and lux not in used and played(lux):
         pos = next((p for p, r in (t.get("reservas") or {}).items() if r == lux), None)
@@ -203,7 +216,10 @@ def team_real_points(t: dict, real: pd.DataFrame, mult: float) -> float:
             low = min(cands, key=lambda a: lineup[a])
             if pts(lux) > lineup[low]:
                 lineup[low] = pts(lux)
-    cap = t["capitao"] if played(t["capitao"]) else t.get("vice")  # vice só existe se estiver ligado
+    if played(t["capitao"]) or cap_replaced_by is not None:
+        cap = cap_id  # se o reserva entrou no lugar do capitão, a linha dele (com os pontos do reserva) leva o ×mult
+    else:
+        cap = t.get("vice")  # vice só existe se estiver ligado
     total = sum(lineup.values()) + ((mult - 1) * lineup.get(int(cap), 0.0) if cap is not None else 0.0)
     return round(float(total), 1)
 

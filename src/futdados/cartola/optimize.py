@@ -65,7 +65,7 @@ def best_team(players: pd.DataFrame, budget: float, schemes: dict[str, dict[str,
     if reserves and reserves.get("ativo"):
         rv = add_reserves(team, players, reserves)
         if len(rv) and "previsto_se_jogar" in rv:
-            sim = bench_simulation(team, rv, reserves.get("desvio_por_posicao"))
+            sim = bench_simulation(team, rv, reserves.get("desvio_por_posicao"), captain_mult=captain_mult)
             rv["valor_reserva"] = rv.posicao.map(lambda q: sim[q]["banco"])
             rv["valor_luxo"] = rv.posicao.map(lambda q: sim[q]["luxo"])
             rv["luxo"] = False
@@ -116,11 +116,13 @@ def vice_captain(team: pd.DataFrame) -> pd.Series | None:
 
 
 def bench_simulation(team: pd.DataFrame, reserves: pd.DataFrame, sd: dict | None = None, n: int = 4000,
-                     seed: int = 0) -> dict[str, dict[str, float]]:
+                     seed: int = 0, captain_mult: float = 1.5) -> dict[str, dict[str, float]]:
     """Valor esperado do banco por posição, simulando quem joga e quanto pontua.
 
     Regras: o reserva entra no lugar de um titular da posição que não jogou, se o reserva jogou e
-    não pontuou negativo (banco). Se ele não foi usado no banco e for o Reserva de Luxo, substitui o
+    pontuou mais que zero (banco); se o capitão está entre os ausentes, ele tem prioridade e o
+    reserva herda o multiplicador (leitura da regra de prioridade, a confirmar).
+    Se ele não foi usado no banco e for o Reserva de Luxo, substitui o
     titular da posição que pontuou menos, se pontuou mais que ele. Pontos ~ Normal(previsto, desvio
     da posição); jogar ~ Bernoulli(chance de jogar).
     """
@@ -133,8 +135,11 @@ def bench_simulation(team: pd.DataFrame, reserves: pd.DataFrame, sd: dict | None
         s_pts = rng.normal(st.previsto_se_jogar.to_numpy(float), sd.get(r.posicao, 4.0), (n, len(st))) * s_play
         r_play = rng.random(n) < r.p_jogar
         r_pts = rng.normal(r.previsto_se_jogar, sd.get(r.posicao, 4.0), n) * r_play
-        bench_used = (~s_play).any(axis=1) & r_play & (r_pts >= 0)
+        bench_used = (~s_play).any(axis=1) & r_play & (r_pts > 0)
         bench_gain = np.where(bench_used, r_pts, 0.0)
+        if "capitao" in st and st.capitao.any():  # capitão ausente tem prioridade: o reserva herda o ×mult
+            cap_missing = ~s_play[:, np.flatnonzero(st.capitao.to_numpy())[0]]
+            bench_gain = bench_gain + np.where(bench_used & cap_missing, (captain_mult - 1) * r_pts, 0.0)
         low = np.where(s_play, s_pts, np.inf).min(axis=1)  # titular que jogou e pontuou menos
         lux = ~bench_used & r_play & np.isfinite(low) & (r_pts > low)
         lux_gain = np.where(lux, r_pts - np.where(np.isfinite(low), low, 0), 0.0)

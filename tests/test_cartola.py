@@ -104,8 +104,8 @@ def test_team_real_points_with_bench_and_captain():
     t = {"atletas": [1, 2, 3], "capitao": 1, "posicoes": {"1": "ata", "2": "ata", "3": "mei"}, "reservas": {"ata": 4}}
     # 10 + 0 + 6, capitão +0,5×10, reserva do ataque entra no lugar do 2 (não jogou): +4
     assert team_real_points(t, real, 1.5) == pytest.approx(25.0)
-    t["capitao"] = 2  # capitão que não jogou não multiplica nada
-    assert team_real_points(t, real, 1.5) == pytest.approx(20.0)
+    t["capitao"] = 2  # capitão não jogou: o reserva do ataque entra no lugar dele e leva o ×1,5
+    assert team_real_points(t, real, 1.5) == pytest.approx(10 + 4 + 6 + 0.5 * 4)
 
 
 def test_real_points_vice_negative_reserve_and_luxury():
@@ -116,7 +116,7 @@ def test_real_points_vice_negative_reserve_and_luxury():
     # 1 capitão (não jogou), 2 vice? não: 3 é o vice; 1 e 5 atacantes; 3 meia; reserva do ataque 4 (negativo)
     t = {"atletas": [1, 3, 5], "capitao": 1, "vice": 3, "posicoes": {"1": "ata", "3": "mei", "5": "ata"},
          "reservas": {"ata": 4, "mei": 6}, "luxo": 6}
-    # banco do ataque: reserva 4 jogou mas fez -2 → não entra (titular 1 fica com 0)
+    # banco do ataque: reserva 4 jogou mas fez -2 → não entra (titular 1, o capitão, fica com 0)
     # luxo no meio: reserva 6 (9) > titular 3 (6) → troca, meia vale 9
     # capitão 1 não jogou → vice 3 herda; vice (posição de meia) agora vale 9 → +0,5×9
     total = 0 + 9 + 1 + 0.5 * 9
@@ -137,3 +137,19 @@ def test_vice_off_by_default():
     pl = _players(5, per_pos=6).assign(p_jogar=0.95)
     res = best_team(pl, 120, SCHEMES, 1.5, reserves={"ativo": True})
     assert "vice" not in res and res.get("valor_vice", 0) == 0
+
+
+def test_reserve_with_zero_does_not_enter_and_inherits_captaincy():
+    from futdados.cartola.project import team_real_points
+
+    real = pd.DataFrame({"pontos": [0.0, 6.0, 0.0, 8.0], "jogou": [False, True, True, True]}, index=[1, 2, 3, 4])
+    t = {"atletas": [1, 2], "capitao": 1, "posicoes": {"1": "ata", "2": "mei"}, "reservas": {"ata": 3}}
+    assert team_real_points(t, real, 1.5) == pytest.approx(6.0)   # reserva com 0 não entra
+    t["reservas"] = {"ata": 4}
+    assert team_real_points(t, real, 1.5) == pytest.approx(6.0 + 8.0 * 1.5)  # entra no lugar do capitão e herda
+
+
+def test_coach_rule_formula():
+    coef = np.array([10.0, 20.0, 0.0, 0.0])  # soma = 10 + 20 × gols_time
+    rows = pd.DataFrame({"gols_time": [1.0], "p_sg": [0.3], "mando": [1], "p_vitoria": [0.5]})
+    assert cm.coach_prediction(rows, coef)[0] == pytest.approx(30 / 11 + 0.5)

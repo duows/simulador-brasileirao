@@ -5,6 +5,8 @@ const LINKS = [
   ["/", "Tabela"],
   ["/rodada/", "Rodada"],
   ["/times/", "Times"],
+  ["/temporadas/", "Temporadas"],
+  ["/historico/", "Histórico"],
   ["/simulador/", "Simulador"],
   ["/modelo/", "Modelo"],
 ];

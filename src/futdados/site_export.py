@@ -256,4 +256,59 @@ def export_site(repo: Repository, cfg, season: int, as_of_round: int | None = No
     _write(out, "times", {**base, "temporada": season, "rodada_base": based_on, "times": times})
     _write(out, "modelo", {**base, **model_data(cfg, w)})
     _write(out, "financas", {**base, **finance_data(cfg)})
+    hist = history_site_data(repo)
+    if hist:
+        _write(out, "temporadas", {**base, **hist["temporadas"]})
+        _write(out, "tendencias", {**base, **hist["tendencias"]})
     return out
+
+
+def history_site_data(repo: Repository) -> dict | None:
+    """Temporadas 2006-2026 e tendências, a partir das tabelas derivadas (futdados metrics/trends)."""
+    try:
+        tss, lss, trs = repo.table("team_season_stats"), repo.table("league_season_stats"), repo.table("team_round_stats")
+        elo = repo.table("elo_ratings")
+    except Exception:  # noqa: BLE001 - tabelas ainda não calculadas
+        return None
+    trends = repo.get_json("trends") or {}
+    m = repo.matches()
+    done = m[(m.status == "FINISHED") & m.home_goals.notna()]
+    seasons = {}
+    for season, ls in lss.groupby("season"):
+        s = int(season)
+        t = tss[tss.season == season].sort_values("posicao")
+        r = trs[trs.season == season]
+        rounds = sorted(int(x) for x in r["round"].unique())
+        traj = {tid: {"pts": g.sort_values("round").pts.astype(int).tolist(),
+                      "pos": g.sort_values("round").posicao.astype(int).tolist()}
+                for tid, g in r.groupby("team_id")}
+        d = done[done.season == season].assign(gd=lambda x: (x.home_goals - x.away_goals).abs(),
+                                                tot=lambda x: x.home_goals + x.away_goals)
+        big = d.sort_values(["gd", "tot"], ascending=False).head(5)
+        row = ls.iloc[0]
+        seasons[s] = {
+            "temporada": s, "encerrada": bool(row.encerrada), "campeao": row.campeao,
+            "liga": {k: (None if pd.isna(v) else (float(v) if isinstance(v, (int, float, np.number)) else v))
+                     for k, v in row.items() if k not in ("season", "campeao")},
+            "tabela": [{"pos": int(x.posicao), "time": x.team_id, "nome": display_name(x.team_id), "j": int(x.j),
+                        "pts": int(x.pts), "v": int(x.v), "e": int(x.e), "d": int(x.d), "gp": int(x.gp), "gc": int(x.gc),
+                        "pts_pitagoricos": round(float(x.pts_pitagoricos), 1),
+                        "sorte": round(float(x.pts_menos_pitagoricos), 1),
+                        "casa_pts": int(x.casa_pts), "fora_pts": int(x.fora_pts),
+                        "maior_seq_invicto": int(x.maior_seq_invicto), "maior_seq_vitorias": int(x.maior_seq_vitorias)}
+                       for x in t.itertuples()],
+            "rodadas": rounds, "trajetorias": traj,
+            "maiores_goleadas": [{"rodada": int(x.round), "mandante": display_name(x.home_id), "visitante": display_name(x.away_id),
+                                  "placar": f"{int(x.home_goals)}-{int(x.away_goals)}"} for x in big.itertuples()],
+        }
+    # histórico por time (todas as temporadas na elite) e Elo no fim de cada temporada
+    elo_end = elo.sort_values("kickoff_utc").groupby(["season", "team_id"]).tail(1)
+    teams_hist = {}
+    for tid, g in tss.sort_values("season").groupby("team_id"):
+        e = elo_end[elo_end.team_id == tid].set_index("season").elo
+        teams_hist[tid] = {"nome": display_name(tid), "temporadas": [
+            {"temporada": int(x.season), "pos": int(x.posicao), "pts": int(x.pts), "j": int(x.j), "gp": int(x.gp),
+             "gc": int(x.gc), "elo_fim": None if x.season not in e.index else round(float(e.loc[x.season]), 1)}
+            for x in g.itertuples()], "tendencia": (trends.get("times") or {}).get(tid)}
+    return {"temporadas": {"temporadas": seasons, "times_historico": teams_hist},
+            "tendencias": {"liga": trends.get("liga", {})}}

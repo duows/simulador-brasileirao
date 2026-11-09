@@ -1,4 +1,5 @@
 import EvolutionChart from "../../../components/EvolutionChart";
+import LineChart from "../../../components/LineChart";
 import FinanceTable from "../../../components/Finance";
 import MatchCard from "../../../components/MatchCard";
 import { RangeBar } from "../../../components/ProjectionTable";
@@ -60,6 +61,11 @@ export default async function TeamPage({ params }) {
     times: { titulo: { v: h.titulo }, g4: { v: h.g4 }, g6: { v: h.g6 }, rebaixamento: { v: h.rebaixamento } },
   } : { rodadas: [], times: {} };
   const ppg = (s) => (s.j ? s.pts / s.j : 0);
+  const past = load("temporadas").times_historico[slug];
+  const closedHist = past ? past.temporadas.filter((t) => t.j >= 38) : [];
+  const best = closedHist.length ? closedHist.reduce((a, b) => (b.pts > a.pts ? b : a)) : (past?.temporadas[0] || {});
+  const worst = closedHist.length ? closedHist.reduce((a, b) => (b.pts < a.pts ? b : a)) : (past?.temporadas[0] || {});
+  const trend = past?.tendencia;
   const adiados = tm.proximos.filter((j) => j.adiado);
   const proximos = tm.proximos.filter((j) => !j.adiado);
 
@@ -162,6 +168,27 @@ export default async function TeamPage({ params }) {
           .filter((k) => teamHist.times[k] && Math.max(...teamHist.times[k].v.map((x) => x ?? 0)) > 0)}
           names={{ titulo: "Título", g4: "G4", g6: "G6", rebaixamento: "Rebaixamento" }} label={`Chances de ${tm.nome}`} />
       </section>
+
+      {past && (
+        <>
+          <h2>Histórico desde 2006</h2>
+          <p className="lead">
+            {past.temporadas.length} temporadas na Série A desde 2006. Melhor campanha: {best.temporada} ({best.pos}º, {best.pts} pts).
+            Pior: {worst.temporada} ({worst.pos}º, {worst.pts} pts).
+            {trend && <> Tendência de pontos por temporada: <strong>{trend.pontos.rotulo}</strong>; da posição: <strong>{trend.posicao.rotulo}</strong>.</>}
+          </p>
+          <div className="grid">
+            <section className="card"><h3>Posição final por temporada</h3>
+              <LineChart x={past.temporadas.map((t) => t.temporada)} series={[{ id: "pos", label: "posição", values: past.temporadas.map((t) => t.pos) }]}
+                yMin={1} yMax={20} invert ticks={[1, 4, 6, 10, 17, 20]} format={(v) => `${v}º`} legend={false} height={220} label={`Posição final de ${tm.nome} por temporada`} />
+              <p className="small muted">Só as temporadas em que o time estava na Série A. A temporada em andamento entra com a posição atual.</p></section>
+            <section className="card"><h3>Força (Elo) no fim de cada temporada</h3>
+              <LineChart x={past.temporadas.map((t) => t.temporada)} series={[{ id: "elo", label: "Elo", values: past.temporadas.map((t) => t.elo_fim) }]}
+                format={(v) => num(v, 0)} legend={false} height={220} label={`Elo de ${tm.nome}`} />
+              <p className="small muted">1.500 ≈ média histórica. Cada vitória sobre um adversário forte rende mais pontos de Elo.</p></section>
+          </div>
+        </>
+      )}
 
       <h2>Finanças</h2>
       {fin.length ? (

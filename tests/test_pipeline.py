@@ -57,6 +57,7 @@ def test_round_pipeline_end_to_end(env):
     assert info["round"] == 1 and info["registered"] == 3
     doc = json.loads(path.read_text(encoding="utf-8"))
     assert doc["aviso"] == AVISO and doc["versao_modelo"] and doc["fontes"] and doc["gerado_em"]
+    assert doc["atribuicao"] == "Football data provided by the Football-Data.org API"
     jogo = doc["jogos"][0]
     probs = jogo["probabilidade_estimada"]
     assert sum(probs.values()) == pytest.approx(1, abs=1e-3)

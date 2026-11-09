@@ -136,12 +136,32 @@ def cmd_verify(args, cfg) -> None:
         raise SystemExit(1)
 
 
+def cmd_simulate_season(args, cfg) -> None:
+    from .pipeline import preseason_json, simulate_preseason
+    from .teams import display_name, team_id
+
+    teams = [team_id(t.strip()) for t in args.teams.split(",")] if args.teams else None
+    table, meta = simulate_preseason(_repo(cfg), cfg, args.season, teams, args.sims)
+    print(f"Pré-temporada {meta['season']} · calendário: {meta['calendar']} · {meta['n_sims']} simulações")
+    pp = meta["prior_promovidos"]
+    print(f"Prior dos promovidos: ataque {pp['ataque']:.2f}, defesa {pp['defesa']:.2f} (1,00 = média da liga)")
+    print(f"{'#':>2} {'Time':<16}{'Pts esp.':>9}{'Faixa':>8}{'Título':>8}{'G4':>7}{'G6':>7}{'Reb.':>7}")
+    for i, r in enumerate(table.itertuples(), start=1):
+        name = display_name(r.team_id) + (" (P)" if r.promovido else "")
+        faixa = f"{r.pos_p10:.0f}-{r.pos_p90:.0f}"
+        print(f"{i:>2} {name:<16}{r.exp_points_final:>9.1f}{faixa:>8}{r.p_titulo:>8.1%}"
+              f"{r.p_g4:>7.1%}{r.p_g6:>7.1%}{r.p_rebaixamento:>7.1%}")
+    if meta["dias_sem_dados"] and meta["dias_sem_dados"] > 200:
+        print(f"ALERTA: último jogo no histórico em {meta['ultimo_jogo_historico']}.")
+    print(f"JSON: {preseason_json(cfg, table, meta)}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
     sub = p.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("ingest-historical", help="carrega 2003-2025 do dataset adaoduque")
+    sub.add_parser("ingest-historical", help="carrega 2010-2024 do footballcsv (CC0)")
     s = sub.add_parser("ingest-api", help="baixa a temporada do football-data.org")
     s.add_argument("--season", type=int, required=True)
     s = sub.add_parser("fit", help="estima os pesos e gera reports/pesos.md")
@@ -163,6 +183,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--season", type=int, required=True)
     s.add_argument("--round", type=int, required=True)
     sub.add_parser("verify-registry", help="confere a cadeia de hashes das previsões")
+    s = sub.add_parser("simulate-season", help="projeção de pré-temporada (campeonato inteiro)")
+    s.add_argument("--season", type=int, required=True)
+    s.add_argument("--teams", help="times separados por vírgula, se a API ainda não tem o calendário")
+    s.add_argument("--sims", type=int, help="número de simulações (padrão no YAML: 10 mil)")
     return p
 
 
@@ -176,6 +200,7 @@ COMMANDS = {
     "predict-round": cmd_predict_round,
     "post-round": cmd_post_round,
     "verify-registry": cmd_verify,
+    "simulate-season": cmd_simulate_season,
 }
 
 

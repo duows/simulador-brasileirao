@@ -23,8 +23,8 @@ from .teams import display_name
 SOURCES = [
     {"nome": "football-data.org (API v4, competição BSA)", "url": "https://www.football-data.org",
      "uso": "jogos e classificação da temporada corrente"},
-    {"nome": "Brasileirao_Dataset, de Adão Duque", "url": "https://github.com/adaoduque/Brasileirao_Dataset",
-     "uso": "resultados históricos 2003-2025"},
+    {"nome": "footballcsv/cache.wfb (domínio público, CC0 1.0)", "url": "https://github.com/footballcsv/cache.wfb",
+     "uso": "resultados históricos 2010-2024"},
 ]
 
 LINGUAGEM = ("Os números são probabilidades estimadas pelo modelo e projeções. "
@@ -46,6 +46,7 @@ def video_json(cfg, w: Weights, tipo: str, dados: dict, slug: str) -> Path:
         "versao_modelo": w.model_version,
         "meia_vida_dias": w.half_life_days,
         "aviso": cfg["output"]["aviso"],
+        "atribuicao": cfg["output"]["atribuicao"],
         "linguagem": LINGUAGEM,
         "fontes": SOURCES,
         **dados,
@@ -57,10 +58,16 @@ def video_json(cfg, w: Weights, tipo: str, dados: dict, slug: str) -> Path:
 
 
 def season_features(repo: Repository, cfg, w: Weights, season: int,
-                    as_of_round: int | None = None) -> pd.DataFrame:
+                    as_of_round: int | None = None,
+                    extra_matches: list[dict] | None = None) -> pd.DataFrame:
     """Fatores de todos os jogos da temporada. Com `as_of_round`, esconde os resultados
-    das rodadas seguintes (para reconstituir o que o modelo veria naquela data)."""
+    das rodadas seguintes (para reconstituir o que o modelo veria naquela data).
+    `extra_matches` acrescenta jogos que não estão no banco (calendário gerado)."""
     matches = repo.matches()
+    if extra_matches:
+        extra = pd.DataFrame(extra_matches)
+        extra["kickoff_utc"] = pd.to_datetime(extra["kickoff_utc"], utc=True)
+        matches = pd.concat([matches, extra], ignore_index=True)
     if as_of_round is not None:
         hide = (matches.season == season) & (matches["round"] > as_of_round)
         matches.loc[hide, ["home_goals", "away_goals"]] = np.nan
@@ -268,3 +275,101 @@ def post_round(repo: Repository, cfg, season: int, round_: int) -> tuple[Path, d
     projection_json(cfg, after, meta)
     slug = f"pos-rodada-{season}-r{round_:02d}"
     return video_json(cfg, w, "pos_rodada", dados, slug), {"brier": dados["brier_rodada"], "n": len(jogos)}
+
+
+# ------------------------------------------------------------- pré-temporada
+def simulate_preseason(repo: Repository, cfg, season: int, teams: list[str] | None = None,
+                       n_sims: int | None = None) -> tuple[pd.DataFrame, dict]:
+    """Projeção de pré-temporada: nenhum jogo da temporada é considerado disputado.
+
+    Calendário: o da API, se já estiver no banco; senão uma tabela balanceada gerada a
+    partir de `teams`. A força inicial de cada time vem só das temporadas anteriores, com
+    regressão à média; promovidos partem do desempenho histórico médio de promovidos.
+    """
+    from .simulate.schedule import generate_schedule
+
+    w = load_weights(cfg)
+    season_m = repo.matches(season)
+    extra, calendar = None, "api"
+    if season_m.empty:
+        if not teams:
+            raise ValueError(f"Não há calendário de {season} no banco. Rode `ingest-api --season "
+                             f"{season}` ou informe os times com --teams.")
+        pcfg = cfg.get("preseason", {})
+        extra = generate_schedule(teams, season, pcfg.get("start_date", "04-11"),
+                                  int(pcfg.get("kickoff_hour_utc", 22)))
+        calendar = "gerado"
+    elif season_m.status.eq("FINISHED").any():
+        calendar = "api (resultados da temporada escondidos para a pré-temporada)"
+    feat = season_features(repo, cfg, w, season, as_of_round=0, extra_matches=extra)
+    table = simulate_season(feat, w, cfg, int(feat["round"].max()), n_sims=n_sims)
+
+    # força inicial: fatores no primeiro jogo de cada time
+    first = {}
+    for r in feat.sort_values("kickoff_utc").itertuples():
+        for tid, att, dfn, promo in ((r.home_id, r.ataque_h, r.defesa_adversario_a, r.raw_promoted_h),
+                                     (r.away_id, r.ataque_a, r.defesa_adversario_h, r.raw_promoted_a)):
+            first.setdefault(tid, (float(np.exp(att)), float(np.exp(dfn)), bool(promo)))
+    table["ataque_inicial"] = table.team_id.map(lambda t: first[t][0])
+    table["defesa_inicial"] = table.team_id.map(lambda t: first[t][1])
+    table["promovido"] = table.team_id.map(lambda t: first[t][2])
+
+    hist = repo.matches()
+    hist = hist[(hist.season < season) & (hist.status == "FINISHED")]
+    last_game = hist.kickoff_utc.max() if not hist.empty else None
+    season_start = feat.kickoff_utc.min()
+    gap_days = int((season_start - last_game).days) if last_game is not None else None
+    meta = {"season": season, "calendar": calendar, "model_version": w.model_version,
+            "n_sims": int(n_sims or cfg["simulation"]["n_sims"]), "max_round": int(feat["round"].max()),
+            "prior_promovidos": {"ataque": round(float(feat.raw_prior_att.iloc[0]), 3),
+                                 "defesa": round(float(feat.raw_prior_def.iloc[0]), 3)},
+            "ultimo_jogo_historico": None if last_game is None else last_game.strftime("%Y-%m-%d"),
+            "dias_sem_dados": gap_days}
+    return table, meta
+
+
+def preseason_json(cfg, table: pd.DataFrame, meta: dict) -> Path:
+    w = load_weights(cfg)
+    linhas = []
+    for i, r in enumerate(table.itertuples(), start=1):
+        linhas.append({
+            "posicao_projetada": i,
+            "time": {"id": r.team_id, "nome": display_name(r.team_id)},
+            "promovido": bool(r.promovido),
+            "forca_inicial": {"ataque": round(float(r.ataque_inicial), 3),
+                              "defesa": round(float(r.defesa_inicial), 3),
+                              "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, "
+                                         "defesa acima de 1 sofre mais"},
+            "pontos_esperados": round(float(r.exp_points_final), 1),
+            "faixa_posicao_final": {"p10": int(round(r.pos_p10)), "mediana": int(round(r.pos_p50)),
+                                    "p90": int(round(r.pos_p90))},
+            "chance_titulo": round(float(r.p_titulo), 4),
+            "chance_g4": round(float(r.p_g4), 4),
+            "chance_g6": round(float(r.p_g6), 4),
+            "chance_rebaixamento": round(float(r.p_rebaixamento), 4),
+        })
+    alertas = []
+    if meta["dias_sem_dados"] is not None and meta["dias_sem_dados"] > 200:
+        alertas.append(f"O último jogo no histórico é de {meta['ultimo_jogo_historico']} "
+                       f"({meta['dias_sem_dados']} dias antes do início). As forças podem estar "
+                       "desatualizadas: complete as temporadas que faltam com `ingest-api`.")
+    if meta["calendar"] == "gerado":
+        alertas.append("Calendário gerado pelo sistema (tabela balanceada, uma rodada por semana). "
+                       "Descanso e jogos no meio da semana não refletem o calendário oficial.")
+    dados = {
+        "titulo": f"Projeção de pré-temporada · Brasileirão {meta['season']}",
+        "temporada": meta["season"],
+        "calendario": meta["calendar"],
+        "simulacoes": meta["n_sims"],
+        "metodo": ("Antes da primeira rodada. A força inicial de cada time vem das temporadas anteriores, "
+                   "com decaimento no tempo e regressão à média (5 jogos fictícios na média da liga). "
+                   "Promovidos partem do desempenho médio histórico de promovidos no primeiro ano. "
+                   "O campeonato inteiro é simulado a partir da matriz de placares de cada jogo; a faixa "
+                   "de posição final vai do percentil 10 ao 90."),
+        "prior_promovidos": meta["prior_promovidos"],
+        "ultimo_jogo_historico": meta["ultimo_jogo_historico"],
+        "alertas": alertas,
+        "criterios_desempate": cfg["simulation"]["tiebreakers"],
+        "tabela": linhas,
+    }
+    return video_json(cfg, w, "pre_temporada", dados, f"pre-temporada-{meta['season']}")

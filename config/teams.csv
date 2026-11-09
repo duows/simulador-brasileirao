@@ -1,48 +1,48 @@
 team_id,display_name,aliases
-america-mg,América-MG,America-MG|América Mineiro|America Mineiro|América FC|América Futebol Clube|America FC (MG)
+america-mg,América-MG,America-MG|América Mineiro|America Mineiro|América FC|América Futebol Clube|America FC (MG)|América MG
 america-rn,América-RN,America-RN|América de Natal
-athletico-pr,Athletico-PR,Athletico-PR|Athletico Paranaense|CA Paranaense|Atlético-PR|Atletico-PR|Club Athletico Paranaense|Athletico
+athletico-pr,Athletico-PR,Athletico-PR|Athletico Paranaense|CA Paranaense|Atlético-PR|Atletico-PR|Club Athletico Paranaense|Athletico|Atlético PR
 atletico-go,Atlético-GO,Atletico-GO|Atlético Goianiense|Atletico Goianiense|AC Goianiense|Atlético Clube Goianiense
 atletico-mg,Atlético-MG,Atletico-MG|Atlético Mineiro|Atletico Mineiro|CA Mineiro|Clube Atlético Mineiro|Atlético
-avai,Avaí,Avai|Avaí FC
-bahia,Bahia,Bahia|EC Bahia|Esporte Clube Bahia
+avai,Avaí,Avai|Avaí FC|Avaí SC
+bahia,Bahia,Bahia|EC Bahia|Esporte Clube Bahia|Bahia BA
 barueri,Barueri,Barueri|Grêmio Barueri
-botafogo,Botafogo,Botafogo-RJ|Botafogo|Botafogo FR|Botafogo de Futebol e Regatas
+botafogo,Botafogo,Botafogo-RJ|Botafogo|Botafogo FR|Botafogo de Futebol e Regatas|Botafogo RJ
 bragantino,Bragantino,Bragantino|Red Bull Bragantino|RB Bragantino|Bragantino-SP
 brasiliense,Brasiliense,Brasiliense
-csa,CSA,CSA|CS Alagoano
-ceara,Ceará,Ceara|Ceará|Ceará SC|Ceara SC|Ceará Sporting Club
+csa,CSA,CSA|CS Alagoano|CSA AL
+ceara,Ceará,Ceara|Ceará|Ceará SC|Ceara SC|Ceará Sporting Club|Ceará CE
 chapecoense,Chapecoense,Chapecoense|Chapecoense AF|Associação Chapecoense de Futebol|Chapecoense-SC
-corinthians,Corinthians,Corinthians|SC Corinthians Paulista|Sport Club Corinthians Paulista
-coritiba,Coritiba,Coritiba|Coritiba FBC|Coritiba Foot Ball Club
-criciuma,Criciúma,Criciuma|Criciúma|Criciúma EC|Criciuma EC
-cruzeiro,Cruzeiro,Cruzeiro|Cruzeiro EC|Cruzeiro Esporte Clube
-cuiaba,Cuiabá,Cuiaba|Cuiabá|Cuiabá EC|Cuiaba EC
-figueirense,Figueirense,Figueirense
-flamengo,Flamengo,Flamengo|CR Flamengo|Clube de Regatas do Flamengo
-fluminense,Fluminense,Fluminense|Fluminense FC
-fortaleza,Fortaleza,Fortaleza|Fortaleza EC|Fortaleza Esporte Clube
-goias,Goiás,Goias|Goiás|Goiás EC|Goias EC
-gremio,Grêmio,Gremio|Grêmio|Grêmio FBPA|Gremio FBPA
+corinthians,Corinthians,Corinthians|SC Corinthians Paulista|Sport Club Corinthians Paulista|Corinthians SP
+coritiba,Coritiba,Coritiba|Coritiba FBC|Coritiba Foot Ball Club|Coritiba PR
+criciuma,Criciúma,Criciuma|Criciúma|Criciúma EC|Criciuma EC|Criciúma SC
+cruzeiro,Cruzeiro,Cruzeiro|Cruzeiro EC|Cruzeiro Esporte Clube|Cruzeiro MG
+cuiaba,Cuiabá,Cuiaba|Cuiabá|Cuiabá EC|Cuiaba EC|Cuiabá MT
+figueirense,Figueirense,Figueirense|Figueirense SC
+flamengo,Flamengo,Flamengo|CR Flamengo|Clube de Regatas do Flamengo|Flamengo RJ
+fluminense,Fluminense,Fluminense|Fluminense FC|Fluminense RJ
+fortaleza,Fortaleza,Fortaleza|Fortaleza EC|Fortaleza Esporte Clube|Fortaleza CE
+goias,Goiás,Goias|Goiás|Goiás EC|Goias EC|Goiás GO
+gremio,Grêmio,Gremio|Grêmio|Grêmio FBPA|Gremio FBPA|Grêmio Porto Alegre|Grêmio RS
 gremio-prudente,Grêmio Prudente,Gremio Prudente|Grêmio Prudente
-guarani,Guarani,Guarani|Guarani FC
-internacional,Internacional,Internacional|SC Internacional|Sport Club Internacional
+guarani,Guarani,Guarani|Guarani FC|Guarani SP
+internacional,Internacional,Internacional|SC Internacional|Sport Club Internacional|Internacional Porto Alegre
 ipatinga,Ipatinga,Ipatinga
-joinville,Joinville,Joinville
-juventude,Juventude,Juventude|EC Juventude
+joinville,Joinville,Joinville|Joinville SC
+juventude,Juventude,Juventude|EC Juventude|Juventude RS
 mirassol,Mirassol,Mirassol|Mirassol FC|Mirassol Futebol Clube
-nautico,Náutico,Nautico|Náutico
-palmeiras,Palmeiras,Palmeiras|SE Palmeiras|Sociedade Esportiva Palmeiras
+nautico,Náutico,Nautico|Náutico|Náutico PE
+palmeiras,Palmeiras,Palmeiras|SE Palmeiras|Sociedade Esportiva Palmeiras|Palmeiras SP
 parana,Paraná,Parana|Paraná|Paraná Clube
 paysandu,Paysandu,Paysandu
 ponte-preta,Ponte Preta,Ponte Preta|AA Ponte Preta
-portuguesa,Portuguesa,Portuguesa
+portuguesa,Portuguesa,Portuguesa|Portuguesa SP
 remo,Remo,Remo|Clube do Remo
-santa-cruz,Santa Cruz,Santa Cruz
+santa-cruz,Santa Cruz,Santa Cruz|Santa Cruz PE
 santo-andre,Santo André,Santo Andre|Santo André
-santos,Santos,Santos|Santos FC
+santos,Santos,Santos|Santos FC|Santos SP
 sao-caetano,São Caetano,Sao Caetano|São Caetano
 sao-paulo,São Paulo,Sao Paulo|São Paulo|São Paulo FC|Sao Paulo FC
-sport,Sport,Sport|Sport Recife|Sport Club do Recife|SC Recife
-vasco,Vasco,Vasco|Vasco da Gama|CR Vasco da Gama
-vitoria,Vitória,Vitoria|Vitória|EC Vitória|EC Vitoria|Esporte Clube Vitória
+sport,Sport,Sport|Sport Recife|Sport Club do Recife|SC Recife|Sport Recife PE
+vasco,Vasco,Vasco|Vasco da Gama|CR Vasco da Gama|Vasco da Gama RJ
+vitoria,Vitória,Vitoria|Vitória|EC Vitória|EC Vitoria|Esporte Clube Vitória|Vitória BA

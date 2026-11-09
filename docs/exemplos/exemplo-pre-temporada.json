@@ -1,0 +1,507 @@
+{
+  "tipo": "pre_temporada",
+  "gerado_em": "2026-11-09T01:41:08Z",
+  "versao_modelo": "futdados-0.1.0+27624119",
+  "meia_vida_dias": 180.0,
+  "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
+  "atribuicao": "Football data provided by the Football-Data.org API",
+  "linguagem": "Os números são probabilidades estimadas pelo modelo e projeções. Descrevem o que é provável com base no desempenho recente e no histórico; não dizem o que vai acontecer.",
+  "fontes": [
+    {
+      "nome": "football-data.org (API v4, competição BSA)",
+      "url": "https://www.football-data.org",
+      "uso": "jogos e classificação da temporada corrente"
+    },
+    {
+      "nome": "footballcsv/cache.wfb (domínio público, CC0 1.0)",
+      "url": "https://github.com/footballcsv/cache.wfb",
+      "uso": "resultados históricos 2010-2024"
+    }
+  ],
+  "titulo": "Projeção de pré-temporada · Brasileirão 2025",
+  "temporada": 2025,
+  "calendario": "gerado",
+  "simulacoes": 10000,
+  "metodo": "Antes da primeira rodada. A força inicial de cada time vem das temporadas anteriores, com decaimento no tempo e regressão à média (5 jogos fictícios na média da liga). Promovidos partem do desempenho médio histórico de promovidos no primeiro ano. O campeonato inteiro é simulado a partir da matriz de placares de cada jogo; a faixa de posição final vai do percentil 10 ao 90.",
+  "prior_promovidos": {
+    "ataque": 0.876,
+    "defesa": 1.115
+  },
+  "ultimo_jogo_historico": "2024-09-15",
+  "alertas": [
+    "O último jogo no histórico é de 2024-09-15 (209 dias antes do início). As forças podem estar desatualizadas: complete as temporadas que faltam com `ingest-api`.",
+    "Calendário gerado pelo sistema (tabela balanceada, uma rodada por semana). Descanso e jogos no meio da semana não refletem o calendário oficial."
+  ],
+  "criterios_desempate": [
+    "points",
+    "wins",
+    "goal_difference",
+    "goals_for",
+    "head_to_head",
+    "red_cards",
+    "yellow_cards",
+    "draw_lots"
+  ],
+  "tabela": [
+    {
+      "posicao_projetada": 1,
+      "time": {
+        "id": "palmeiras",
+        "nome": "Palmeiras"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.338,
+        "defesa": 0.733,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 62.8,
+      "faixa_posicao_final": {
+        "p10": 1,
+        "mediana": 3,
+        "p90": 10
+      },
+      "chance_titulo": 0.3024,
+      "chance_g4": 0.6654,
+      "chance_g6": 0.7807,
+      "chance_rebaixamento": 0.0112
+    },
+    {
+      "posicao_projetada": 2,
+      "time": {
+        "id": "botafogo",
+        "nome": "Botafogo"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.266,
+        "defesa": 0.877,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 58.8,
+      "faixa_posicao_final": {
+        "p10": 1,
+        "mediana": 5,
+        "p90": 13
+      },
+      "chance_titulo": 0.1477,
+      "chance_g4": 0.4618,
+      "chance_g6": 0.6086,
+      "chance_rebaixamento": 0.0316
+    },
+    {
+      "posicao_projetada": 3,
+      "time": {
+        "id": "flamengo",
+        "nome": "Flamengo"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.199,
+        "defesa": 0.936,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 56.7,
+      "faixa_posicao_final": {
+        "p10": 2,
+        "mediana": 6,
+        "p90": 15
+      },
+      "chance_titulo": 0.0934,
+      "chance_g4": 0.3591,
+      "chance_g6": 0.5052,
+      "chance_rebaixamento": 0.0595
+    },
+    {
+      "posicao_projetada": 4,
+      "time": {
+        "id": "bahia",
+        "nome": "Bahia"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.131,
+        "defesa": 0.957,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 54.8,
+      "faixa_posicao_final": {
+        "p10": 2,
+        "mediana": 8,
+        "p90": 16
+      },
+      "chance_titulo": 0.0572,
+      "chance_g4": 0.277,
+      "chance_g6": 0.4135,
+      "chance_rebaixamento": 0.0897
+    },
+    {
+      "posicao_projetada": 5,
+      "time": {
+        "id": "fortaleza",
+        "nome": "Fortaleza"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.046,
+        "defesa": 0.886,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 54.4,
+      "faixa_posicao_final": {
+        "p10": 2,
+        "mediana": 8,
+        "p90": 17
+      },
+      "chance_titulo": 0.0501,
+      "chance_g4": 0.2529,
+      "chance_g6": 0.3855,
+      "chance_rebaixamento": 0.1005
+    },
+    {
+      "posicao_projetada": 6,
+      "time": {
+        "id": "sao-paulo",
+        "nome": "São Paulo"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 0.994,
+        "defesa": 0.852,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 54.0,
+      "faixa_posicao_final": {
+        "p10": 2,
+        "mediana": 9,
+        "p90": 17
+      },
+      "chance_titulo": 0.0451,
+      "chance_g4": 0.2357,
+      "chance_g6": 0.3687,
+      "chance_rebaixamento": 0.1048
+    },
+    {
+      "posicao_projetada": 7,
+      "time": {
+        "id": "cruzeiro",
+        "nome": "Cruzeiro"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 0.972,
+        "defesa": 0.818,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 53.9,
+      "faixa_posicao_final": {
+        "p10": 2,
+        "mediana": 9,
+        "p90": 17
+      },
+      "chance_titulo": 0.0493,
+      "chance_g4": 0.2365,
+      "chance_g6": 0.3695,
+      "chance_rebaixamento": 0.1139
+    },
+    {
+      "posicao_projetada": 8,
+      "time": {
+        "id": "internacional",
+        "nome": "Internacional"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 0.98,
+        "defesa": 0.85,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 53.6,
+      "faixa_posicao_final": {
+        "p10": 3,
+        "mediana": 9,
+        "p90": 17
+      },
+      "chance_titulo": 0.0443,
+      "chance_g4": 0.2179,
+      "chance_g6": 0.3485,
+      "chance_rebaixamento": 0.1213
+    },
+    {
+      "posicao_projetada": 9,
+      "time": {
+        "id": "atletico-mg",
+        "nome": "Atlético-MG"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.104,
+        "defesa": 1.032,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 52.9,
+      "faixa_posicao_final": {
+        "p10": 3,
+        "mediana": 10,
+        "p90": 17
+      },
+      "chance_titulo": 0.0418,
+      "chance_g4": 0.2032,
+      "chance_g6": 0.3199,
+      "chance_rebaixamento": 0.1392
+    },
+    {
+      "posicao_projetada": 10,
+      "time": {
+        "id": "bragantino",
+        "nome": "Bragantino"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.035,
+        "defesa": 0.975,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 52.6,
+      "faixa_posicao_final": {
+        "p10": 3,
+        "mediana": 10,
+        "p90": 18
+      },
+      "chance_titulo": 0.0322,
+      "chance_g4": 0.1919,
+      "chance_g6": 0.3075,
+      "chance_rebaixamento": 0.1499
+    },
+    {
+      "posicao_projetada": 11,
+      "time": {
+        "id": "gremio",
+        "nome": "Grêmio"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.06,
+        "defesa": 1.052,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 51.7,
+      "faixa_posicao_final": {
+        "p10": 3,
+        "mediana": 11,
+        "p90": 18
+      },
+      "chance_titulo": 0.0294,
+      "chance_g4": 0.1663,
+      "chance_g6": 0.2678,
+      "chance_rebaixamento": 0.1745
+    },
+    {
+      "posicao_projetada": 12,
+      "time": {
+        "id": "vasco",
+        "nome": "Vasco"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 1.005,
+        "defesa": 1.019,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 51.2,
+      "faixa_posicao_final": {
+        "p10": 4,
+        "mediana": 11,
+        "p90": 18
+      },
+      "chance_titulo": 0.026,
+      "chance_g4": 0.1471,
+      "chance_g6": 0.2434,
+      "chance_rebaixamento": 0.1892
+    },
+    {
+      "posicao_projetada": 13,
+      "time": {
+        "id": "fluminense",
+        "nome": "Fluminense"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 0.914,
+        "defesa": 0.939,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 50.6,
+      "faixa_posicao_final": {
+        "p10": 4,
+        "mediana": 12,
+        "p90": 18
+      },
+      "chance_titulo": 0.0195,
+      "chance_g4": 0.1244,
+      "chance_g6": 0.222,
+      "chance_rebaixamento": 0.2178
+    },
+    {
+      "posicao_projetada": 14,
+      "time": {
+        "id": "juventude",
+        "nome": "Juventude"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 0.989,
+        "defesa": 1.093,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 49.5,
+      "faixa_posicao_final": {
+        "p10": 4,
+        "mediana": 13,
+        "p90": 19
+      },
+      "chance_titulo": 0.0155,
+      "chance_g4": 0.1046,
+      "chance_g6": 0.1821,
+      "chance_rebaixamento": 0.2529
+    },
+    {
+      "posicao_projetada": 15,
+      "time": {
+        "id": "vitoria",
+        "nome": "Vitória"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 0.981,
+        "defesa": 1.123,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 49.2,
+      "faixa_posicao_final": {
+        "p10": 5,
+        "mediana": 13,
+        "p90": 19
+      },
+      "chance_titulo": 0.0128,
+      "chance_g4": 0.0965,
+      "chance_g6": 0.1725,
+      "chance_rebaixamento": 0.2701
+    },
+    {
+      "posicao_projetada": 16,
+      "time": {
+        "id": "corinthians",
+        "nome": "Corinthians"
+      },
+      "promovido": false,
+      "forca_inicial": {
+        "ataque": 0.893,
+        "defesa": 1.012,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 48.9,
+      "faixa_posicao_final": {
+        "p10": 5,
+        "mediana": 13,
+        "p90": 19
+      },
+      "chance_titulo": 0.0127,
+      "chance_g4": 0.0865,
+      "chance_g6": 0.1611,
+      "chance_rebaixamento": 0.2789
+    },
+    {
+      "posicao_projetada": 17,
+      "time": {
+        "id": "ceara",
+        "nome": "Ceará"
+      },
+      "promovido": true,
+      "forca_inicial": {
+        "ataque": 0.861,
+        "defesa": 1.07,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 46.4,
+      "faixa_posicao_final": {
+        "p10": 7,
+        "mediana": 15,
+        "p90": 20
+      },
+      "chance_titulo": 0.0052,
+      "chance_g4": 0.049,
+      "chance_g6": 0.0958,
+      "chance_rebaixamento": 0.3992
+    },
+    {
+      "posicao_projetada": 18,
+      "time": {
+        "id": "mirassol",
+        "nome": "Mirassol"
+      },
+      "promovido": true,
+      "forca_inicial": {
+        "ataque": 0.876,
+        "defesa": 1.115,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 46.2,
+      "faixa_posicao_final": {
+        "p10": 7,
+        "mediana": 15,
+        "p90": 20
+      },
+      "chance_titulo": 0.0064,
+      "chance_g4": 0.0465,
+      "chance_g6": 0.0891,
+      "chance_rebaixamento": 0.4063
+    },
+    {
+      "posicao_projetada": 19,
+      "time": {
+        "id": "sport",
+        "nome": "Sport"
+      },
+      "promovido": true,
+      "forca_inicial": {
+        "ataque": 0.86,
+        "defesa": 1.097,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 46.1,
+      "faixa_posicao_final": {
+        "p10": 7,
+        "mediana": 15,
+        "p90": 20
+      },
+      "chance_titulo": 0.0055,
+      "chance_g4": 0.0441,
+      "chance_g6": 0.0888,
+      "chance_rebaixamento": 0.4115
+    },
+    {
+      "posicao_projetada": 20,
+      "time": {
+        "id": "santos",
+        "nome": "Santos"
+      },
+      "promovido": true,
+      "forca_inicial": {
+        "ataque": 0.874,
+        "defesa": 1.209,
+        "leitura": "1,00 = média da liga; ataque acima de 1 marca mais, defesa acima de 1 sofre mais"
+      },
+      "pontos_esperados": 44.9,
+      "faixa_posicao_final": {
+        "p10": 8,
+        "mediana": 16,
+        "p90": 20
+      },
+      "chance_titulo": 0.0035,
+      "chance_g4": 0.0336,
+      "chance_g6": 0.0698,
+      "chance_rebaixamento": 0.478
+    }
+  ]
+}

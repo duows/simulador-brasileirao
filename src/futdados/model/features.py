@@ -66,12 +66,41 @@ def coach_change_dates(matches: pd.DataFrame, extra: pd.DataFrame | None = None)
     return {k: sorted(v) for k, v in changes.items()}
 
 
+def promoted_prior(season_stats: dict, members: dict, season: int) -> tuple[float, float, int] | None:
+    """Desempenho médio dos promovidos no primeiro ano, só com temporadas anteriores a `season`.
+
+    Promovido = time que está na temporada p e não estava na p-1. A razão é gols por jogo
+    dividido pela média da liga naquela temporada. Devolve (ataque, defesa, n) ou None.
+    """
+    att, dfn = [], []
+    for p, by_team in season_stats.items():
+        if p >= season or (p - 1) not in members:
+            continue
+        tot_g = sum(v[0] for v in by_team.values())
+        tot_n = sum(v[2] for v in by_team.values())
+        if tot_n == 0:
+            continue
+        mu = tot_g / tot_n
+        for tid, (gf, ga, n) in by_team.items():
+            if tid not in members[p - 1] and n > 0:
+                att.append(gf / n / mu)
+                dfn.append(ga / n / mu)
+    if not att:
+        return None
+    return float(np.mean(att)), float(np.mean(dfn)), len(att)
+
+
 def build_features(matches: pd.DataFrame, mcfg: dict, coach_extra: pd.DataFrame | None = None,
                    half_life_days: float | None = None) -> pd.DataFrame:
     """Devolve uma linha por jogo com os fatores do mandante (_h) e do visitante (_a)."""
     hl = float(half_life_days or mcfg["half_life_days"])
     k = float(mcfg["prior_matches"])
-    p_att, p_def = float(mcfg["prior_attack_ratio"]), float(mcfg["prior_defense_ratio"])
+    # Prior: times que estavam na temporada anterior são puxados para a média da liga (1,0).
+    # Promovidos são puxados para o desempenho médio histórico de promovidos no 1º ano.
+    auto_prior = str(mcfg["prior_attack_ratio"]).lower() == "auto"
+    fb_att, fb_def = mcfg.get("prior_fallback", [0.85, 1.15])
+    prior = {"att": float(fb_att if auto_prior else mcfg["prior_attack_ratio"]),
+             "def": float(fb_def if auto_prior else mcfg["prior_defense_ratio"]), "season": None}
     n_form = int(mcfg["form_matches"])
     rest_lo, rest_hi = mcfg["rest_clip_days"]
     midweek = set(mcfg["midweek_days"])
@@ -79,6 +108,8 @@ def build_features(matches: pd.DataFrame, mcfg: dict, coach_extra: pd.DataFrame 
     adjust = bool(mcfg.get("opponent_adjust", True))
 
     df = matches.sort_values(["kickoff_utc", "home_id"]).reset_index(drop=True)
+    members = {int(s): set(g.home_id) | set(g.away_id) for s, g in df.groupby("season")}
+    season_stats: dict = defaultdict(lambda: defaultdict(lambda: [0.0, 0.0, 0]))
     changes = coach_change_dates(df, coach_extra)
     teams: dict[str, TeamState] = defaultdict(lambda: TeamState(last_points=deque(maxlen=n_form)))
     league = {"g": 0.0, "w": 0.0, "t": None}
@@ -93,12 +124,17 @@ def build_features(matches: pd.DataFrame, mcfg: dict, coach_extra: pd.DataFrame 
             return 1.25
         return league["g"] / league["w"]  # razão não depende do decaimento comum
 
-    def strength(tid, t_now, mu):
+    def promoted(tid, season):
+        prev = members.get(season - 1)
+        return prev is not None and tid not in prev
+
+    def strength(tid, t_now, mu, season):
         s = teams[tid]
         f = decay(s.t, t_now)
         gf, ga, w = s.gf * f, s.ga * f, s.w * f
-        att = (gf + k * p_att * mu) / (w + k) / mu
-        dfn = (ga + k * p_def * mu) / (w + k) / mu
+        ta, td = (prior["att"], prior["def"]) if promoted(tid, season) else (1.0, 1.0)
+        att = (gf + k * ta * mu) / (w + k) / mu
+        dfn = (ga + k * td * mu) / (w + k) / mu
         return math.log(att), math.log(dfn), w
 
     def ppg(tid, season):
@@ -125,10 +161,16 @@ def build_features(matches: pd.DataFrame, mcfg: dict, coach_extra: pd.DataFrame 
     for ko, group in df.groupby("kickoff_utc", sort=True):
         t_now = _days(ko)
         mu = league_mu(t_now)
+        season_now = int(group["season"].iloc[0])
+        if auto_prior and prior["season"] != season_now:
+            est = promoted_prior(season_stats, members, season_now)
+            if est is not None:
+                prior["att"], prior["def"] = est[0], est[1]
+            prior["season"] = season_now
         rows = []
         for r in group.itertuples():
-            att_h, def_h, w_h = strength(r.home_id, t_now, mu)
-            att_a, def_a, w_a = strength(r.away_id, t_now, mu)
+            att_h, def_h, w_h = strength(r.home_id, t_now, mu, r.season)
+            att_a, def_a, w_a = strength(r.away_id, t_now, mu, r.season)
             ppg_h, nf_h = ppg(r.home_id, r.season)
             ppg_a, nf_a = ppg(r.away_id, r.season)
             rest_h, rest_a = rest(r.home_id, ko), rest(r.away_id, ko)
@@ -151,6 +193,9 @@ def build_features(matches: pd.DataFrame, mcfg: dict, coach_extra: pd.DataFrame 
                 "raw_ppg_h": ppg_h, "raw_ppg_a": ppg_a, "raw_nform_h": nf_h, "raw_nform_a": nf_a,
                 "raw_rest_h": rest_h, "raw_rest_a": rest_a, "raw_newcoach_h": nc_h,
                 "raw_newcoach_a": nc_a, "raw_weight_h": w_h, "raw_weight_a": w_a,
+                "raw_promoted_h": int(promoted(r.home_id, r.season)),
+                "raw_promoted_a": int(promoted(r.away_id, r.season)),
+                "raw_prior_att": prior["att"], "raw_prior_def": prior["def"],
             })
         out.extend(rows)
 
@@ -178,6 +223,8 @@ def build_features(matches: pd.DataFrame, mcfg: dict, coach_extra: pd.DataFrame 
                 s.last_points.append(pts)
                 s.last_kickoff = ko
                 coach_count[tid] += 1
+                st = season_stats[int(r.season)][tid]
+                st[0], st[1], st[2] = st[0] + gf, st[1] + ga, st[2] + 1
             f = decay(league["t"], t_now)
             league["g"] = league["g"] * f + hg + ag
             league["w"] = league["w"] * f + 2

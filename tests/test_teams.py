@@ -5,7 +5,7 @@ import pytest
 from futdados.config import ROOT
 from futdados.teams import UnknownTeamError, display_name, normalize_key, team_id, try_team_id
 
-REPO = ROOT / "data" / "external" / "Brasileirao_Dataset"
+REPO = ROOT / "data" / "external" / "footballcsv-cache.wfb"
 
 
 def test_normalize_strips_accents_and_nbsp():
@@ -47,18 +47,19 @@ def test_display_name():
     assert display_name("sao-paulo") == "São Paulo"
 
 
-@pytest.mark.skipif(not (REPO / "campeonato-brasileiro-full.csv").exists(),
-                    reason="dataset histórico não baixado")
+@pytest.mark.skipif(not (REPO / "2010" / "br.1.csv").exists(), reason="footballcsv não baixado")
 def test_all_historical_names_resolve():
-    import json
-
     import pandas as pd
 
-    df = pd.read_csv(REPO / "campeonato-brasileiro-full.csv", dtype=str)
-    for name in set(df.mandante) | set(df.visitante):
-        team_id(name)
-    for path in (REPO / "data").glob("brasileirao-*.json"):
-        for matches in json.loads(path.read_text(encoding="utf-8")).values():
-            for m in matches:
-                team_id(m["clubs"]["home"])
-                team_id(m["clubs"]["away"])
+    for season in range(2010, 2025):
+        df = pd.read_csv(REPO / str(season) / "br.1.csv", dtype=str)
+        for name in set(df["Team 1"]) | set(df["Team 2"]):
+            team_id(name)
+
+
+@pytest.mark.parametrize("name, expected", [
+    ("Flamengo RJ", "flamengo"), ("Grêmio Porto Alegre", "gremio"), ("Atlético Goianiense", "atletico-go"),
+    ("Athletico Paranaense", "athletico-pr"), ("Atlético Mineiro", "atletico-mg"), ("Vasco da Gama RJ", "vasco"),
+])
+def test_footballcsv_names(name, expected):
+    assert team_id(name) == expected

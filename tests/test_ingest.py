@@ -2,7 +2,7 @@ import pytest
 
 from futdados.ingest.football_data import (FootballDataClient, MissingTokenError, RateLimiter,
                                            parse_matches, parse_standings)
-from futdados.ingest.historical import assign_seasons
+from futdados.ingest.historical import load_season
 
 import pandas as pd
 
@@ -63,7 +63,16 @@ def test_parse_standings():
     assert parse_standings(payload)[0]["team_id"] == "sao-paulo"
 
 
-def test_assign_seasons_by_round_reset():
-    ids = pd.Series([1, 2, 3, 4, 5, 6])
-    rounds = pd.Series([1, 38, 38, 1, 2, 38])
-    assert list(assign_seasons(ids, rounds, 2003)) == [2003, 2003, 2003, 2004, 2004, 2004]
+def test_load_footballcsv_season(tmp_path):
+    d = tmp_path / "2016"
+    d.mkdir()
+    (d / "br.1.csv").write_text(
+        "Round,Date,Time,Timezone,Team 1,FT,HT,Team 2,Comments,UTC\n"
+        "1,Sat May 14 2016,21:00,-0300,São Paulo FC,1-0,0-0,Botafogo RJ,,2016-05-15T00:00Z\n"
+        "38,Sun Dec 11 2016,,,Chapecoense,(*),,Atlético Mineiro,cancelled,\n",
+        encoding="utf-8")
+    rows, skipped = load_season(tmp_path, 2016)
+    assert skipped == 1 and len(rows) == 1
+    r = rows[0]
+    assert (r["home_id"], r["away_id"], r["home_goals"], r["away_goals"]) == ("sao-paulo", "botafogo", 1, 0)
+    assert r["kickoff_utc"] == "2016-05-15T00:00:00Z" and r["source"] == "footballcsv"

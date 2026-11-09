@@ -1,16 +1,16 @@
 # Backtest walk-forward
 
-Temporadas de teste: 2015–2025 (4179 jogos). Para prever a temporada S, os pesos foram ajustados só com temporadas anteriores a S, e os fatores de cada jogo usam só resultados anteriores àquele jogo. A meia-vida (365 dias) foi escolhida em temporadas anteriores ao período de teste.
+Temporadas de teste: 2015–2024 (3671 jogos). Para prever a temporada S, os pesos foram ajustados só com temporadas anteriores a S, e os fatores de cada jogo usam só resultados anteriores àquele jogo. A meia-vida (180 dias) foi escolhida em temporadas anteriores ao período de teste.
 
 ## Resultado
 
-O modelo **supera os dois baselines** no Brier e no log loss. A vantagem sobre a frequência histórica é de 3,4% no Brier e 2,9% no log loss: real, mas pequena. Futebol tem muito acaso e um modelo sem escalação e sem xG não vai muito além disso.
+O modelo **supera os dois baselines** no Brier e no log loss. A vantagem sobre a frequência histórica é de 3,1% no Brier e 2,6% no log loss: real, mas pequena. Futebol tem muito acaso e um modelo sem escalação e sem xG não vai muito além disso.
 
 | Método | Brier (menor é melhor) | Log loss (menor é melhor) | Acerto do resultado mais provável |
 |---|---|---|---|
-| Modelo | 0,6121 | 1,0208 | 49,6% |
-| Frequência histórica (mandante/empate/visitante) | 0,6335 | 1,0515 | 48,3% |
-| Sempre mandante (100% vitória do mandante) | 1,0347 | 17,87* | 48,3% |
+| Modelo | 0,6143 | 1,0242 | 49,4% |
+| Frequência histórica (mandante/empate/visitante) | 0,6337 | 1,0518 | 48,2% |
+| Sempre mandante (100% vitória do mandante) | 1,0357 | 17,89* | 48,2% |
 
 \* "Sempre mandante" dá probabilidade zero a empates e derrotas, então o log loss é enorme (limitado numericamente). Ele serve de referência de acerto, não de probabilidade.
 
@@ -20,37 +20,35 @@ Brier multiclasse: soma dos erros quadráticos nas três classes (0 = perfeito, 
 
 | Temporada | Jogos | Brier modelo | Brier frequência | Log loss modelo | Log loss frequência |
 |---|---|---|---|---|---|
-| 2015 | 380 | 0,6035 | 0,6122 | 1,0089 | 1,0222 |
-| 2016 | 379 | 0,6008 | 0,6078 | 1,0034 | 1,0155 |
-| 2017 | 380 | 0,6504 | 0,6575 | 1,0764 | 1,0856 |
-| 2018 | 380 | 0,5819 | 0,6065 | 0,9771 | 1,0124 |
-| 2019 | 380 | 0,5898 | 0,6336 | 0,9885 | 1,0521 |
-| 2020 | 380 | 0,6315 | 0,6502 | 1,0467 | 1,0746 |
-| 2021 | 380 | 0,6246 | 0,6447 | 1,0373 | 1,0664 |
-| 2022 | 380 | 0,6232 | 0,6534 | 1,0390 | 1,0793 |
-| 2023 | 380 | 0,6195 | 0,6411 | 1,0333 | 1,0627 |
-| 2024 | 380 | 0,6148 | 0,6378 | 1,0249 | 1,0577 |
-| 2025 | 380 | 0,5933 | 0,6236 | 0,9931 | 1,0376 |
+| 2015 | 380 | 0,6007 | 0,6129 | 1,0057 | 1,0230 |
+| 2016 | 379 | 0,5979 | 0,6082 | 0,9993 | 1,0161 |
+| 2017 | 380 | 0,6540 | 0,6570 | 1,0816 | 1,0846 |
+| 2018 | 380 | 0,5806 | 0,6077 | 0,9759 | 1,0144 |
+| 2019 | 380 | 0,5900 | 0,6334 | 0,9888 | 1,0517 |
+| 2020 | 380 | 0,6344 | 0,6496 | 1,0510 | 1,0738 |
+| 2021 | 380 | 0,6268 | 0,6442 | 1,0406 | 1,0658 |
+| 2022 | 380 | 0,6237 | 0,6525 | 1,0397 | 1,0781 |
+| 2023 | 380 | 0,6232 | 0,6406 | 1,0382 | 1,0619 |
+| 2024 | 252 | 0,6101 | 0,6294 | 1,0201 | 1,0462 |
 
 ## Calibração
 
 Se o modelo diz 40%, o evento deveria acontecer perto de 40% das vezes.
-Empates: o modelo estimou em média 26,9% e aconteceram 26,9%.
+Empates: o modelo estimou em média 26,8% e aconteceram 26,9%.
 
 | Resultado | Faixa estimada | Jogos | Estimado (média) | Observado |
 |---|---|---|---|---|
-| mandante | 20%-30% | 81 | 27,0% | 16,0% |
-| mandante | 30%-40% | 746 | 36,3% | 34,2% |
-| mandante | 40%-50% | 1655 | 45,3% | 44,4% |
-| mandante | 50%-60% | 1310 | 54,4% | 57,9% |
-| mandante | 60%-70% | 359 | 63,2% | 65,7% |
-| mandante | 70%-80% | 28 | 72,4% | 71,4% |
-| empate | 10%-20% | 55 | 18,5% | 16,4% |
-| empate | 20%-30% | 3770 | 26,7% | 26,2% |
-| empate | 30%-40% | 354 | 30,9% | 35,9% |
-| visitante | 10%-20% | 1029 | 16,8% | 14,5% |
-| visitante | 20%-30% | 2124 | 24,8% | 24,2% |
-| visitante | 30%-40% | 904 | 33,8% | 35,6% |
-| visitante | 40%-50% | 103 | 43,4% | 47,6% |
+| mandante | 20%-30% | 53 | 27,3% | 15,1% |
+| mandante | 30%-40% | 595 | 36,4% | 31,9% |
+| mandante | 40%-50% | 1511 | 45,4% | 44,7% |
+| mandante | 50%-60% | 1197 | 54,4% | 57,6% |
+| mandante | 60%-70% | 299 | 63,3% | 65,2% |
+| empate | 10%-20% | 40 | 18,6% | 12,5% |
+| empate | 20%-30% | 3343 | 26,5% | 26,3% |
+| empate | 30%-40% | 288 | 31,0% | 35,4% |
+| visitante | 10%-20% | 864 | 16,8% | 15,9% |
+| visitante | 20%-30% | 1967 | 24,8% | 23,7% |
+| visitante | 30%-40% | 753 | 33,6% | 36,4% |
+| visitante | 40%-50% | 76 | 43,0% | 46,1% |
 
 Faixas com menos de 20 jogos foram omitidas.

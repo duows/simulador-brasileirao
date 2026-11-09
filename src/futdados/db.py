@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS matches (
     status      TEXT    NOT NULL,   -- FINISHED, SCHEDULED, TIMED, POSTPONED...
     home_coach  TEXT,
     away_coach  TEXT,
-    source      TEXT    NOT NULL,   -- 'adaoduque' ou 'football-data'
+    source      TEXT    NOT NULL,   -- 'footballcsv', 'football-data' ou 'calendario-gerado'
     ext_id      TEXT,
     updated_at  TEXT    NOT NULL,
     PRIMARY KEY (season, home_id, away_id)  -- em pontos corridos cada mando ocorre 1 vez

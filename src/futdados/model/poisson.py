@@ -99,8 +99,9 @@ def fit(feat, mcfg: dict, half_life_days: float, bootstrap: int | None = None,
     """Ajusta os pesos nos jogos disputados de `feat` (já filtrado para o treino)."""
     feat = feat[feat["status"] == "FINISHED"].dropna(subset=["home_goals"])
     X, y, off, gid = long_format(feat)
-    scale = X.std(axis=0)
-    scale[scale == 0] = 1.0
+    raw_std = X.std(axis=0)
+    scale = raw_std.copy()
+    scale[scale == 0] = 1.0  # fator sem variação: peso fica 0 (não estimável)
     alpha = float(mcfg["ridge_alpha"])
     b = _fit_ridge(X, y, off, alpha, scale)
 
@@ -127,7 +128,7 @@ def fit(feat, mcfg: dict, half_life_days: float, bootstrap: int | None = None,
         intercept=float(b[0]),
         coef={f: float(b[i + 1]) for i, f in enumerate(FEATURES)},
         ci_low=lo, ci_high=hi,
-        feature_std={f: float(scale[i]) for i, f in enumerate(FEATURES)},
+        feature_std={f: float(raw_std[i]) for i, f in enumerate(FEATURES)},
         rho=rho, half_life_days=float(half_life_days),
         train_seasons=sorted(int(s) for s in feat["season"].unique()),
         n_matches=int(n),

@@ -5,7 +5,7 @@
 paths:
   db: data/futdados.sqlite
   raw: data/raw
-  historical_repo: data/external/Brasileirao_Dataset
+  historical_repo: data/external/footballcsv-cache.wfb
   weights: data/model/weights.json
   videos: out/videos
   reports: reports
@@ -18,18 +18,21 @@ api:
   requests_per_minute: 10   # limite do plano grátis
 
 historical:
-  repo_url: https://github.com/adaoduque/Brasileirao_Dataset
-  first_season: 2003
-  last_season_csv: 2024    # 2003-2024 vêm do CSV consolidado
-  json_seasons: [2025]     # 2025 só existe nos JSONs por temporada do repositório
+  # footballcsv (CC0). O repo "world" só tem 2019-2020; cache.wfb tem 2003-2024 (ver DECISIONS D14).
+  repo_url: https://github.com/footballcsv/cache.wfb
+  first_season: 2010
+  last_season: 2024        # 2024 incompleta no cache (até set/2024); completar com ingest-api
 
 model:
   # a. Força de longo prazo (ataque e defesa) com decaimento temporal.
   half_life_days: 365          # escolhida no walk-forward 2010-2014 (ver reports/pesos.md)
   half_life_grid: [60, 90, 180, 365, 730, 1460]
   prior_matches: 5             # jogos "fictícios" que puxam a força para o valor a priori
-  prior_attack_ratio: 0.85     # time sem histórico recente: ataque 15% abaixo da média da liga
-  prior_defense_ratio: 1.15    # ... e sofre 15% a mais que a média
+  # "auto": promovidos partem do desempenho médio histórico de promovidos no 1º ano, estimado
+  # só com temporadas anteriores. Times que estavam na temporada anterior partem da média (1,0).
+  prior_attack_ratio: auto
+  prior_defense_ratio: auto
+  prior_fallback: [0.85, 1.15] # usado só enquanto não há temporada anterior nos dados
   # b. Forma recente
   form_matches: 5
   # d. Descanso e calendário
@@ -40,14 +43,14 @@ model:
   # Estimação
   opponent_adjust: true        # gols ajustados pela força do adversário
   ridge_alpha: 1.0             # força da regularização (escala padronizada)
-  train_first_season: 2006     # 2003-2005 servem só de aquecimento das forças
+  train_first_season: 2011     # 2010 serve só de aquecimento das forças
   bootstrap: 200               # reamostragens para o intervalo de incerteza
   max_goals: 10                # tamanho da matriz de placares
   dixon_coles: false           # ajuste de placares baixos; rho estimado ~ -0,01 (ver DECISIONS.md D09)
 
 backtest:
-  tune_seasons: [2010, 2011, 2012, 2013, 2014]   # escolha da meia-vida
-  test_seasons: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+  tune_seasons: [2012, 2013, 2014]   # escolha da meia-vida
+  test_seasons: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
   calibration_bins: 10
 
 simulation:
@@ -64,6 +67,12 @@ simulation:
     g6: [1, 6]
     rebaixamento: [17, 20]
 
+preseason:
+  # Calendário gerado (só quando a API ainda não publicou a tabela da temporada)
+  start_date: "04-11"          # mês-dia da 1ª rodada; uma rodada por semana, aos sábados
+  kickoff_hour_utc: 22
+
 output:
   focus_team: sao-paulo
+  atribuicao: "Football data provided by the Football-Data.org API"
   aviso: "Projeção estatística baseada em dados históricos. Não é recomendação de aposta."

@@ -58,7 +58,9 @@ def weights_markdown(w: Weights, tune: pd.DataFrame | None = None) -> str:
         eff = math.exp(b * step) - 1
         clear = not (lo <= 0 <= hi)
         meaning = f"{phrase.capitalize()} muda os gols esperados em {pct(eff)}."
-        if not clear:
+        if w.feature_std.get(f, 1.0) == 0:
+            meaning = "Sem dados no histórico (fator sempre 0): peso não estimável, fixado em 0."
+        elif not clear:
             meaning += " Efeito não distinguível de zero."
         lines.append(f"| {label} | {num(b)} | [{num(lo)}; {num(hi)}] | {meaning} |")
     lines += [
@@ -67,14 +69,17 @@ def weights_markdown(w: Weights, tune: pd.DataFrame | None = None) -> str:
         "",
         "- **Ataque e defesa** são taxas de gols com decaimento: um jogo de "
         f"{w.half_life_days:.0f} dias atrás vale metade de um jogo de hoje. Os gols são ajustados "
-        "pela força do adversário, e um time sem histórico recente na Série A começa 15% abaixo "
-        "da média (5 jogos fictícios, configurável).",
+        "pela força do adversário. Cada time é puxado para a média com 5 jogos fictícios "
+        "(regressão à média); promovidos são puxados para o desempenho médio histórico de "
+        "promovidos no primeiro ano, estimado só com temporadas anteriores.",
         "- Pesos de ataque e defesa menores que 1 significam que a diferença observada entre os "
         "times é em parte ruído: o modelo puxa as forças em direção à média.",
         "- **Forma** é medida além da força de longo prazo. Peso pequeno quer dizer que a "
         "sequência recente acrescenta pouco ao que o histórico com decaimento já captura.",
         "- **Descanso** só conta jogos da Série A (copas não estão nos dados). Ver limitações no README.",
-        "- **Técnico novo** só tem dados por jogo a partir de 2014.",
+        "- **Técnico novo**: a fonte histórica (footballcsv) não traz técnicos, então o fator vale "
+        "0 em todo o histórico e o peso não é estimável (fica 0). Só passa a contar quando houver "
+        "trocas registradas (API ou config/coach_changes.csv) **e** um histórico com técnicos para estimar o peso.",
     ]
     if tune is not None and not tune.empty:
         lines += ["", "## Escolha da meia-vida (walk-forward nas temporadas de ajuste)", "",

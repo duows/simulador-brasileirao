@@ -1,9 +1,10 @@
 {
   "tipo": "estimativas_rodada",
-  "gerado_em": "2026-11-09T01:20:20Z",
-  "versao_modelo": "futdados-0.1.0+dbe414fa",
-  "meia_vida_dias": 365.0,
+  "gerado_em": "2026-11-09T01:43:21Z",
+  "versao_modelo": "futdados-0.1.0+27624119",
+  "meia_vida_dias": 180.0,
   "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
+  "atribuicao": "Football data provided by the Football-Data.org API",
   "linguagem": "Os números são probabilidades estimadas pelo modelo e projeções. Descrevem o que é provável com base no desempenho recente e no histórico; não dizem o que vai acontecer.",
   "fontes": [
     {
@@ -12,688 +13,80 @@
       "uso": "jogos e classificação da temporada corrente"
     },
     {
-      "nome": "Brasileirao_Dataset, de Adão Duque",
-      "url": "https://github.com/adaoduque/Brasileirao_Dataset",
-      "uso": "resultados históricos 2003-2025"
+      "nome": "footballcsv/cache.wfb (domínio público, CC0 1.0)",
+      "url": "https://github.com/footballcsv/cache.wfb",
+      "uso": "resultados históricos 2010-2024"
     }
   ],
-  "titulo": "EXEMPLO (reconstituído, não registrado) · rodada 31 · 2025",
-  "temporada": 2025,
+  "titulo": "EXEMPLO (reconstituído, não registrado) · rodada 31 · 2023",
+  "temporada": 2023,
   "rodada": 31,
   "jogos": [
-    {
-      "mandante": {
-        "id": "santos",
-        "nome": "Santos"
-      },
-      "visitante": {
-        "id": "fortaleza",
-        "nome": "Fortaleza"
-      },
-      "rodada": 31,
-      "inicio_utc": "2025-11-01T19:01:00Z",
-      "gols_esperados": {
-        "mandante": 1.301,
-        "visitante": 1.051
-      },
-      "gols_base": 0.951,
-      "probabilidade_estimada": {
-        "mandante": 0.4223,
-        "empate": 0.2772,
-        "visitante": 0.3006
-      },
-      "placar_mais_provavel": {
-        "mandante": 1,
-        "visitante": 1,
-        "probabilidade": 0.1301
-      },
-      "fatores": [
-        {
-          "fator": "ataque",
-          "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
-          "mandante": {
-            "valor": -0.184,
-            "efeito_gols": -0.153,
-            "multiplicador": 0.872
-          },
-          "visitante": {
-            "valor": -0.131,
-            "efeito_gols": -0.097,
-            "multiplicador": 0.907
-          }
-        },
-        {
-          "fator": "defesa_adversario",
-          "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
-          "mandante": {
-            "valor": 0.093,
-            "efeito_gols": 0.073,
-            "multiplicador": 1.068
-          },
-          "visitante": {
-            "valor": 0.243,
-            "efeito_gols": 0.172,
-            "multiplicador": 1.187
-          }
-        },
-        {
-          "fator": "mando",
-          "rotulo": "Mando de campo",
-          "peso": 0.4104,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": 0.458,
-            "multiplicador": 1.507
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "forma",
-          "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
-          "mandante": {
-            "valor": -0.2,
-            "efeito_gols": -0.008,
-            "multiplicador": 0.993
-          },
-          "visitante": {
-            "valor": 0.2,
-            "efeito_gols": 0.007,
-            "multiplicador": 1.007
-          }
-        },
-        {
-          "fator": "descanso",
-          "rotulo": "Dias de descanso",
-          "peso": 0.0002,
-          "mandante": {
-            "valor": -0.853,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.853,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "meio_de_semana",
-          "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "tecnico_novo",
-          "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": -0.021,
-            "multiplicador": 0.981
-          },
-          "visitante": {
-            "valor": -1.0,
-            "efeito_gols": 0.019,
-            "multiplicador": 1.019
-          }
-        }
-      ],
-      "contexto": {
-        "pontos_por_jogo_ultimos": {
-          "mandante": 1.0,
-          "visitante": 1.2,
-          "jogos_considerados": [
-            5,
-            5
-          ]
-        },
-        "dias_descanso": {
-          "mandante": 5.999305555555556,
-          "visitante": 6.852777777777778
-        },
-        "tecnico_novo": {
-          "mandante": true,
-          "visitante": false
-        }
-      }
-    },
-    {
-      "mandante": {
-        "id": "cruzeiro",
-        "nome": "Cruzeiro"
-      },
-      "visitante": {
-        "id": "vitoria",
-        "nome": "Vitória"
-      },
-      "rodada": 31,
-      "inicio_utc": "2025-11-01T19:02:00Z",
-      "gols_esperados": {
-        "mandante": 1.511,
-        "visitante": 0.687
-      },
-      "gols_base": 0.951,
-      "probabilidade_estimada": {
-        "mandante": 0.5711,
-        "empate": 0.2599,
-        "visitante": 0.169
-      },
-      "placar_mais_provavel": {
-        "mandante": 1,
-        "visitante": 0,
-        "probabilidade": 0.1678
-      },
-      "fatores": [
-        {
-          "fator": "ataque",
-          "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
-          "mandante": {
-            "valor": -0.093,
-            "efeito_gols": -0.083,
-            "multiplicador": 0.934
-          },
-          "visitante": {
-            "valor": -0.21,
-            "efeito_gols": -0.127,
-            "multiplicador": 0.855
-          }
-        },
-        {
-          "fator": "defesa_adversario",
-          "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
-          "mandante": {
-            "valor": 0.192,
-            "efeito_gols": 0.164,
-            "multiplicador": 1.145
-          },
-          "visitante": {
-            "valor": -0.259,
-            "efeito_gols": -0.148,
-            "multiplicador": 0.833
-          }
-        },
-        {
-          "fator": "mando",
-          "rotulo": "Mando de campo",
-          "peso": 0.4104,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": 0.496,
-            "multiplicador": 1.507
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "forma",
-          "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
-          "mandante": {
-            "valor": -0.4,
-            "efeito_gols": -0.016,
-            "multiplicador": 0.987
-          },
-          "visitante": {
-            "valor": 0.4,
-            "efeito_gols": 0.011,
-            "multiplicador": 1.014
-          }
-        },
-        {
-          "fator": "descanso",
-          "rotulo": "Dias de descanso",
-          "peso": 0.0002,
-          "mandante": {
-            "valor": -1.188,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 1.188,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "meio_de_semana",
-          "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "tecnico_novo",
-          "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          }
-        }
-      ],
-      "contexto": {
-        "pontos_por_jogo_ultimos": {
-          "mandante": 1.4,
-          "visitante": 1.8,
-          "jogos_considerados": [
-            5,
-            5
-          ]
-        },
-        "dias_descanso": {
-          "mandante": 5.813194444444444,
-          "visitante": 7.000694444444444
-        },
-        "tecnico_novo": {
-          "mandante": false,
-          "visitante": false
-        }
-      }
-    },
-    {
-      "mandante": {
-        "id": "mirassol",
-        "nome": "Mirassol"
-      },
-      "visitante": {
-        "id": "botafogo",
-        "nome": "Botafogo"
-      },
-      "rodada": 31,
-      "inicio_utc": "2025-11-01T21:00:00Z",
-      "gols_esperados": {
-        "mandante": 1.552,
-        "visitante": 0.936
-      },
-      "gols_base": 0.951,
-      "probabilidade_estimada": {
-        "mandante": 0.517,
-        "empate": 0.2554,
-        "visitante": 0.2277
-      },
-      "placar_mais_provavel": {
-        "mandante": 1,
-        "visitante": 0,
-        "probabilidade": 0.129
-      },
-      "fatores": [
-        {
-          "fator": "ataque",
-          "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
-          "mandante": {
-            "valor": 0.251,
-            "efeito_gols": 0.229,
-            "multiplicador": 1.205
-          },
-          "visitante": {
-            "valor": 0.074,
-            "efeito_gols": 0.052,
-            "multiplicador": 1.056
-          }
-        },
-        {
-          "fator": "defesa_adversario",
-          "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
-          "mandante": {
-            "valor": -0.173,
-            "efeito_gols": -0.15,
-            "multiplicador": 0.885
-          },
-          "visitante": {
-            "valor": -0.079,
-            "efeito_gols": -0.052,
-            "multiplicador": 0.946
-          }
-        },
-        {
-          "fator": "mando",
-          "rotulo": "Mando de campo",
-          "peso": 0.4104,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": 0.504,
-            "multiplicador": 1.507
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "forma",
-          "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": 0.042,
-            "multiplicador": 1.034
-          },
-          "visitante": {
-            "valor": -1.0,
-            "efeito_gols": -0.032,
-            "multiplicador": 0.967
-          }
-        },
-        {
-          "fator": "descanso",
-          "rotulo": "Dias de descanso",
-          "peso": 0.0002,
-          "mandante": {
-            "valor": 0.897,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": -0.897,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "meio_de_semana",
-          "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "tecnico_novo",
-          "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": -0.023,
-            "multiplicador": 0.981
-          },
-          "visitante": {
-            "valor": -1.0,
-            "efeito_gols": 0.018,
-            "multiplicador": 1.019
-          }
-        }
-      ],
-      "contexto": {
-        "pontos_por_jogo_ultimos": {
-          "mandante": 2.4,
-          "visitante": 1.4,
-          "jogos_considerados": [
-            5,
-            5
-          ]
-        },
-        "dias_descanso": {
-          "mandante": 6.979166666666667,
-          "visitante": 6.081944444444445
-        },
-        "tecnico_novo": {
-          "mandante": true,
-          "visitante": false
-        }
-      }
-    },
-    {
-      "mandante": {
-        "id": "flamengo",
-        "nome": "Flamengo"
-      },
-      "visitante": {
-        "id": "sport",
-        "nome": "Sport"
-      },
-      "rodada": 31,
-      "inicio_utc": "2025-11-02T00:00:00Z",
-      "gols_esperados": {
-        "mandante": 2.148,
-        "visitante": 0.585
-      },
-      "gols_base": 0.951,
-      "probabilidade_estimada": {
-        "mandante": 0.7361,
-        "empate": 0.1763,
-        "visitante": 0.0875
-      },
-      "placar_mais_provavel": {
-        "mandante": 2,
-        "visitante": 0,
-        "probabilidade": 0.15
-      },
-      "fatores": [
-        {
-          "fator": "ataque",
-          "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
-          "mandante": {
-            "valor": 0.272,
-            "efeito_gols": 0.297,
-            "multiplicador": 1.224
-          },
-          "visitante": {
-            "valor": -0.411,
-            "efeito_gols": -0.23,
-            "multiplicador": 0.737
-          }
-        },
-        {
-          "fator": "defesa_adversario",
-          "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
-          "mandante": {
-            "valor": 0.266,
-            "efeito_gols": 0.275,
-            "multiplicador": 1.206
-          },
-          "visitante": {
-            "valor": -0.234,
-            "efeito_gols": -0.124,
-            "multiplicador": 0.848
-          }
-        },
-        {
-          "fator": "mando",
-          "rotulo": "Mando de campo",
-          "peso": 0.4104,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": 0.603,
-            "multiplicador": 1.507
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "forma",
-          "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": 0.05,
-            "multiplicador": 1.034
-          },
-          "visitante": {
-            "valor": -1.0,
-            "efeito_gols": -0.026,
-            "multiplicador": 0.967
-          }
-        },
-        {
-          "fator": "descanso",
-          "rotulo": "Dias de descanso",
-          "peso": 0.0002,
-          "mandante": {
-            "valor": -0.044,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.044,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "meio_de_semana",
-          "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "tecnico_novo",
-          "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": -0.028,
-            "multiplicador": 0.981
-          },
-          "visitante": {
-            "valor": -1.0,
-            "efeito_gols": 0.014,
-            "multiplicador": 1.019
-          }
-        }
-      ],
-      "contexto": {
-        "pontos_por_jogo_ultimos": {
-          "mandante": 1.4,
-          "visitante": 0.4,
-          "jogos_considerados": [
-            5,
-            5
-          ]
-        },
-        "dias_descanso": {
-          "mandante": 7.060416666666667,
-          "visitante": 7.104166666666667
-        },
-        "tecnico_novo": {
-          "mandante": true,
-          "visitante": false
-        }
-      }
-    },
     {
       "mandante": {
         "id": "bahia",
         "nome": "Bahia"
       },
       "visitante": {
-        "id": "bragantino",
-        "nome": "Bragantino"
+        "id": "fluminense",
+        "nome": "Fluminense"
       },
       "rodada": 31,
-      "inicio_utc": "2025-11-02T19:01:00Z",
+      "inicio_utc": "2023-10-31T22:00:00Z",
       "gols_esperados": {
-        "mandante": 1.68,
-        "visitante": 0.927
+        "mandante": 1.605,
+        "visitante": 1.219
       },
-      "gols_base": 0.951,
+      "gols_base": 0.984,
       "probabilidade_estimada": {
-        "mandante": 0.5511,
-        "empate": 0.2419,
-        "visitante": 0.207
+        "mandante": 0.4635,
+        "empate": 0.2463,
+        "visitante": 0.2902
       },
       "placar_mais_provavel": {
         "mandante": 1,
-        "visitante": 0,
-        "probabilidade": 0.124
+        "visitante": 1,
+        "probabilidade": 0.1162
       },
       "fatores": [
         {
           "fator": "ataque",
           "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
+          "peso": 0.7054,
           "mandante": {
-            "valor": 0.01,
-            "efeito_gols": 0.009,
-            "multiplicador": 1.007
+            "valor": -0.033,
+            "efeito_gols": -0.029,
+            "multiplicador": 0.977
           },
           "visitante": {
-            "valor": -0.083,
-            "efeito_gols": -0.058,
-            "multiplicador": 0.94
+            "valor": 0.14,
+            "efeito_gols": 0.108,
+            "multiplicador": 1.104
           }
         },
         {
           "fator": "defesa_adversario",
           "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
+          "peso": 0.6262,
           "mandante": {
-            "valor": 0.166,
-            "efeito_gols": 0.15,
-            "multiplicador": 1.124
+            "valor": 0.071,
+            "efeito_gols": 0.057,
+            "multiplicador": 1.046
           },
           "visitante": {
-            "valor": 0.099,
-            "efeito_gols": 0.065,
-            "multiplicador": 1.072
+            "valor": 0.137,
+            "efeito_gols": 0.094,
+            "multiplicador": 1.089
           }
         },
         {
           "fator": "mando",
           "rotulo": "Mando de campo",
-          "peso": 0.4104,
+          "peso": 0.3991,
           "mandante": {
             "valor": 1.0,
-            "efeito_gols": 0.526,
-            "multiplicador": 1.507
+            "efeito_gols": 0.507,
+            "multiplicador": 1.491
           },
           "visitante": {
             "valor": 0.0,
@@ -704,60 +97,60 @@
         {
           "fator": "forma",
           "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
+          "peso": 0.0194,
           "mandante": {
             "valor": 1.0,
-            "efeito_gols": 0.043,
-            "multiplicador": 1.034
+            "efeito_gols": 0.025,
+            "multiplicador": 1.02
           },
           "visitante": {
             "valor": -1.0,
-            "efeito_gols": -0.032,
-            "multiplicador": 0.967
+            "efeito_gols": -0.021,
+            "multiplicador": 0.981
           }
         },
         {
           "fator": "descanso",
           "rotulo": "Dias de descanso",
-          "peso": 0.0002,
+          "peso": -0.0014,
           "mandante": {
-            "valor": 0.873,
-            "efeito_gols": 0.0,
+            "valor": 0.083,
+            "efeito_gols": -0.0,
             "multiplicador": 1.0
           },
           "visitante": {
-            "valor": -0.873,
-            "efeito_gols": -0.0,
+            "valor": -0.083,
+            "efeito_gols": 0.0,
             "multiplicador": 1.0
           }
         },
         {
           "fator": "meio_de_semana",
           "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
+          "peso": 0.049,
           "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
+            "valor": 1.0,
+            "efeito_gols": 0.062,
+            "multiplicador": 1.05
           },
           "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
+            "valor": 1.0,
+            "efeito_gols": 0.054,
+            "multiplicador": 1.05
           }
         },
         {
           "fator": "tecnico_novo",
           "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
+          "peso": 0.0,
           "mandante": {
             "valor": 0.0,
-            "efeito_gols": -0.0,
+            "efeito_gols": 0.0,
             "multiplicador": 1.0
           },
           "visitante": {
             "valor": 0.0,
-            "efeito_gols": -0.0,
+            "efeito_gols": 0.0,
             "multiplicador": 1.0
           }
         }
@@ -772,163 +165,11 @@
           ]
         },
         "dias_descanso": {
-          "mandante": 7.769444444444445,
-          "visitante": 6.896527777777778
+          "mandante": 3.0,
+          "visitante": 2.9166666666666665
         },
         "tecnico_novo": {
           "mandante": false,
-          "visitante": false
-        }
-      }
-    },
-    {
-      "mandante": {
-        "id": "ceara",
-        "nome": "Ceará"
-      },
-      "visitante": {
-        "id": "fluminense",
-        "nome": "Fluminense"
-      },
-      "rodada": 31,
-      "inicio_utc": "2025-11-02T19:01:00Z",
-      "gols_esperados": {
-        "mandante": 1.063,
-        "visitante": 0.861
-      },
-      "gols_base": 0.951,
-      "probabilidade_estimada": {
-        "mandante": 0.3969,
-        "empate": 0.3136,
-        "visitante": 0.2895
-      },
-      "placar_mais_provavel": {
-        "mandante": 1,
-        "visitante": 0,
-        "probabilidade": 0.1553
-      },
-      "fatores": [
-        {
-          "fator": "ataque",
-          "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
-          "mandante": {
-            "valor": -0.323,
-            "efeito_gols": -0.241,
-            "multiplicador": 0.787
-          },
-          "visitante": {
-            "valor": -0.098,
-            "efeito_gols": -0.066,
-            "multiplicador": 0.93
-          }
-        },
-        {
-          "fator": "defesa_adversario",
-          "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
-          "mandante": {
-            "valor": -0.01,
-            "efeito_gols": -0.007,
-            "multiplicador": 0.993
-          },
-          "visitante": {
-            "valor": -0.113,
-            "efeito_gols": -0.072,
-            "multiplicador": 0.923
-          }
-        },
-        {
-          "fator": "mando",
-          "rotulo": "Mando de campo",
-          "peso": 0.4104,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": 0.413,
-            "multiplicador": 1.507
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "forma",
-          "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
-          "mandante": {
-            "valor": -1.0,
-            "efeito_gols": -0.034,
-            "multiplicador": 0.967
-          },
-          "visitante": {
-            "valor": 1.0,
-            "efeito_gols": 0.031,
-            "multiplicador": 1.034
-          }
-        },
-        {
-          "fator": "descanso",
-          "rotulo": "Dias de descanso",
-          "peso": 0.0002,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "meio_de_semana",
-          "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "tecnico_novo",
-          "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": -0.019,
-            "multiplicador": 0.981
-          },
-          "visitante": {
-            "valor": -1.0,
-            "efeito_gols": 0.017,
-            "multiplicador": 1.019
-          }
-        }
-      ],
-      "contexto": {
-        "pontos_por_jogo_ultimos": {
-          "mandante": 0.8,
-          "visitante": 1.8,
-          "jogos_considerados": [
-            5,
-            5
-          ]
-        },
-        "dias_descanso": {
-          "mandante": 3.8756944444444446,
-          "visitante": 3.8756944444444446
-        },
-        "tecnico_novo": {
-          "mandante": true,
           "visitante": false
         }
       }
@@ -939,65 +180,65 @@
         "nome": "Corinthians"
       },
       "visitante": {
-        "id": "gremio",
-        "nome": "Grêmio"
+        "id": "athletico-pr",
+        "nome": "Athletico-PR"
       },
       "rodada": 31,
-      "inicio_utc": "2025-11-02T19:01:00Z",
+      "inicio_utc": "2023-11-01T22:00:00Z",
       "gols_esperados": {
-        "mandante": 1.545,
-        "visitante": 0.907
+        "mandante": 1.462,
+        "visitante": 1.095
       },
-      "gols_base": 0.951,
+      "gols_base": 0.984,
       "probabilidade_estimada": {
-        "mandante": 0.5224,
-        "empate": 0.2563,
-        "visitante": 0.2212
+        "mandante": 0.4556,
+        "empate": 0.2611,
+        "visitante": 0.2833
       },
       "placar_mais_provavel": {
         "mandante": 1,
-        "visitante": 0,
-        "probabilidade": 0.1331
+        "visitante": 1,
+        "probabilidade": 0.1241
       },
       "fatores": [
         {
           "fator": "ataque",
           "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
+          "peso": 0.7054,
           "mandante": {
-            "valor": -0.053,
-            "efeito_gols": -0.048,
-            "multiplicador": 0.961
+            "valor": -0.005,
+            "efeito_gols": -0.004,
+            "multiplicador": 0.997
           },
           "visitante": {
-            "valor": -0.048,
-            "efeito_gols": -0.033,
-            "multiplicador": 0.965
+            "valor": 0.151,
+            "efeito_gols": 0.111,
+            "multiplicador": 1.113
           }
         },
         {
           "fator": "defesa_adversario",
           "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
+          "peso": 0.6262,
           "mandante": {
-            "valor": 0.133,
-            "efeito_gols": 0.115,
-            "multiplicador": 1.098
+            "valor": -0.065,
+            "efeito_gols": -0.049,
+            "multiplicador": 0.96
           },
           "visitante": {
-            "valor": 0.012,
-            "efeito_gols": 0.008,
-            "multiplicador": 1.009
+            "valor": -0.09,
+            "efeito_gols": -0.058,
+            "multiplicador": 0.945
           }
         },
         {
           "fator": "mando",
           "rotulo": "Mando de campo",
-          "peso": 0.4104,
+          "peso": 0.3991,
           "mandante": {
             "valor": 1.0,
-            "efeito_gols": 0.502,
-            "multiplicador": 1.507
+            "efeito_gols": 0.482,
+            "multiplicador": 1.491
           },
           "visitante": {
             "valor": 0.0,
@@ -1008,29 +249,29 @@
         {
           "fator": "forma",
           "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
+          "peso": 0.0194,
           "mandante": {
-            "valor": 0.6,
-            "efeito_gols": 0.025,
-            "multiplicador": 1.021
+            "valor": -0.4,
+            "efeito_gols": -0.009,
+            "multiplicador": 0.992
           },
           "visitante": {
-            "valor": -0.6,
-            "efeito_gols": -0.019,
-            "multiplicador": 0.98
+            "valor": 0.4,
+            "efeito_gols": 0.008,
+            "multiplicador": 1.008
           }
         },
         {
           "fator": "descanso",
           "rotulo": "Dias de descanso",
-          "peso": 0.0002,
+          "peso": -0.0014,
           "mandante": {
-            "valor": 0.999,
+            "valor": -0.104,
             "efeito_gols": 0.0,
             "multiplicador": 1.0
           },
           "visitante": {
-            "valor": -0.999,
+            "valor": 0.104,
             "efeito_gols": -0.0,
             "multiplicador": 1.0
           }
@@ -1038,7 +279,281 @@
         {
           "fator": "meio_de_semana",
           "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
+          "peso": 0.049,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.059,
+            "multiplicador": 1.05
+          },
+          "visitante": {
+            "valor": 1.0,
+            "efeito_gols": 0.051,
+            "multiplicador": 1.05
+          }
+        },
+        {
+          "fator": "tecnico_novo",
+          "rotulo": "Troca recente de técnico",
+          "peso": 0.0,
+          "mandante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        }
+      ],
+      "contexto": {
+        "pontos_por_jogo_ultimos": {
+          "mandante": 1.4,
+          "visitante": 1.8,
+          "jogos_considerados": [
+            5,
+            5
+          ]
+        },
+        "dias_descanso": {
+          "mandante": 3.0208333333333335,
+          "visitante": 3.125
+        },
+        "tecnico_novo": {
+          "mandante": false,
+          "visitante": false
+        }
+      }
+    },
+    {
+      "mandante": {
+        "id": "internacional",
+        "nome": "Internacional"
+      },
+      "visitante": {
+        "id": "america-mg",
+        "nome": "América-MG"
+      },
+      "rodada": 31,
+      "inicio_utc": "2023-11-01T22:00:00Z",
+      "gols_esperados": {
+        "mandante": 1.933,
+        "visitante": 0.976
+      },
+      "gols_base": 0.984,
+      "probabilidade_estimada": {
+        "mandante": 0.5972,
+        "empate": 0.2174,
+        "visitante": 0.1854
+      },
+      "placar_mais_provavel": {
+        "mandante": 1,
+        "visitante": 0,
+        "probabilidade": 0.1054
+      },
+      "fatores": [
+        {
+          "fator": "ataque",
+          "rotulo": "Força de ataque (longo prazo)",
+          "peso": 0.7054,
+          "mandante": {
+            "valor": 0.031,
+            "efeito_gols": 0.031,
+            "multiplicador": 1.022
+          },
+          "visitante": {
+            "valor": 0.02,
+            "efeito_gols": 0.014,
+            "multiplicador": 1.014
+          }
+        },
+        {
+          "fator": "defesa_adversario",
+          "rotulo": "Defesa do adversário (longo prazo)",
+          "peso": 0.6262,
+          "mandante": {
+            "valor": 0.276,
+            "efeito_gols": 0.243,
+            "multiplicador": 1.188
+          },
+          "visitante": {
+            "valor": -0.062,
+            "efeito_gols": -0.038,
+            "multiplicador": 0.962
+          }
+        },
+        {
+          "fator": "mando",
+          "rotulo": "Mando de campo",
+          "peso": 0.3991,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.561,
+            "multiplicador": 1.491
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        },
+        {
+          "fator": "forma",
+          "rotulo": "Forma recente (últimos 5 jogos)",
+          "peso": 0.0194,
+          "mandante": {
+            "valor": 1.6,
+            "efeito_gols": 0.044,
+            "multiplicador": 1.032
+          },
+          "visitante": {
+            "valor": -1.6,
+            "efeito_gols": -0.03,
+            "multiplicador": 0.969
+          }
+        },
+        {
+          "fator": "descanso",
+          "rotulo": "Dias de descanso",
+          "peso": -0.0014,
+          "mandante": {
+            "valor": -0.979,
+            "efeito_gols": 0.002,
+            "multiplicador": 1.001
+          },
+          "visitante": {
+            "valor": 0.979,
+            "efeito_gols": -0.001,
+            "multiplicador": 0.999
+          }
+        },
+        {
+          "fator": "meio_de_semana",
+          "rotulo": "Jogo no meio da semana",
+          "peso": 0.049,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.069,
+            "multiplicador": 1.05
+          },
+          "visitante": {
+            "valor": 1.0,
+            "efeito_gols": 0.048,
+            "multiplicador": 1.05
+          }
+        },
+        {
+          "fator": "tecnico_novo",
+          "rotulo": "Troca recente de técnico",
+          "peso": 0.0,
+          "mandante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        }
+      ],
+      "contexto": {
+        "pontos_por_jogo_ultimos": {
+          "mandante": 1.8,
+          "visitante": 0.2,
+          "jogos_considerados": [
+            5,
+            5
+          ]
+        },
+        "dias_descanso": {
+          "mandante": 3.0208333333333335,
+          "visitante": 4.0
+        },
+        "tecnico_novo": {
+          "mandante": false,
+          "visitante": false
+        }
+      }
+    },
+    {
+      "mandante": {
+        "id": "coritiba",
+        "nome": "Coritiba"
+      },
+      "visitante": {
+        "id": "gremio",
+        "nome": "Grêmio"
+      },
+      "rodada": 31,
+      "inicio_utc": "2023-11-01T23:00:00Z",
+      "gols_esperados": {
+        "mandante": 1.69,
+        "visitante": 1.583
+      },
+      "gols_base": 0.984,
+      "probabilidade_estimada": {
+        "mandante": 0.4072,
+        "empate": 0.2309,
+        "visitante": 0.3619
+      },
+      "placar_mais_provavel": {
+        "mandante": 1,
+        "visitante": 1,
+        "probabilidade": 0.1013
+      },
+      "fatores": [
+        {
+          "fator": "ataque",
+          "rotulo": "Força de ataque (longo prazo)",
+          "peso": 0.7054,
+          "mandante": {
+            "valor": -0.023,
+            "efeito_gols": -0.021,
+            "multiplicador": 0.984
+          },
+          "visitante": {
+            "valor": 0.252,
+            "efeito_gols": 0.224,
+            "multiplicador": 1.195
+          }
+        },
+        {
+          "fator": "defesa_adversario",
+          "rotulo": "Defesa do adversário (longo prazo)",
+          "peso": 0.6262,
+          "mandante": {
+            "valor": 0.172,
+            "efeito_gols": 0.141,
+            "multiplicador": 1.114
+          },
+          "visitante": {
+            "valor": 0.399,
+            "efeito_gols": 0.315,
+            "multiplicador": 1.284
+          }
+        },
+        {
+          "fator": "mando",
+          "rotulo": "Mando de campo",
+          "peso": 0.3991,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.521,
+            "multiplicador": 1.491
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        },
+        {
+          "fator": "forma",
+          "rotulo": "Forma recente (últimos 5 jogos)",
+          "peso": 0.0194,
           "mandante": {
             "valor": 0.0,
             "efeito_gols": 0.0,
@@ -1051,17 +566,199 @@
           }
         },
         {
+          "fator": "descanso",
+          "rotulo": "Dias de descanso",
+          "peso": -0.0014,
+          "mandante": {
+            "valor": -0.979,
+            "efeito_gols": 0.002,
+            "multiplicador": 1.001
+          },
+          "visitante": {
+            "valor": 0.979,
+            "efeito_gols": -0.002,
+            "multiplicador": 0.999
+          }
+        },
+        {
+          "fator": "meio_de_semana",
+          "rotulo": "Jogo no meio da semana",
+          "peso": 0.049,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.064,
+            "multiplicador": 1.05
+          },
+          "visitante": {
+            "valor": 1.0,
+            "efeito_gols": 0.062,
+            "multiplicador": 1.05
+          }
+        },
+        {
           "fator": "tecnico_novo",
           "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
+          "peso": 0.0,
           "mandante": {
             "valor": 0.0,
-            "efeito_gols": -0.0,
+            "efeito_gols": 0.0,
             "multiplicador": 1.0
           },
           "visitante": {
             "valor": 0.0,
-            "efeito_gols": -0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        }
+      ],
+      "contexto": {
+        "pontos_por_jogo_ultimos": {
+          "mandante": 1.2,
+          "visitante": 1.2,
+          "jogos_considerados": [
+            5,
+            5
+          ]
+        },
+        "dias_descanso": {
+          "mandante": 3.0625,
+          "visitante": 4.041666666666667
+        },
+        "tecnico_novo": {
+          "mandante": false,
+          "visitante": false
+        }
+      }
+    },
+    {
+      "mandante": {
+        "id": "flamengo",
+        "nome": "Flamengo"
+      },
+      "visitante": {
+        "id": "santos",
+        "nome": "Santos"
+      },
+      "rodada": 31,
+      "inicio_utc": "2023-11-01T23:00:00Z",
+      "gols_esperados": {
+        "mandante": 2.092,
+        "visitante": 0.93
+      },
+      "gols_base": 0.984,
+      "probabilidade_estimada": {
+        "mandante": 0.6415,
+        "empate": 0.2008,
+        "visitante": 0.1577
+      },
+      "placar_mais_provavel": {
+        "mandante": 2,
+        "visitante": 0,
+        "probabilidade": 0.1066
+      },
+      "fatores": [
+        {
+          "fator": "ataque",
+          "rotulo": "Força de ataque (longo prazo)",
+          "peso": 0.7054,
+          "mandante": {
+            "valor": 0.183,
+            "efeito_gols": 0.189,
+            "multiplicador": 1.137
+          },
+          "visitante": {
+            "valor": -0.047,
+            "efeito_gols": -0.032,
+            "multiplicador": 0.967
+          }
+        },
+        {
+          "fator": "defesa_adversario",
+          "rotulo": "Defesa do adversário (longo prazo)",
+          "peso": 0.6262,
+          "mandante": {
+            "valor": 0.273,
+            "efeito_gols": 0.251,
+            "multiplicador": 1.187
+          },
+          "visitante": {
+            "valor": -0.105,
+            "efeito_gols": -0.063,
+            "multiplicador": 0.936
+          }
+        },
+        {
+          "fator": "mando",
+          "rotulo": "Mando de campo",
+          "peso": 0.3991,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.586,
+            "multiplicador": 1.491
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        },
+        {
+          "fator": "forma",
+          "rotulo": "Forma recente (últimos 5 jogos)",
+          "peso": 0.0194,
+          "mandante": {
+            "valor": 0.6,
+            "efeito_gols": 0.017,
+            "multiplicador": 1.012
+          },
+          "visitante": {
+            "valor": -0.6,
+            "efeito_gols": -0.011,
+            "multiplicador": 0.988
+          }
+        },
+        {
+          "fator": "descanso",
+          "rotulo": "Dias de descanso",
+          "peso": -0.0014,
+          "mandante": {
+            "valor": 3.875,
+            "efeito_gols": -0.008,
+            "multiplicador": 0.995
+          },
+          "visitante": {
+            "valor": -3.875,
+            "efeito_gols": 0.005,
+            "multiplicador": 1.005
+          }
+        },
+        {
+          "fator": "meio_de_semana",
+          "rotulo": "Jogo no meio da semana",
+          "peso": 0.049,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.072,
+            "multiplicador": 1.05
+          },
+          "visitante": {
+            "valor": 1.0,
+            "efeito_gols": 0.047,
+            "multiplicador": 1.05
+          }
+        },
+        {
+          "fator": "tecnico_novo",
+          "rotulo": "Troca recente de técnico",
+          "peso": 0.0,
+          "mandante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
             "multiplicador": 1.0
           }
         }
@@ -1076,8 +773,8 @@
           ]
         },
         "dias_descanso": {
-          "mandante": 8.0,
-          "visitante": 7.000694444444444
+          "mandante": 6.9375,
+          "visitante": 3.0625
         },
         "tecnico_novo": {
           "mandante": false,
@@ -1087,69 +784,69 @@
     },
     {
       "mandante": {
-        "id": "internacional",
-        "nome": "Internacional"
-      },
-      "visitante": {
         "id": "atletico-mg",
         "nome": "Atlético-MG"
       },
-      "rodada": 31,
-      "inicio_utc": "2025-11-02T21:29:00Z",
-      "gols_esperados": {
-        "mandante": 1.401,
-        "visitante": 0.912
+      "visitante": {
+        "id": "fortaleza",
+        "nome": "Fortaleza"
       },
-      "gols_base": 0.951,
+      "rodada": 31,
+      "inicio_utc": "2023-11-02T00:30:00Z",
+      "gols_esperados": {
+        "mandante": 1.448,
+        "visitante": 0.785
+      },
+      "gols_base": 0.984,
       "probabilidade_estimada": {
-        "mandante": 0.483,
-        "empate": 0.2721,
-        "visitante": 0.245
+        "mandante": 0.5282,
+        "empate": 0.2684,
+        "visitante": 0.2033
       },
       "placar_mais_provavel": {
         "mandante": 1,
         "visitante": 0,
-        "probabilidade": 0.1386
+        "probabilidade": 0.1552
       },
       "fatores": [
         {
           "fator": "ataque",
           "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
+          "peso": 0.7054,
           "mandante": {
-            "valor": -0.01,
-            "efeito_gols": -0.008,
-            "multiplicador": 0.993
+            "valor": 0.044,
+            "efeito_gols": 0.037,
+            "multiplicador": 1.031
           },
           "visitante": {
-            "valor": -0.111,
-            "efeito_gols": -0.077,
-            "multiplicador": 0.921
+            "valor": -0.042,
+            "efeito_gols": -0.026,
+            "multiplicador": 0.97
           }
         },
         {
           "fator": "defesa_adversario",
           "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
+          "peso": 0.6262,
           "mandante": {
-            "valor": 0.014,
-            "efeito_gols": 0.011,
-            "multiplicador": 1.01
+            "valor": -0.174,
+            "efeito_gols": -0.131,
+            "multiplicador": 0.897
           },
           "visitante": {
-            "valor": 0.022,
-            "efeito_gols": 0.014,
-            "multiplicador": 1.015
+            "valor": -0.365,
+            "efeito_gols": -0.202,
+            "multiplicador": 0.795
           }
         },
         {
           "fator": "mando",
           "rotulo": "Mando de campo",
-          "peso": 0.4104,
+          "peso": 0.3991,
           "mandante": {
             "valor": 1.0,
-            "efeito_gols": 0.477,
-            "multiplicador": 1.507
+            "efeito_gols": 0.479,
+            "multiplicador": 1.491
           },
           "visitante": {
             "valor": 0.0,
@@ -1160,67 +857,67 @@
         {
           "fator": "forma",
           "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
+          "peso": 0.0194,
           "mandante": {
-            "valor": -0.2,
-            "efeito_gols": -0.008,
-            "multiplicador": 0.993
+            "valor": 0.4,
+            "efeito_gols": 0.009,
+            "multiplicador": 1.008
           },
           "visitante": {
-            "valor": 0.2,
-            "efeito_gols": 0.006,
-            "multiplicador": 1.007
+            "valor": -0.4,
+            "efeito_gols": -0.007,
+            "multiplicador": 0.992
           }
         },
         {
           "fator": "descanso",
           "rotulo": "Dias de descanso",
-          "peso": 0.0002,
+          "peso": -0.0014,
           "mandante": {
-            "valor": -0.062,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
+            "valor": -5.979,
+            "efeito_gols": 0.01,
+            "multiplicador": 1.008
           },
           "visitante": {
-            "valor": 0.062,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
+            "valor": 5.979,
+            "efeito_gols": -0.007,
+            "multiplicador": 0.992
           }
         },
         {
           "fator": "meio_de_semana",
           "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
+          "peso": 0.049,
           "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
+            "valor": 1.0,
+            "efeito_gols": 0.059,
+            "multiplicador": 1.05
           },
           "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
+            "valor": 1.0,
+            "efeito_gols": 0.043,
+            "multiplicador": 1.05
           }
         },
         {
           "fator": "tecnico_novo",
           "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
+          "peso": 0.0,
           "mandante": {
-            "valor": 1.0,
-            "efeito_gols": -0.022,
-            "multiplicador": 0.981
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
           },
           "visitante": {
-            "valor": -1.0,
-            "efeito_gols": 0.018,
-            "multiplicador": 1.019
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
           }
         }
       ],
       "contexto": {
         "pontos_por_jogo_ultimos": {
-          "mandante": 1.2,
+          "mandante": 1.8,
           "visitante": 1.4,
           "jogos_considerados": [
             5,
@@ -1228,160 +925,8 @@
           ]
         },
         "dias_descanso": {
-          "mandante": 8.040972222222223,
-          "visitante": 8.103472222222223
-        },
-        "tecnico_novo": {
-          "mandante": true,
-          "visitante": false
-        }
-      }
-    },
-    {
-      "mandante": {
-        "id": "juventude",
-        "nome": "Juventude"
-      },
-      "visitante": {
-        "id": "palmeiras",
-        "nome": "Palmeiras"
-      },
-      "rodada": 31,
-      "inicio_utc": "2025-11-02T21:33:00Z",
-      "gols_esperados": {
-        "mandante": 0.975,
-        "visitante": 1.538
-      },
-      "gols_base": 0.951,
-      "probabilidade_estimada": {
-        "mandante": 0.2398,
-        "empate": 0.2564,
-        "visitante": 0.5038
-      },
-      "placar_mais_provavel": {
-        "mandante": 0,
-        "visitante": 1,
-        "probabilidade": 0.1246
-      },
-      "fatores": [
-        {
-          "fator": "ataque",
-          "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
-          "mandante": {
-            "valor": -0.255,
-            "efeito_gols": -0.182,
-            "multiplicador": 0.828
-          },
-          "visitante": {
-            "valor": 0.273,
-            "efeito_gols": 0.247,
-            "multiplicador": 1.225
-          }
-        },
-        {
-          "fator": "defesa_adversario",
-          "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
-          "mandante": {
-            "valor": -0.211,
-            "efeito_gols": -0.143,
-            "multiplicador": 0.862
-          },
-          "visitante": {
-            "valor": 0.327,
-            "efeito_gols": 0.282,
-            "multiplicador": 1.259
-          }
-        },
-        {
-          "fator": "mando",
-          "rotulo": "Mando de campo",
-          "peso": 0.4104,
-          "mandante": {
-            "valor": 1.0,
-            "efeito_gols": 0.395,
-            "multiplicador": 1.507
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "forma",
-          "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
-          "mandante": {
-            "valor": -1.4,
-            "efeito_gols": -0.046,
-            "multiplicador": 0.954
-          },
-          "visitante": {
-            "valor": 1.4,
-            "efeito_gols": 0.058,
-            "multiplicador": 1.049
-          }
-        },
-        {
-          "fator": "descanso",
-          "rotulo": "Dias de descanso",
-          "peso": 0.0002,
-          "mandante": {
-            "valor": 0.188,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": -0.188,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "meio_de_semana",
-          "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
-          }
-        },
-        {
-          "fator": "tecnico_novo",
-          "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
-          "mandante": {
-            "valor": 0.0,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          },
-          "visitante": {
-            "valor": 0.0,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
-          }
-        }
-      ],
-      "contexto": {
-        "pontos_por_jogo_ultimos": {
-          "mandante": 0.6,
-          "visitante": 2.0,
-          "jogos_considerados": [
-            5,
-            5
-          ]
-        },
-        "dias_descanso": {
-          "mandante": 7.10625,
-          "visitante": 6.918055555555555
+          "mandante": 4.020833333333333,
+          "visitante": 10.0
         },
         "tecnico_novo": {
           "mandante": false,
@@ -1391,69 +936,69 @@
     },
     {
       "mandante": {
-        "id": "vasco",
-        "nome": "Vasco"
+        "id": "botafogo",
+        "nome": "Botafogo"
       },
       "visitante": {
-        "id": "sao-paulo",
-        "nome": "São Paulo"
+        "id": "palmeiras",
+        "nome": "Palmeiras"
       },
       "rodada": 31,
-      "inicio_utc": "2025-11-02T23:32:00Z",
+      "inicio_utc": "2023-11-02T00:30:00Z",
       "gols_esperados": {
-        "mandante": 1.521,
-        "visitante": 0.984
+        "mandante": 1.269,
+        "visitante": 0.957
       },
-      "gols_base": 0.951,
+      "gols_base": 0.984,
       "probabilidade_estimada": {
-        "mandante": 0.4973,
-        "empate": 0.258,
-        "visitante": 0.2447
+        "mandante": 0.4357,
+        "empate": 0.2847,
+        "visitante": 0.2797
       },
       "placar_mais_provavel": {
         "mandante": 1,
         "visitante": 0,
-        "probabilidade": 0.1242
+        "probabilidade": 0.1371
       },
       "fatores": [
         {
           "fator": "ataque",
           "rotulo": "Força de ataque (longo prazo)",
-          "peso": 0.7427,
+          "peso": 0.7054,
           "mandante": {
-            "valor": 0.06,
-            "efeito_gols": 0.054,
-            "multiplicador": 1.046
+            "valor": 0.083,
+            "efeito_gols": 0.065,
+            "multiplicador": 1.06
           },
           "visitante": {
-            "valor": -0.075,
-            "efeito_gols": -0.054,
-            "multiplicador": 0.946
+            "valor": 0.207,
+            "efeito_gols": 0.141,
+            "multiplicador": 1.157
           }
         },
         {
           "fator": "defesa_adversario",
           "rotulo": "Defesa do adversário (longo prazo)",
-          "peso": 0.705,
+          "peso": 0.6262,
           "mandante": {
-            "valor": -0.036,
-            "efeito_gols": -0.031,
-            "multiplicador": 0.975
+            "valor": -0.398,
+            "efeito_gols": -0.279,
+            "multiplicador": 0.779
           },
           "visitante": {
-            "valor": 0.185,
-            "efeito_gols": 0.126,
-            "multiplicador": 1.139
+            "valor": -0.36,
+            "efeito_gols": -0.219,
+            "multiplicador": 0.798
           }
         },
         {
           "fator": "mando",
           "rotulo": "Mando de campo",
-          "peso": 0.4104,
+          "peso": 0.3991,
           "mandante": {
             "valor": 1.0,
-            "efeito_gols": 0.498,
-            "multiplicador": 1.507
+            "efeito_gols": 0.447,
+            "multiplicador": 1.491
           },
           "visitante": {
             "valor": 0.0,
@@ -1464,76 +1009,532 @@
         {
           "fator": "forma",
           "rotulo": "Forma recente (últimos 5 jogos)",
-          "peso": 0.0338,
+          "peso": 0.0194,
           "mandante": {
-            "valor": 1.2,
-            "efeito_gols": 0.049,
-            "multiplicador": 1.041
+            "valor": -0.2,
+            "efeito_gols": -0.004,
+            "multiplicador": 0.996
           },
           "visitante": {
-            "valor": -1.2,
-            "efeito_gols": -0.039,
-            "multiplicador": 0.96
+            "valor": 0.2,
+            "efeito_gols": 0.004,
+            "multiplicador": 1.004
           }
         },
         {
           "fator": "descanso",
           "rotulo": "Dias de descanso",
-          "peso": 0.0002,
+          "peso": -0.0014,
           "mandante": {
-            "valor": -0.873,
-            "efeito_gols": -0.0,
-            "multiplicador": 1.0
+            "valor": -1.042,
+            "efeito_gols": 0.002,
+            "multiplicador": 1.001
           },
           "visitante": {
-            "valor": 0.873,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
+            "valor": 1.042,
+            "efeito_gols": -0.001,
+            "multiplicador": 0.999
           }
         },
         {
           "fator": "meio_de_semana",
           "rotulo": "Jogo no meio da semana",
-          "peso": 0.044,
+          "peso": 0.049,
           "mandante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
+            "valor": 1.0,
+            "efeito_gols": 0.055,
+            "multiplicador": 1.05
           },
           "visitante": {
-            "valor": 0.0,
-            "efeito_gols": 0.0,
-            "multiplicador": 1.0
+            "valor": 1.0,
+            "efeito_gols": 0.048,
+            "multiplicador": 1.05
           }
         },
         {
           "fator": "tecnico_novo",
           "rotulo": "Troca recente de técnico",
-          "peso": -0.019,
+          "peso": 0.0,
           "mandante": {
             "valor": 0.0,
-            "efeito_gols": -0.0,
+            "efeito_gols": 0.0,
             "multiplicador": 1.0
           },
           "visitante": {
             "valor": 0.0,
-            "efeito_gols": -0.0,
+            "efeito_gols": 0.0,
             "multiplicador": 1.0
           }
         }
       ],
       "contexto": {
         "pontos_por_jogo_ultimos": {
-          "mandante": 2.4,
-          "visitante": 1.2,
+          "mandante": 1.6,
+          "visitante": 1.8,
           "jogos_considerados": [
             5,
             5
           ]
         },
         "dias_descanso": {
-          "mandante": 7.084722222222222,
-          "visitante": 7.957638888888889
+          "mandante": 3.0625,
+          "visitante": 4.104166666666667
+        },
+        "tecnico_novo": {
+          "mandante": false,
+          "visitante": false
+        }
+      }
+    },
+    {
+      "mandante": {
+        "id": "cuiaba",
+        "nome": "Cuiabá"
+      },
+      "visitante": {
+        "id": "vasco",
+        "nome": "Vasco"
+      },
+      "rodada": 31,
+      "inicio_utc": "2023-11-02T20:00:00Z",
+      "gols_esperados": {
+        "mandante": 1.422,
+        "visitante": 0.791
+      },
+      "gols_base": 0.984,
+      "probabilidade_estimada": {
+        "mandante": 0.5198,
+        "empate": 0.2717,
+        "visitante": 0.2086
+      },
+      "placar_mais_provavel": {
+        "mandante": 1,
+        "visitante": 0,
+        "probabilidade": 0.1556
+      },
+      "fatores": [
+        {
+          "fator": "ataque",
+          "rotulo": "Força de ataque (longo prazo)",
+          "peso": 0.7054,
+          "mandante": {
+            "valor": -0.177,
+            "efeito_gols": -0.149,
+            "multiplicador": 0.882
+          },
+          "visitante": {
+            "valor": -0.177,
+            "efeito_gols": -0.111,
+            "multiplicador": 0.882
+          }
+        },
+        {
+          "fator": "defesa_adversario",
+          "rotulo": "Defesa do adversário (longo prazo)",
+          "peso": 0.6262,
+          "mandante": {
+            "valor": 0.053,
+            "efeito_gols": 0.039,
+            "multiplicador": 1.034
+          },
+          "visitante": {
+            "valor": -0.209,
+            "efeito_gols": -0.116,
+            "multiplicador": 0.877
+          }
+        },
+        {
+          "fator": "mando",
+          "rotulo": "Mando de campo",
+          "peso": 0.3991,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.475,
+            "multiplicador": 1.491
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        },
+        {
+          "fator": "forma",
+          "rotulo": "Forma recente (últimos 5 jogos)",
+          "peso": 0.0194,
+          "mandante": {
+            "valor": 0.6,
+            "efeito_gols": 0.014,
+            "multiplicador": 1.012
+          },
+          "visitante": {
+            "valor": -0.6,
+            "efeito_gols": -0.01,
+            "multiplicador": 0.988
+          }
+        },
+        {
+          "fator": "descanso",
+          "rotulo": "Dias de descanso",
+          "peso": -0.0014,
+          "mandante": {
+            "valor": -0.167,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          },
+          "visitante": {
+            "valor": 0.167,
+            "efeito_gols": -0.0,
+            "multiplicador": 1.0
+          }
+        },
+        {
+          "fator": "meio_de_semana",
+          "rotulo": "Jogo no meio da semana",
+          "peso": 0.049,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.058,
+            "multiplicador": 1.05
+          },
+          "visitante": {
+            "valor": 1.0,
+            "efeito_gols": 0.043,
+            "multiplicador": 1.05
+          }
+        },
+        {
+          "fator": "tecnico_novo",
+          "rotulo": "Troca recente de técnico",
+          "peso": 0.0,
+          "mandante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        }
+      ],
+      "contexto": {
+        "pontos_por_jogo_ultimos": {
+          "mandante": 1.6,
+          "visitante": 1.0,
+          "jogos_considerados": [
+            5,
+            5
+          ]
+        },
+        "dias_descanso": {
+          "mandante": 3.875,
+          "visitante": 4.041666666666667
+        },
+        "tecnico_novo": {
+          "mandante": false,
+          "visitante": false
+        }
+      }
+    },
+    {
+      "mandante": {
+        "id": "goias",
+        "nome": "Goiás"
+      },
+      "visitante": {
+        "id": "bragantino",
+        "nome": "Bragantino"
+      },
+      "rodada": 31,
+      "inicio_utc": "2023-11-02T21:00:00Z",
+      "gols_esperados": {
+        "mandante": 1.345,
+        "visitante": 1.22
+      },
+      "gols_base": 0.984,
+      "probabilidade_estimada": {
+        "mandante": 0.3968,
+        "empate": 0.2654,
+        "visitante": 0.3379
+      },
+      "placar_mais_provavel": {
+        "mandante": 1,
+        "visitante": 1,
+        "probabilidade": 0.1262
+      },
+      "fatores": [
+        {
+          "fator": "ataque",
+          "rotulo": "Força de ataque (longo prazo)",
+          "peso": 0.7054,
+          "mandante": {
+            "valor": -0.066,
+            "efeito_gols": -0.054,
+            "multiplicador": 0.954
+          },
+          "visitante": {
+            "valor": 0.119,
+            "efeito_gols": 0.092,
+            "multiplicador": 1.087
+          }
+        },
+        {
+          "fator": "defesa_adversario",
+          "rotulo": "Defesa do adversário (longo prazo)",
+          "peso": 0.6262,
+          "mandante": {
+            "valor": -0.12,
+            "efeito_gols": -0.087,
+            "multiplicador": 0.928
+          },
+          "visitante": {
+            "valor": 0.109,
+            "efeito_gols": 0.075,
+            "multiplicador": 1.071
+          }
+        },
+        {
+          "fator": "mando",
+          "rotulo": "Mando de campo",
+          "peso": 0.3991,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.461,
+            "multiplicador": 1.491
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        },
+        {
+          "fator": "forma",
+          "rotulo": "Forma recente (últimos 5 jogos)",
+          "peso": 0.0194,
+          "mandante": {
+            "valor": -1.0,
+            "efeito_gols": -0.022,
+            "multiplicador": 0.981
+          },
+          "visitante": {
+            "valor": 1.0,
+            "efeito_gols": 0.021,
+            "multiplicador": 1.02
+          }
+        },
+        {
+          "fator": "descanso",
+          "rotulo": "Dias de descanso",
+          "peso": -0.0014,
+          "mandante": {
+            "valor": -3.875,
+            "efeito_gols": 0.006,
+            "multiplicador": 1.005
+          },
+          "visitante": {
+            "valor": 3.875,
+            "efeito_gols": -0.006,
+            "multiplicador": 0.995
+          }
+        },
+        {
+          "fator": "meio_de_semana",
+          "rotulo": "Jogo no meio da semana",
+          "peso": 0.049,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.057,
+            "multiplicador": 1.05
+          },
+          "visitante": {
+            "valor": 1.0,
+            "efeito_gols": 0.054,
+            "multiplicador": 1.05
+          }
+        },
+        {
+          "fator": "tecnico_novo",
+          "rotulo": "Troca recente de técnico",
+          "peso": 0.0,
+          "mandante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        }
+      ],
+      "contexto": {
+        "pontos_por_jogo_ultimos": {
+          "mandante": 1.0,
+          "visitante": 2.0,
+          "jogos_considerados": [
+            5,
+            5
+          ]
+        },
+        "dias_descanso": {
+          "mandante": 4.083333333333333,
+          "visitante": 7.958333333333333
+        },
+        "tecnico_novo": {
+          "mandante": false,
+          "visitante": false
+        }
+      }
+    },
+    {
+      "mandante": {
+        "id": "sao-paulo",
+        "nome": "São Paulo"
+      },
+      "visitante": {
+        "id": "cruzeiro",
+        "nome": "Cruzeiro"
+      },
+      "rodada": 31,
+      "inicio_utc": "2023-11-02T23:00:00Z",
+      "gols_esperados": {
+        "mandante": 1.198,
+        "visitante": 0.817
+      },
+      "gols_base": 0.984,
+      "probabilidade_estimada": {
+        "mandante": 0.449,
+        "empate": 0.2994,
+        "visitante": 0.2516
+      },
+      "placar_mais_provavel": {
+        "mandante": 1,
+        "visitante": 0,
+        "probabilidade": 0.1597
+      },
+      "fatores": [
+        {
+          "fator": "ataque",
+          "rotulo": "Força de ataque (longo prazo)",
+          "peso": 0.7054,
+          "mandante": {
+            "valor": -0.044,
+            "efeito_gols": -0.033,
+            "multiplicador": 0.97
+          },
+          "visitante": {
+            "valor": -0.287,
+            "efeito_gols": -0.182,
+            "multiplicador": 0.817
+          }
+        },
+        {
+          "fator": "defesa_adversario",
+          "rotulo": "Defesa do adversário (longo prazo)",
+          "peso": 0.6262,
+          "mandante": {
+            "valor": -0.342,
+            "efeito_gols": -0.233,
+            "multiplicador": 0.807
+          },
+          "visitante": {
+            "valor": -0.062,
+            "efeito_gols": -0.035,
+            "multiplicador": 0.962
+          }
+        },
+        {
+          "fator": "mando",
+          "rotulo": "Mando de campo",
+          "peso": 0.3991,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.434,
+            "multiplicador": 1.491
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        },
+        {
+          "fator": "forma",
+          "rotulo": "Forma recente (últimos 5 jogos)",
+          "peso": 0.0194,
+          "mandante": {
+            "valor": -0.6,
+            "efeito_gols": -0.013,
+            "multiplicador": 0.988
+          },
+          "visitante": {
+            "valor": 0.6,
+            "efeito_gols": 0.01,
+            "multiplicador": 1.012
+          }
+        },
+        {
+          "fator": "descanso",
+          "rotulo": "Dias de descanso",
+          "peso": -0.0014,
+          "mandante": {
+            "valor": -3.833,
+            "efeito_gols": 0.006,
+            "multiplicador": 1.005
+          },
+          "visitante": {
+            "valor": 3.833,
+            "efeito_gols": -0.005,
+            "multiplicador": 0.995
+          }
+        },
+        {
+          "fator": "meio_de_semana",
+          "rotulo": "Jogo no meio da semana",
+          "peso": 0.049,
+          "mandante": {
+            "valor": 1.0,
+            "efeito_gols": 0.053,
+            "multiplicador": 1.05
+          },
+          "visitante": {
+            "valor": 1.0,
+            "efeito_gols": 0.044,
+            "multiplicador": 1.05
+          }
+        },
+        {
+          "fator": "tecnico_novo",
+          "rotulo": "Troca recente de técnico",
+          "peso": 0.0,
+          "mandante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          },
+          "visitante": {
+            "valor": 0.0,
+            "efeito_gols": 0.0,
+            "multiplicador": 1.0
+          }
+        }
+      ],
+      "contexto": {
+        "pontos_por_jogo_ultimos": {
+          "mandante": 1.0,
+          "visitante": 1.6,
+          "jogos_considerados": [
+            5,
+            5
+          ]
+        },
+        "dias_descanso": {
+          "mandante": 4.166666666666667,
+          "visitante": 8.0
         },
         "tecnico_novo": {
           "mandante": false,

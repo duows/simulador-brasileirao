@@ -26,7 +26,7 @@ versão mexe no sistema, então o ambiente `.venv` usa 3.14 e o código mira 3.1
 - Cada atualização faz 3 requisições (jogos, classificação, times). O limitador do
   cliente garante no máximo 10 por minuto em qualquer janela de 60 s.
 
-## D03 · 2026-11-08 · Dataset histórico (adaoduque/Brasileirao_Dataset)
+## D03 · 2026-11-08 · Dataset histórico (adaoduque/Brasileirao_Dataset) · SUBSTITUÍDA por D14
 - **Licença: o repositório não tem arquivo LICENSE e a API do GitHub devolve
   `license: null`.** Sem licença explícita, o padrão legal é "todos os direitos
   reservados" para a compilação. Decisão: (1) não versionamos cópia do dataset
@@ -75,7 +75,7 @@ adversário) porque gols marcados e sofridos são informações diferentes; cont
 jogo de terça a quinta). Forma, descanso e técnico novo entram como **diferença** entre
 os times para usar um único peso por fator. Nenhum fator extra foi adicionado.
 
-## D08 · 2026-11-08 · Força de longo prazo
+## D08 · 2026-11-08 · Força de longo prazo (prior dos promovidos atualizado em D15)
 - Taxa de gols com decaimento exponencial no calendário (meia-vida configurável).
 - Gols ajustados pela força do adversário no momento do jogo (`opponent_adjust`),
   senão quem enfrentou tabela mais difícil seria subestimado.
@@ -101,7 +101,7 @@ A contribuição de cada fator em gols usa a média logarítmica (LMDI): soma ex
 `gols esperados - gols base`. O JSON traz também o multiplicador `exp(peso × fator)`,
 mais fácil de narrar ("o mando multiplica por 1,5").
 
-## D11 · 2026-11-08 · Técnico novo
+## D11 · 2026-11-08 · Técnico novo (ver D14: sem dados no histórico novo)
 Técnico é "novo" nos primeiros 5 jogos dele no clube. No histórico, troca = nome do
 técnico diferente do jogo anterior (só existe a partir de 2014; antes o fator vale 0, o
 que atenua um pouco o peso estimado). Na temporada corrente o plano grátis da API não
@@ -138,3 +138,59 @@ fonte. Interinos e grafias diferentes do mesmo nome contam como troca (limitaç�
   marcados como `nao_confirmado`.
 - Campos extras além dos pedidos (`receita_estadio`, `obrigacoes_totais`, `passivo_total`,
   `patrimonio_liquido`) existem para explicar diferenças de definição de dívida e o Morumbis.
+
+## D14 · 2026-11-08 · Troca da fonte histórica para footballcsv (CC0)
+Pedido: usar github.com/footballcsv/world (CC0), de 2010 em diante, e remover o dataset do
+Adão Duque.
+- **O que existe no footballcsv/world** (commit `0783bd4`, jul/2024): Série A só em
+  `2010s/2019/br.1.csv` (380 jogos) e `2020s/2020/br.1.csv` (380 linhas, 177 sem placar).
+  Não dá para cobrir 2010+ com ele.
+- **Decisão:** usar `footballcsv/cache.wfb` (mesma organização, mesma licença CC0 1.0,
+  commit `399cc1f`, set/2024), que tem `br.1.csv` de 2003 a 2024 com rodada, data, horário
+  em UTC e placar, sem odds. Usamos 2010-2024. Conferido: em 2019 a distribuição de placares
+  é idêntica à do `world`.
+- **Cobertura real:** 2010-2023 completos (2016 com 379 jogos, Chapecoense x Atlético-MG
+  cancelado); **2024 só até setembro (252 de 380)**; **2025 não existe** em nenhum repositório
+  da organização (o `cache.api.fbdat`, cache da API football-data.org, também para em set/2024).
+  O restante vem da API (`ingest-api --season 2024/2025`), que sobrescreve pela mesma chave.
+  **TODO:** verificar se o plano grátis libera temporadas passadas.
+- **Ressalva de procedência:** o `cache.wfb` é um cache de dados do worldfootball.net. A
+  organização footballcsv declara CC0, mas resultados de partidas são fatos; o risco legal é
+  baixo, e citamos a fonte nos JSONs e no README.
+- **Perdas com a troca:** não há técnico por jogo, então o fator "técnico novo" fica com peso
+  0 (não estimável). Também saem as temporadas 2003-2009 e 2025.
+- O dataset do Adão Duque foi removido do código, da configuração, dos testes e do disco. O
+  banco foi recriado (o registro de previsões estava vazio; só projeções de demonstração foram
+  descartadas).
+- Novos parâmetros: treino a partir de 2011 (2010 aquece as forças), meia-vida escolhida em
+  2012-2014 (180 dias), teste 2015-2024.
+
+## D15 · 2026-11-08 · Atribuição do football-data.org
+Os Termos e Condições do football-data.org (versão de 1º/jun/2018, exibidos em
+https://www.football-data.org/client/register; o endereço api.football-data.org/register
+não abre fora do navegador), cláusula 7.1, exigem a frase "Football data provided by the
+Football-Data.org API" em local visível. Ela vai no campo `atribuicao` de todo JSON de saída
+e no README. A mesma página diz que credenciais não podem ficar em repositório de código
+aberto: o token continua só na variável de ambiente.
+
+## D16 · 2026-11-08 · Pré-temporada (`simulate-season`)
+- Nenhum jogo da temporada conta como disputado; se a temporada já tem resultados no banco,
+  eles são escondidos e as temporadas seguintes são ignoradas.
+- Calendário: o da API, se já estiver no banco. Se não estiver, uma tabela balanceada gerada
+  pelo método do círculo (turno e returno espelhado, 19 jogos em casa por time, 9 ou 10 em
+  casa no turno, no máximo 2 jogos seguidos com o mesmo mando), uma rodada por semana aos
+  sábados a partir de `preseason.start_date`. Os times vêm de `--teams`.
+- Força inicial com regressão à média: decaimento no tempo (a pausa entre temporadas já
+  reduz o peso do passado), 5 jogos fictícios na média da liga e pesos de ataque e defesa
+  menores que 1 no modelo.
+- **Prior dos promovidos (substitui o 0,85/1,15 fixo do D08):** promovido é o time que não
+  estava na temporada anterior. O prior é a média, entre os promovidos de todas as
+  temporadas anteriores, de gols marcados e sofridos por jogo divididos pela média da liga
+  naquela temporada. É recalculado no início de cada temporada só com temporadas
+  encerradas (sem vazamento). Valor para 2025: ataque 0,88 e defesa 1,11. Times que estavam
+  na temporada anterior são puxados para 1,0.
+- Saída `out/videos/pre-temporada-<S>.json` com força inicial, pontos esperados, faixa p10-p90
+  e chances de título, G4, G6 e rebaixamento, `aviso`, `atribuicao` e alertas (calendário
+  gerado; histórico com mais de 200 dias sem jogos).
+- Demonstração com 2023 (calendário real, resultados escondidos): os pesos atuais foram
+  ajustados com dados até 2024, então a demonstração não é uma avaliação limpa.

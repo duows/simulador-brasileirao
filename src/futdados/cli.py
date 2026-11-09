@@ -298,23 +298,40 @@ def cmd_trends(args, cfg) -> None:
 
 
 def cmd_cartola(args, cfg) -> None:
-    """Pontuação esperada da próxima rodada e o melhor time para um orçamento (estudo, só local)."""
+    """Rodada do Cartola: pontuação esperada, registro antes do fechamento, previsto x real das
+    rodadas já encerradas e o melhor time para um orçamento (estudo, só local)."""
     from .cartola.optimize import best_team
-    from .cartola.project import cartola_report, describe_team, players_frame, project, write_site_json
+    from .cartola.project import (
+        cartola_report,
+        describe_team,
+        live_record,
+        players_frame,
+        project,
+        register,
+        write_site_json,
+    )
     from .reports import write
 
-    doc = project(_repo(cfg), cfg)
+    repo = _repo(cfg)
+    doc = project(repo, cfg)
+    digest = None if args.no_register else register(repo, cfg, doc)
+    doc["ao_vivo"] = live_record(repo, cfg, doc["temporada"], doc["rodada"])
     path = write_site_json(doc, Path(cfg["paths"]["site_data"]) / "cartola.json")
-    write(f"{cfg['paths']['reports']}/cartola.md", cartola_report(doc["backtest"]))
+    write(f"{cfg['paths']['reports']}/cartola.md", cartola_report(doc["backtest"], doc["ao_vivo"]))
     ev = doc["backtest"]
-    print(f"Rodada {doc['rodada']}: {len(doc['atletas'])} atletas disponíveis. Backtest: erro {ev['mae_modelo']:.2f} "
-          f"x média {ev['mae_media']:.2f}; melhor em {ev['rodadas_modelo_melhor']} de {ev['rodadas']} rodadas.")
+    print(f"Rodada {doc['rodada']}: {len(doc['atletas'])} atletas disponíveis. Temporadas no treino: {doc['temporadas_no_treino']}.")
+    print(f"Backtest: erro {ev['mae_modelo']:.2f} x média {ev['mae_media']:.2f}; melhor em {ev['rodadas_modelo_melhor']} de {ev['rodadas']} rodadas.")
+    print(f"Previsões gravadas no registro: {digest[:12] + '…' if digest else 'não (mercado fechado ou --no-register)'}")
+    for x in doc["ao_vivo"]:
+        print(f"  Rodada {x['rodada']}: erro {x['erro_modelo']:.2f} x média {x['erro_media_cartola']:.2f}; "
+              + "; ".join(f"C$ {b}: {v['esperado']:.1f} esperado, {v['real']:.1f} real" for b, v in x["times"].items()))
     if doc["jogos_fora_da_rodada"]:
         print("Jogos fora da rodada (não pontuam):", ", ".join(doc["jogos_fora_da_rodada"]))
     budget = args.budget if args.budget is not None else float(doc["cartoletas_iniciais"] or 100)
-    res = best_team(players_frame(doc), budget, doc["esquemas"], doc["multiplicador_capitao"], args.esquema)
+    res = best_team(players_frame(doc), budget, doc["esquemas"], doc["multiplicador_capitao"], args.esquema,
+                    reserves=cfg["cartola"]["reservas"])
     print(describe_team(res))
-    print(f"Dados da página /cartola (local, fora do git): {path}")
+    print(f"Página /cartola atualizada (local, fora do git): {path}")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -352,6 +369,7 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("cartola", help="estudo: pontuação esperada no Cartola e melhor time para um orçamento")
     s.add_argument("--budget", type=float, help="cartoletas disponíveis (padrão: as iniciais do jogo)")
     s.add_argument("--esquema", help="fixa o esquema, ex.: 4-3-3 (padrão: o melhor)")
+    s.add_argument("--no-register", action="store_true", help="não grava as previsões no registro")
     sub.add_parser("metrics", help="recalcula o catálogo de métricas (tabelas derivadas)")
     s = sub.add_parser("coverage", help="cobertura 2006-2026, qualidade e divergências entre fontes")
     s.add_argument("--current-season", type=int, default=2026, help="temporada em andamento")

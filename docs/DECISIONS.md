@@ -336,3 +336,21 @@ rodada 35.
   cabe no orçamento). Os dois batem com força bruta nos testes. Capitão ×1,5 (TODO: confirmar a
   regra vigente).
 - Vocabulário do canal mantido: "pontuação esperada pelo modelo", nada de dica.
+
+## D25 · 2026-11-09 · Cartola: histórico por temporada, registro, ao vivo e banco de reservas
+- **Cache por temporada** (`data/cartola/<ano>/`): a API só mostra a temporada atual; o
+  passado só existe no cache. O mercado de cada rodada também é guardado
+  (`atletas_mercado_r{N}.json`), criando histórico de preço e de status. **Faça backup dessa
+  pasta**: ela está fora do git.
+- **Várias temporadas no treino**: os coeficientes usam todas as temporadas do cache; no início
+  de uma temporada, a média de cada atleta parte da média dele na temporada anterior (5+ jogos).
+- **Registro imutável** (`cartola_predictions`): a cada `futdados cartola` com o mercado aberto,
+  grava a pontuação esperada de cada atleta e os times sugeridos para C$ 100/120/140/160, antes do
+  fechamento (o banco recusa depois), sem alterar nem apagar.
+- **Ao vivo**: o mesmo comando compara, para cada rodada registrada e já encerrada, o previsto com
+  o real (erro do modelo x média do Cartola, % de prováveis que jogaram, pontos reais dos times
+  sugeridos com a regra do banco) em `reports/cartola.md` e na página /cartola.
+- **Banco de reservas**: um por posição (sem técnico), escolhido depois dos titulares. Regra
+  configurável: não gasta cartoletas e custa no máximo o titular mais barato da posição (**TODO:
+  confirmar a regra vigente**). Vale chance de algum titular faltar × esperado do reserva. Reserva
+  de luxo: não implementada.

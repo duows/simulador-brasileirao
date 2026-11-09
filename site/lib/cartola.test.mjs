@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
-import { bestTeam } from "./cartola.mjs";
+import { addReserves, bestTeam } from "./cartola.mjs";
 
 const SCHEMES = { "4-3-3": { gol: 1, lat: 2, zag: 2, mei: 3, ata: 3, tec: 1 }, "3-5-2": { gol: 1, lat: 0, zag: 3, mei: 5, ata: 2, tec: 1 } };
 
@@ -75,4 +75,17 @@ test("com os dados locais da rodada: time válido e rápido", { skip: !existsSyn
   const ms = Date.now() - t0;
   assert.ok(res.ok && res.custo <= 100 && res.time.length === 12);
   assert.ok(ms < 8000, `demorou ${ms} ms`);
+});
+
+test("banco: um reserva por posição, mais barato que o titular mais barato, sem técnico", () => {
+  const players = randomPlayers(7, 6).map((p) => ({ ...p, p_jogar: 0.95 }));
+  const res = bestTeam(players, 120, SCHEMES, 1.5);
+  const bench = addReserves(res.time, players, { ativo: true, preco_maximo: "titular_mais_barato" });
+  assert.ok(!bench.reservas.some((r) => r.posicao === "tec"));
+  for (const r of bench.reservas) {
+    const starters = res.time.filter((p) => p.posicao === r.posicao);
+    assert.ok(r.preco <= Math.min(...starters.map((p) => p.preco)) + 1e-9);
+    assert.ok(!res.time.some((p) => p.id === r.id));
+    assert.ok(Math.abs(r.chance_de_entrar - (1 - 0.95 ** starters.length)) < 1e-9);
+  }
 });

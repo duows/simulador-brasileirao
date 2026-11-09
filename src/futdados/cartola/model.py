@@ -45,8 +45,15 @@ def match_context(partidas: pd.DataFrame, feat: pd.DataFrame, weights) -> pd.Dat
     return ctx
 
 
-def add_prior_means(pontos: pd.DataFrame, shrink: float) -> pd.DataFrame:
-    """Média de cada atleta nas rodadas anteriores (sem vazamento), puxada para a média da posição."""
+def season_means(pontos: pd.DataFrame, min_games: int = 5) -> dict[int, float]:
+    """Média de cada atleta numa temporada (só quem jogou pelo menos `min_games`)."""
+    g = pontos[pontos.jogou].groupby("atleta_id").pontos.agg(["mean", "count"])
+    return g[g["count"] >= min_games]["mean"].to_dict()
+
+
+def add_prior_means(pontos: pd.DataFrame, shrink: float, prev_means: dict[int, float] | None = None) -> pd.DataFrame:
+    """Média de cada atleta nas rodadas anteriores (sem vazamento), puxada para um valor a priori:
+    a média dele na temporada anterior, se houver (5+ jogos), senão a média da posição."""
     df = pontos[pontos.jogou].sort_values(["atleta_id", "rodada"]).copy()
     g = df.groupby("atleta_id").pontos
     df["soma_prev"] = g.cumsum() - df.pontos
@@ -58,7 +65,8 @@ def add_prior_means(pontos: pd.DataFrame, shrink: float) -> pd.DataFrame:
     overall = df.groupby("posicao").pontos.mean().to_dict()
     df["media_pos"] = [pos_mean[r].get(p, overall[p]) for r, p in zip(df.rodada, df.posicao)]
     df["media_previa"] = np.where(df.n_prev > 0, df.soma_prev / df.n_prev.clip(lower=1), np.nan)
-    df["media_ajustada"] = (df.soma_prev + shrink * df.media_pos) / (df.n_prev + shrink)
+    prior = df.atleta_id.map(prev_means or {}).fillna(df.media_pos)
+    df["media_ajustada"] = (df.soma_prev + shrink * prior) / (df.n_prev + shrink)
     return df
 
 
@@ -90,8 +98,9 @@ def decompose(row: pd.Series, coef: np.ndarray) -> dict[str, float]:
     return out
 
 
-def training_table(pontos: pd.DataFrame, ctx: pd.DataFrame, shrink: float) -> pd.DataFrame:
-    df = add_prior_means(pontos, shrink)
+def training_table(pontos: pd.DataFrame, ctx: pd.DataFrame, shrink: float,
+                   prev_means: dict[int, float] | None = None) -> pd.DataFrame:
+    df = add_prior_means(pontos, shrink, prev_means)
     return df.merge(ctx, on=["rodada", "team_id"], how="inner").dropna(subset=FEATURES)
 
 

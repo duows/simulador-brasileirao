@@ -16,7 +16,7 @@ POSITIONS = ["gol", "lat", "zag", "mei", "ata", "tec"]
 
 
 def best_team(players: pd.DataFrame, budget: float, schemes: dict[str, dict[str, int]],
-              captain_mult: float = 1.5, only: str | None = None) -> dict:
+              captain_mult: float = 1.5, only: str | None = None, reserves: dict | None = None) -> dict:
     """players: colunas atleta_id, apelido, posicao, preco, esperado (> 0 para entrar)."""
     p = players[players.esperado > 0].reset_index(drop=True)
     names = [only] if only else list(schemes)
@@ -51,5 +51,39 @@ def best_team(players: pd.DataFrame, budget: float, schemes: dict[str, dict[str,
     team["pos_ordem"] = team.posicao.map({q: i for i, q in enumerate(POSITIONS)})
     team = team.sort_values(["pos_ordem", "esperado"], ascending=[True, False]).drop(columns="pos_ordem")
     total = float(team.esperado.sum() + (captain_mult - 1) * team[team.capitao].esperado.sum())
-    return {"ok": True, "esquema": scheme, "custo": float(team.preco.sum()), "orcamento": budget,
-            "pontos_esperados": total, "time": team}
+    res = {"ok": True, "esquema": scheme, "custo": float(team.preco.sum()), "orcamento": budget,
+           "pontos_esperados": total, "time": team, "reservas": pd.DataFrame()}
+    if reserves and reserves.get("ativo"):
+        rv = add_reserves(team, players, reserves)
+        res["reservas"] = rv
+        res["valor_reservas"] = float(rv.valor_reserva.sum()) if len(rv) else 0.0
+        res["pontos_esperados_com_reservas"] = total + res["valor_reservas"]
+    return res
+
+
+RESERVE_POSITIONS = ["gol", "lat", "zag", "mei", "ata"]
+
+
+def add_reserves(team: pd.DataFrame, players: pd.DataFrame, rules: dict) -> pd.DataFrame:
+    """Um reserva por posição (técnico não tem), escolhido depois dos titulares.
+
+    Regra (configurável, TODO confirmar no regulamento do Cartola): o reserva não gasta cartoletas,
+    mas custa no máximo o mesmo que o titular mais barato da posição. Ele só entra se um titular da
+    posição não jogar, então vale chance(algum titular faltar) × pontuação esperada do reserva.
+    """
+    pool = players[(players.esperado > 0) & ~players.atleta_id.isin(team.atleta_id)]
+    rows = []
+    for pos in RESERVE_POSITIONS:
+        starters = team[team.posicao == pos]
+        if starters.empty:  # esquema sem a posição (ex.: 3-5-2 sem laterais): não há a quem substituir
+            continue
+        cap = starters.preco.min() if rules.get("preco_maximo") == "titular_mais_barato" else np.inf
+        cand = pool[(pool.posicao == pos) & (pool.preco <= cap + 1e-9)]
+        if cand.empty:
+            continue
+        q = 1 - float(np.prod(starters.p_jogar.to_numpy(float))) if "p_jogar" in starters else 0.0
+        best = cand.loc[cand.esperado.idxmax()].copy()
+        best["chance_de_entrar"] = q
+        best["valor_reserva"] = q * float(best.esperado)
+        rows.append(best)
+    return pd.DataFrame(rows)

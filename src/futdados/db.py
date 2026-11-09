@@ -94,6 +94,25 @@ CREATE TRIGGER IF NOT EXISTS projections_no_update BEFORE UPDATE ON projections
 BEGIN SELECT RAISE(ABORT, 'registro de projeções é imutável'); END;
 CREATE TRIGGER IF NOT EXISTS projections_no_delete BEFORE DELETE ON projections
 BEGIN SELECT RAISE(ABORT, 'registro de projeções é imutável'); END;
+
+-- Cartola (estudo local): previsões gravadas antes do fechamento do mercado, só inserção.
+CREATE TABLE IF NOT EXISTS cartola_predictions (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at     TEXT NOT NULL,
+    season         INTEGER NOT NULL,
+    rodada         INTEGER NOT NULL,
+    fechamento_utc TEXT NOT NULL,
+    model_version  TEXT NOT NULL,
+    atletas        TEXT NOT NULL,   -- JSON: id, posicao, status, preco, media_cartola, esperado, previsto_se_jogar
+    times          TEXT NOT NULL,   -- JSON: time sugerido para cada orçamento
+    prev_hash      TEXT NOT NULL,
+    hash           TEXT NOT NULL UNIQUE,
+    CHECK (created_at < fechamento_utc)
+);
+CREATE TRIGGER IF NOT EXISTS cartola_no_update BEFORE UPDATE ON cartola_predictions
+BEGIN SELECT RAISE(ABORT, 'registro do Cartola é imutável'); END;
+CREATE TRIGGER IF NOT EXISTS cartola_no_delete BEFORE DELETE ON cartola_predictions
+BEGIN SELECT RAISE(ABORT, 'registro do Cartola é imutável'); END;
 """
 
 # Migrações simples e idempotentes: cada item roda uma vez, em ordem (tabela schema_version).
@@ -319,3 +338,24 @@ class Repository:
         self.conn.execute("CREATE TABLE IF NOT EXISTS kv_store (key TEXT PRIMARY KEY, value TEXT)")
         row = self.conn.execute("SELECT value FROM kv_store WHERE key=?", (key,)).fetchone()
         return json.loads(row[0]) if row else default
+
+
+    # ------------------------------------------------- Cartola (registro)
+    def insert_cartola_prediction(self, rec: dict[str, Any], created_at: str | None = None) -> str:
+        created_at = created_at or utc_now()
+        row = self.conn.execute("SELECT hash FROM cartola_predictions ORDER BY id DESC LIMIT 1").fetchone()
+        prev = row[0] if row else "genesis"
+        atletas = json.dumps(rec["atletas"], ensure_ascii=False, sort_keys=True)
+        times = json.dumps(rec["times"], ensure_ascii=False, sort_keys=True)
+        digest = hashlib.sha256(f"{created_at}|{rec['season']}|{rec['rodada']}|{rec['model_version']}|{prev}|{atletas}|{times}"
+                                .encode()).hexdigest()
+        with self.conn:
+            self.conn.execute(
+                "INSERT INTO cartola_predictions (created_at, season, rodada, fechamento_utc, model_version, atletas, times,"
+                " prev_hash, hash) VALUES (?,?,?,?,?,?,?,?,?)",
+                (created_at, rec["season"], rec["rodada"], rec["fechamento_utc"], rec["model_version"], atletas, times, prev,
+                 digest))
+        return digest
+
+    def cartola_predictions(self, season: int) -> pd.DataFrame:
+        return pd.read_sql_query("SELECT * FROM cartola_predictions WHERE season=? ORDER BY id", self.conn, params=(season,))

@@ -74,3 +74,34 @@ def test_decomposition_sums_to_prediction():
     dec = cm.decompose(rows.iloc[7], coefs["zag"])
     assert sum(dec.values()) == pytest.approx(pred[7])
     assert np.allclose(pred, rows.pontos, atol=0.05)
+
+
+
+def test_reserves_respect_price_rule_and_skip_tecnico():
+    from futdados.cartola.optimize import add_reserves
+
+    pl = _players(5, per_pos=6).assign(p_jogar=0.95)
+    res = best_team(pl, 120, SCHEMES, 1.5, reserves={"ativo": True, "preco_maximo": "titular_mais_barato"})
+    assert res["ok"]
+    t, rv = res["time"], res["reservas"]
+    assert "tec" not in set(rv.posicao)
+    for r in rv.itertuples():
+        assert r.atleta_id not in set(t.atleta_id)
+        assert r.preco <= t[t.posicao == r.posicao].preco.min() + 1e-9
+        n = (t.posicao == r.posicao).sum()
+        assert r.chance_de_entrar == pytest.approx(1 - 0.95**n)
+    assert res["pontos_esperados_com_reservas"] == pytest.approx(res["pontos_esperados"] + rv.valor_reserva.sum())
+    # esquema sem laterais: não há reserva de lateral
+    t352 = best_team(pl, 120, SCHEMES, 1.5, only="3-5-2")["time"]
+    assert "lat" not in set(add_reserves(t352, pl, {"ativo": True, "preco_maximo": "livre"}).posicao)
+
+
+def test_team_real_points_with_bench_and_captain():
+    from futdados.cartola.project import team_real_points
+
+    real = pd.DataFrame({"pontos": [10.0, 0.0, 6.0, 4.0], "jogou": [True, False, True, True]}, index=[1, 2, 3, 4])
+    t = {"atletas": [1, 2, 3], "capitao": 1, "posicoes": {"1": "ata", "2": "ata", "3": "mei"}, "reservas": {"ata": 4}}
+    # 10 + 0 + 6, capitão +0,5×10, reserva do ataque entra no lugar do 2 (não jogou): +4
+    assert team_real_points(t, real, 1.5) == pytest.approx(25.0)
+    t["capitao"] = 2  # capitão que não jogou não multiplica nada
+    assert team_real_points(t, real, 1.5) == pytest.approx(20.0)

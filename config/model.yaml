@@ -84,6 +84,11 @@ cartola:
   alpha: 10                 # ridge leve dos coeficientes por posição
   first_backtest_round: 6
   captain_multiplier: 1.5   # TODO: confirmar a regra vigente do capitão no Cartola
+  registro_orcamentos: [100, 120, 140, 160]   # times sugeridos gravados a cada rodada
+  reservas:                 # banco: 1 por posição (sem técnico); entra se um titular da posição não jogar
+    ativo: true
+    preco_maximo: titular_mais_barato   # TODO confirmar a regra vigente; "livre" = sem limite de preço
+    # reserva de luxo (substitui mesmo quem jogou) ainda não implementada
   p_jogar:                  # chance de jogar pelo status do mercado (não estimada: sem histórico de status)
     provavel: 0.95
     duvida: 0.5

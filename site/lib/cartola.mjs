@@ -118,3 +118,27 @@ export function bestTeam(players, budget, schemes, mult = 1.5, onlyScheme = null
   const custo = team.reduce((x, p) => x + p.preco, 0);
   return { ok: true, esquema: best.s, custo, pontos_esperados: best.value, time: team };
 }
+
+const RESERVE_POSITIONS = ["gol", "lat", "zag", "mei", "ata"];
+
+/**
+ * Banco de reservas: um por posição (técnico não tem), escolhido depois dos titulares.
+ * Regra configurável (TODO confirmar no Cartola): não gasta cartoletas e custa no máximo o mesmo
+ * que o titular mais barato da posição. Vale chance(algum titular faltar) × esperado do reserva.
+ */
+export function addReserves(team, players, rules = { ativo: true, preco_maximo: "titular_mais_barato" }) {
+  if (!rules || !rules.ativo) return { reservas: [], valor: 0 };
+  const inTeam = new Set(team.map((p) => p.id));
+  const reservas = [];
+  for (const pos of RESERVE_POSITIONS) {
+    const starters = team.filter((p) => p.posicao === pos);
+    if (!starters.length) continue;
+    const cap = rules.preco_maximo === "titular_mais_barato" ? Math.min(...starters.map((p) => p.preco)) : Infinity;
+    const cand = players.filter((p) => p.posicao === pos && p.esperado > 0 && !inTeam.has(p.id) && p.preco <= cap + 1e-9);
+    if (!cand.length) continue;
+    const best = cand.reduce((a, b) => (b.esperado > a.esperado ? b : a));
+    const q = 1 - starters.reduce((acc, p) => acc * (p.p_jogar ?? 1), 1);
+    reservas.push({ ...best, chance_de_entrar: q, valor_reserva: q * best.esperado });
+  }
+  return { reservas, valor: reservas.reduce((s, r) => s + r.valor_reserva, 0) };
+}

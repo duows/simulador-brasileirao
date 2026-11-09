@@ -1,7 +1,7 @@
 "use client";
 // Monta o melhor time do Cartola para o orçamento digitado, no navegador.
 import { useMemo, useState } from "react";
-import { bestTeam } from "../lib/cartola.mjs";
+import { addReserves, bestTeam } from "../lib/cartola.mjs";
 import { num, pct, signed } from "../lib/format";
 
 const POS = { gol: "Goleiro", lat: "Lateral", zag: "Zagueiro", mei: "Meia", ata: "Atacante", tec: "Técnico" };
@@ -34,7 +34,10 @@ export default function CartolaBuilder({ data }) {
   const res = useMemo(() => {
     const b = Number(budget);
     if (!Number.isFinite(b) || b <= 0) return { ok: false, motivo: "Digite um orçamento válido." };
-    return bestTeam(players, b, data.esquemas, data.multiplicador_capitao, scheme || null);
+    const r = bestTeam(players, b, data.esquemas, data.multiplicador_capitao, scheme || null);
+    if (!r.ok) return r;
+    const bench = addReserves(r.time, players, data.reservas);
+    return { ...r, reservas: bench.reservas, valor_reservas: bench.valor };
   }, [players, budget, scheme, data]);
 
   return (
@@ -56,8 +59,8 @@ export default function CartolaBuilder({ data }) {
       {!res.ok ? <p className="lead">{res.motivo}</p> : (
         <>
           <div className="tiles">
-            <div className="card tile"><div className="label">Pontuação esperada</div><div className="value">{num(res.pontos_esperados, 1)}</div>
-              <div className="sub">com capitão ×{num(data.multiplicador_capitao, 1)}</div></div>
+            <div className="card tile"><div className="label">Pontuação esperada</div><div className="value">{num(res.pontos_esperados + res.valor_reservas, 1)}</div>
+              <div className="sub">titulares {num(res.pontos_esperados, 1)} + banco {num(res.valor_reservas, 1)} · capitão ×{num(data.multiplicador_capitao, 1)}</div></div>
             <div className="card tile"><div className="label">Custo</div><div className="value">C$ {num(res.custo, 2)}</div>
               <div className="sub">sobram C$ {num(Number(budget) - res.custo, 2)}</div></div>
             <div className="card tile"><div className="label">Esquema</div><div className="value">{res.esquema}</div><div className="sub">{scheme ? "escolhido por você" : "o que rende mais"}</div></div>
@@ -82,9 +85,31 @@ export default function CartolaBuilder({ data }) {
                   </tr>
                 ))}
               </tbody>
-              <caption>Pontuação esperada = chance de jogar × pontos previstos se jogar. Os pontos previstos somam a base da posição, a média do atleta (puxada para a média da posição quando há poucos jogos) e o contexto do jogo vindo do nosso modelo: chance de não sofrer gol, gols esperados do time, mando e chance de vitória.</caption>
+              <caption>Titulares. Pontuação esperada = chance de jogar × pontos previstos se jogar. Os pontos previstos somam a base da posição, a média do atleta (puxada para a média da posição quando há poucos jogos) e o contexto do jogo vindo do nosso modelo: chance de não sofrer gol, gols esperados do time, mando e chance de vitória.</caption>
             </table>
           </div>
+          {res.reservas.length > 0 && (
+            <>
+              <h3 style={{ marginTop: 18 }}>Banco de reservas</h3>
+              <div className="table-scroll">
+                <table>
+                  <thead><tr><th className="l">Posição</th><th className="l">Atleta</th><th className="l">Jogo</th><th>Preço</th><th>Esperado se entrar</th><th>Chance de entrar</th><th>Vale</th></tr></thead>
+                  <tbody>
+                    {res.reservas.map((p) => (
+                      <tr key={p.id}>
+                        <td className="l">{POS[p.posicao]}</td>
+                        <td className="l"><strong>{p.apelido}</strong><div className="small muted">{p.time_nome}</div></td>
+                        <td className="l small">{p.mando ? "x" : "@"} {p.adversario}</td>
+                        <td>C$ {num(p.preco, 2)}</td><td>{num(p.esperado, 2)}</td><td>{pct(p.chance_de_entrar)}</td>
+                        <td><strong>{num(p.valor_reserva, 2)}</strong></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <caption>O reserva entra no lugar de um titular da mesma posição que não jogar. Regra usada: não gasta cartoletas e custa no máximo o mesmo que o titular mais barato da posição (a confirmar no regulamento do Cartola). Técnico não tem reserva.</caption>
+                </table>
+              </div>
+            </>
+          )}
         </>
       )}
     </>

@@ -1,6 +1,8 @@
-# Cartola FC: backtest da pontuação esperada (estudo de caso)
+# Cartola FC: quanto o modelo erra (estudo de caso)
 
-Walk-forward dentro da temporada: cada rodada prevista só com rodadas anteriores; o modelo de jogos usado no contexto foi ajustado só até a temporada anterior. Avaliado em atletas que entraram em campo (a chance de jogar não é avaliada: não há histórico do status do mercado). Baseline: a média do próprio Cartola.
+## Backtest da temporada
+
+Walk-forward: cada rodada prevista só com rodadas anteriores; o modelo de jogos usado no contexto foi ajustado só até a temporada anterior. Avaliado em atletas que entraram em campo. Baseline: a média do próprio Cartola.
 
 | Métrica | Modelo | Média do Cartola |
 |---|---|---|
@@ -16,5 +18,9 @@ Walk-forward dentro da temporada: cada rodada prevista só com rodadas anteriore
 | mei | 2,565 | 2,654 | 2935 |
 | tec | 1,755 | 1,875 | 539 |
 | zag | 2,796 | 2,949 | 1291 |
+
+## Ao vivo (previsões gravadas antes do fechamento do mercado)
+
+Ainda não há rodada registrada e encerrada.
 
 Ganho real, mas modesto: a pontuação do Cartola tem muito acaso e o modelo não sabe a escalação.

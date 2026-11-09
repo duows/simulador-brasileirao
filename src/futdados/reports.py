@@ -125,7 +125,7 @@ def backtest_markdown(scores: dict, per_season: pd.DataFrame, calib: pd.DataFram
         f"| Frequência histórica (mandante/empate/visitante) | {num(f['brier'], 4)} | {num(f['log_loss'], 4)} | {p1(f['acerto'])} |",
         f"| Sempre mandante (100% vitória do mandante) | {num(h['brier'], 4)} | {num(h['log_loss'], 2)}* | {p1(h['acerto'])} |",
         "",
-        "\* \"Sempre mandante\" dá probabilidade zero a empates e derrotas, então o log loss é "
+        "\\* \"Sempre mandante\" dá probabilidade zero a empates e derrotas, então o log loss é "
         "enorme (limitado numericamente). Ele serve de referência de acerto, não de probabilidade.",
         "",
         "Brier multiclasse: soma dos erros quadráticos nas três classes (0 = perfeito, 2 = pior "

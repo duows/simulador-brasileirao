@@ -105,6 +105,37 @@ def cmd_backtest(args, cfg) -> None:
     print("Relatório: reports/backtest.md")
 
 
+def cmd_update(args, cfg) -> None:
+    """Atualiza dados da temporada pela API e reestima os pesos."""
+    cmd_ingest_api(args, cfg)
+    cmd_fit(args, cfg)
+
+
+def cmd_predict_round(args, cfg) -> None:
+    from .pipeline import predict_round
+
+    path, info = predict_round(_repo(cfg), cfg, args.season, args.round)
+    print(f"Rodada {info['round']}: {info['registered']} previsões gravadas no registro imutável.")
+    for s in info["skipped"]:
+        print(f"  Não registrado (já começou): {s}")
+    print(f"JSON: {path}")
+
+
+def cmd_post_round(args, cfg) -> None:
+    from .pipeline import post_round
+
+    path, info = post_round(_repo(cfg), cfg, args.season, args.round)
+    print(f"Rodada {args.round}: Brier {info['brier']:.4f} em {info['n']} jogos.")
+    print(f"JSON: {path}")
+
+
+def cmd_verify(args, cfg) -> None:
+    ok = _repo(cfg).verify_prediction_chain()
+    print("Cadeia de hashes do registro: " + ("íntegra" if ok else "QUEBRADA"))
+    if not ok:
+        raise SystemExit(1)
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -122,6 +153,16 @@ def build_parser() -> argparse.ArgumentParser:
                    help="reconstitui a projeção escondendo resultados depois desta rodada (demonstração)")
     s.add_argument("--sims", type=int, help="número de simulações (padrão no YAML)")
     sub.add_parser("backtest", help="walk-forward por temporada e reports/backtest.md")
+    s = sub.add_parser("update", help="ingest-api + fit (atualiza dados e pesos)")
+    s.add_argument("--season", type=int, required=True)
+    s.add_argument("--half-life", type=float, help="pula a escolha automática da meia-vida")
+    s = sub.add_parser("predict-round", help="estima a próxima rodada e grava no registro")
+    s.add_argument("--season", type=int, required=True)
+    s.add_argument("--round", type=int, help="padrão: próxima rodada com jogos pendentes")
+    s = sub.add_parser("post-round", help="compara estimado x real e atualiza a projeção")
+    s.add_argument("--season", type=int, required=True)
+    s.add_argument("--round", type=int, required=True)
+    sub.add_parser("verify-registry", help="confere a cadeia de hashes das previsões")
     return p
 
 
@@ -131,6 +172,10 @@ COMMANDS = {
     "fit": cmd_fit,
     "project": cmd_project,
     "backtest": cmd_backtest,
+    "update": cmd_update,
+    "predict-round": cmd_predict_round,
+    "post-round": cmd_post_round,
+    "verify-registry": cmd_verify,
 }
 
 

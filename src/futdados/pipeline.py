@@ -129,3 +129,142 @@ def projection_json(cfg, table: pd.DataFrame, meta: dict) -> Path:
     }
     slug = f"tabela-projetada-{meta['season']}-apos-r{meta['target_round']:02d}-base-r{meta['based_on_round']:02d}"
     return video_json(cfg, w, "tabela_projetada", dados, slug)
+
+
+# --------------------------------------------------------- previsão da rodada
+def next_round(feat: pd.DataFrame) -> int | None:
+    pending = feat[feat.status != "FINISHED"]
+    return None if pending.empty else int(pending["round"].min())
+
+
+def predict_round(repo: Repository, cfg, season: int, round_: int | None = None,
+                  now: pd.Timestamp | None = None) -> tuple[Path, dict]:
+    """Estima os jogos da rodada, grava no registro imutável e gera o JSON do vídeo.
+
+    Só jogos que ainda não começaram são registrados (o banco também recusa o contrário).
+    """
+    w = load_weights(cfg)
+    now = now or pd.Timestamp.now(tz="UTC")
+    feat = season_features(repo, cfg, w, season)
+    rnd = round_ or next_round(feat)
+    if rnd is None:
+        raise ValueError(f"Não há jogos pendentes na temporada {season}.")
+    games = feat[(feat["round"] == rnd) & (feat.status != "FINISHED")]
+    jogos, skipped = [], []
+    created = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    for _, row in games.iterrows():
+        payload = match_payload(row, w, cfg["model"]["max_goals"])
+        if pd.Timestamp(row["kickoff_utc"]) <= now:
+            skipped.append(payload["inicio_utc"] + f" {row['home_id']} x {row['away_id']}")
+            continue
+        p = payload["probabilidade_estimada"]
+        digest = repo.insert_prediction({
+            "season": season, "round": rnd, "home_id": row["home_id"], "away_id": row["away_id"],
+            "kickoff_utc": payload["inicio_utc"], "model_version": w.model_version,
+            "lambda_home": payload["gols_esperados"]["mandante"],
+            "lambda_away": payload["gols_esperados"]["visitante"],
+            "p_home": p["mandante"], "p_draw": p["empate"], "p_away": p["visitante"], "payload": payload,
+        }, created_at=created)
+        payload["registro"] = {"gravado_em": created, "hash": digest}
+        jogos.append(payload)
+
+    # projeção antes da rodada (fica gravada para o pós-rodada comparar)
+    table, meta = project(repo, cfg, season, None)
+    focus = cfg["output"]["focus_team"]
+    dados = {
+        "titulo": f"Probabilidades estimadas pelo modelo · rodada {rnd} · {season}",
+        "temporada": season, "rodada": rnd,
+        "jogos": sorted(jogos, key=lambda j: j["inicio_utc"]),
+        "jogos_nao_registrados_ja_iniciados": skipped,
+        "time_foco": _focus_block(table, focus),
+        "explicacao_fatores": ("Para cada time, 'efeito_gols' é quanto o fator somou ou tirou dos gols "
+                               "esperados em relação aos gols base. A soma dos efeitos mais os gols base "
+                               "dá os gols esperados."),
+    }
+    slug = f"rodada-{season}-r{rnd:02d}-estimativas"
+    return video_json(cfg, w, "estimativas_rodada", dados, slug), {"round": rnd, "registered": len(jogos),
+                                                                    "skipped": skipped, "meta": meta}
+
+
+def _focus_block(table: pd.DataFrame, team: str) -> dict | None:
+    row = table[table.team_id == team]
+    if row.empty:
+        return None
+    r = row.iloc[0]
+    return {"id": team, "nome": display_name(team), "pontos_atuais": int(r.pontos_atuais),
+            "pontos_esperados_fim": round(float(r.exp_points_final), 1),
+            "chance_titulo": round(float(r.p_titulo), 4), "chance_g4": round(float(r.p_g4), 4),
+            "chance_g6": round(float(r.p_g6), 4), "chance_rebaixamento": round(float(r.p_rebaixamento), 4)}
+
+
+# ------------------------------------------------------------------ pós-rodada
+def post_round(repo: Repository, cfg, season: int, round_: int) -> tuple[Path, dict]:
+    """Compara estimado x real, calcula o Brier da rodada e a variação das chances do time foco."""
+    from .backtest.walkforward import brier, log_loss, outcome_index
+
+    w = load_weights(cfg)
+    preds = repo.predictions(season, round_)
+    if preds.empty:
+        raise ValueError(f"Nenhuma previsão registrada para a rodada {round_} de {season}.")
+    preds = preds[preds.created_at < preds.kickoff_utc]
+    preds = preds.sort_values("id").groupby(["home_id", "away_id"]).tail(1)  # última antes do jogo
+    m = repo.matches(season)
+    merged = preds.merge(m[["home_id", "away_id", "home_goals", "away_goals", "status"]],
+                         on=["home_id", "away_id"])
+    done = merged[merged.status == "FINISHED"].dropna(subset=["home_goals"])
+    if done.empty:
+        raise ValueError("Os jogos da rodada ainda não têm resultado no banco. Rode `update` antes.")
+    y = outcome_index(done.home_goals, done.away_goals)
+    p = done[["p_home", "p_draw", "p_away"]].to_numpy()
+    labels = ["mandante", "empate", "visitante"]
+    jogos = []
+    for k, r in enumerate(done.itertuples()):
+        jogos.append({
+            "mandante": {"id": r.home_id, "nome": display_name(r.home_id)},
+            "visitante": {"id": r.away_id, "nome": display_name(r.away_id)},
+            "placar": {"mandante": int(r.home_goals), "visitante": int(r.away_goals)},
+            "resultado": labels[y[k]],
+            "probabilidade_estimada": {"mandante": r.p_home, "empate": r.p_draw, "visitante": r.p_away},
+            "probabilidade_do_que_aconteceu": round(float(p[k, y[k]]), 4),
+            "gols_esperados": {"mandante": r.lambda_home, "visitante": r.lambda_away},
+            "brier_jogo": round(float(np.sum((p[k] - np.eye(3)[y[k]]) ** 2)), 4),
+            "versao_modelo_da_previsao": r.model_version,
+            "previsao_gravada_em": r.created_at,
+            "hash_registro": r.hash,
+        })
+
+    max_round = int(m["round"].max())
+    before = repo.projection(season, round_ - 1, max_round)
+    reconstituted = False
+    if before.empty:
+        bt, _ = project(repo, cfg, season, None, as_of_round=round_ - 1, record=False)
+        before, reconstituted = bt, True
+    after, meta = project(repo, cfg, season, None)
+    focus = cfg["output"]["focus_team"]
+
+    def pick(df, col):
+        row = df[df.team_id == focus]
+        return float(row.iloc[0][col]) if not row.empty else None
+
+    variacao = {}
+    for col, name in (("p_titulo", "titulo"), ("p_g4", "g4"), ("p_g6", "g6"),
+                      ("p_rebaixamento", "rebaixamento")):
+        a, b = pick(before, col), pick(after, col)
+        variacao[name] = None if a is None or b is None else {
+            "antes": round(a, 4), "depois": round(b, 4), "variacao_pp": round(100 * (b - a), 1)}
+
+    dados = {
+        "titulo": f"Estimado x real · rodada {round_} · {season}",
+        "temporada": season, "rodada": round_,
+        "brier_rodada": round(brier(p, y), 4),
+        "log_loss_rodada": round(log_loss(p, y), 4),
+        "referencia_brier": {"backtest_modelo": "ver reports/backtest.md",
+                             "chute_um_terco": round(2 / 3, 4)},
+        "jogos": jogos,
+        "time_foco": {"id": focus, "nome": display_name(focus), "variacao_chances": variacao,
+                      "projecao_anterior_reconstituida": reconstituted},
+        "tabela_projetada_atualizada": f"tabela-projetada-{season}-apos-r{max_round:02d}-base-r{meta['based_on_round']:02d}.json",
+    }
+    projection_json(cfg, after, meta)
+    slug = f"pos-rodada-{season}-r{round_:02d}"
+    return video_json(cfg, w, "pos_rodada", dados, slug), {"brier": dados["brier_rodada"], "n": len(jogos)}

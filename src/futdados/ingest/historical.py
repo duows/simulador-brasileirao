@@ -76,8 +76,13 @@ def ingest_historical(repo, cfg: dict) -> dict[int, int]:
     hcfg = cfg["historical"]
     repo_dir = ensure_repo(cfg["paths"]["historical_repo"], hcfg["repo_url"])
     counts: dict[int, int] = {}
+    # prioridade de fontes (ver ingest/reconcile.py): não sobrescreve temporada que já veio da API
+    api = repo.matches()
+    api_keys = set(zip(api[api.source == "football-data"].season, api[api.source == "football-data"].home_id,
+                       api[api.source == "football-data"].away_id))
     for season in range(hcfg["first_season"], hcfg["last_season"] + 1):
         rows, _ = load_season(repo_dir, season)
+        rows = [r for r in rows if (r["season"], r["home_id"], r["away_id"]) not in api_keys]
         repo.upsert_matches(rows)
         counts[season] = len(rows)
     return counts

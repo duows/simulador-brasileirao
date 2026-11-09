@@ -31,6 +31,24 @@ def normalize_key(name: str) -> str:
 
 
 @lru_cache(maxsize=4)
+def _info(path: str) -> dict[str, dict[str, str]]:
+    """id -> {slug, display_name, short_name, color_primary, color_secondary}."""
+    with open(path, encoding="utf-8") as fh:
+        return {row["team_id"].strip(): {k: (row.get(k) or "").strip() for k in
+                ("slug", "display_name", "short_name", "color_primary", "color_secondary")}
+                for row in csv.DictReader(fh)}
+
+
+def team_info(tid: str, path: str | Path = TEAMS_CSV) -> dict[str, str]:
+    """Nome, sigla de 3 letras e cores (para o monograma; o projeto não usa escudos)."""
+    info = _info(str(path)).get(tid)
+    if info is None:
+        return {"slug": tid, "display_name": tid, "short_name": tid[:3].upper(),
+                "color_primary": "#33443d", "color_secondary": "#ffffff"}
+    return info
+
+
+@lru_cache(maxsize=4)
 def _load(path: str) -> tuple[dict[str, str], dict[str, str]]:
     alias_to_id: dict[str, str] = {}
     display: dict[str, str] = {}

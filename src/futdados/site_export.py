@@ -18,11 +18,9 @@ from .db import Repository, utc_now
 from .finance import read as read_finance
 from .model.features import FEATURES
 from .model.predict import FACTOR_LABEL, match_payload
-from .pipeline import (LINGUAGEM, SOURCES, last_complete_round, load_weights,
-                       season_features)
-from .simulate.montecarlo import round_plan
+from .pipeline import LINGUAGEM, SOURCES, last_complete_round, load_weights, season_features
 from .reports import FACTOR_TEXT
-from .simulate.montecarlo import simulate_season, split_remaining
+from .simulate.montecarlo import round_plan, simulate_season, split_remaining
 from .teams import display_name
 
 

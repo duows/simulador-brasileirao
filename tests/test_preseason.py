@@ -3,12 +3,11 @@ from collections import Counter
 
 import pandas as pd
 import pytest
+from test_pipeline import AVISO, FORBIDDEN, env  # noqa: F401  (reaproveita a liga fictícia)
 
 from futdados.model.features import promoted_prior
 from futdados.pipeline import preseason_json, simulate_preseason
 from futdados.simulate.schedule import generate_schedule, round_robin
-
-from test_pipeline import AVISO, FORBIDDEN, env  # noqa: F401  (reaproveita a liga fictícia)
 
 ATTRIB = "Football data provided by the Football-Data.org API"
 

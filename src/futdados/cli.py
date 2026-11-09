@@ -63,9 +63,8 @@ def _print_projection(table, meta) -> None:
 
 
 def cmd_project(args, cfg) -> None:
-    from .pipeline import project, projection_json
-
     from .db import utc_now
+    from .pipeline import project, projection_json
     from .reports import projection_markdown, write
     from .teams import display_name
 
@@ -94,10 +93,9 @@ def cmd_project(args, cfg) -> None:
 def cmd_backtest(args, cfg) -> None:
     import pandas as pd
 
-    from .backtest.walkforward import (brier, calibration_table, log_loss, outcome_index, score,
-                                       walk_forward)
-    from .model.predict import features_for
+    from .backtest.walkforward import brier, calibration_table, log_loss, outcome_index, score, walk_forward
     from .model.poisson import Weights
+    from .model.predict import features_for
     from .reports import backtest_markdown, write
 
     repo = _repo(cfg)
@@ -196,6 +194,37 @@ def cmd_export_site(args, cfg) -> None:
     print(f"Dados do site em {out}. Para ver: cd site && npm run dev")
 
 
+def cmd_coverage(args, cfg) -> None:
+    """Flags de casos especiais, qualidade, cobertura 2006-2026 e divergências entre fontes."""
+    from .ingest.reconcile import reconcile
+    from .quality import closed_season_issues, compute_flags, coverage, quality_issues
+    from .reports import coverage_markdown, divergence_markdown, write
+
+    repo = _repo(cfg)
+    m = repo.matches()
+    repo.set_match_flags(compute_flags(m))
+    m = repo.matches()
+    issues = quality_issues(m)
+    for s in sorted(m.season.unique()):
+        if int(s) < args.current_season:
+            issues += closed_season_issues(m, int(s))
+    cov = coverage(m, 2006, args.current_season)
+    flags = m.groupby("season")[["postponed", "rescheduled", "behind_closed_doors"]].sum()
+    div, summary = reconcile(m, cfg)
+    if not args.no_write:
+        write(f"{cfg['paths']['reports']}/cobertura.md", coverage_markdown(cov, issues, flags))
+        write(f"{cfg['paths']['reports']}/divergencias.md", divergence_markdown(div, summary))
+    print(cov[["temporada", "esperados", "existentes", "encerrados", "fontes"]].to_string(index=False))
+    print("Problemas de qualidade:", len(issues))
+    for i in issues:
+        print("  -", i)
+    for s in summary:
+        print(s)
+    print("Relatórios: reports/cobertura.md e reports/divergencias.md")
+    if issues and args.strict:
+        raise SystemExit(1)
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -226,6 +255,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--season", type=int, required=True)
     s.add_argument("--round", type=int, required=True)
     sub.add_parser("verify-registry", help="confere a cadeia de hashes das previsões")
+    s = sub.add_parser("coverage", help="cobertura 2006-2026, qualidade e divergências entre fontes")
+    s.add_argument("--current-season", type=int, default=2026, help="temporada em andamento")
+    s.add_argument("--strict", action="store_true", help="sai com erro se houver problema de qualidade")
+    s.add_argument("--no-write", action="store_true", help="só confere, sem regravar os relatórios")
     s = sub.add_parser("export-site", help="gera os dados do site estático em site/public/data")
     s.add_argument("--season", type=int, required=True)
     s.add_argument("--as-of-round", type=int, help="demonstração: reconstitui a temporada nesta rodada")
@@ -249,6 +282,7 @@ COMMANDS = {
     "verify-registry": cmd_verify,
     "simulate-season": cmd_simulate_season,
     "export-site": cmd_export_site,
+    "coverage": cmd_coverage,
 }
 
 

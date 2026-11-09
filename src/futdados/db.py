@@ -10,9 +10,10 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import pandas as pd
 
@@ -95,6 +96,16 @@ CREATE TRIGGER IF NOT EXISTS projections_no_delete BEFORE DELETE ON projections
 BEGIN SELECT RAISE(ABORT, 'registro de projeções é imutável'); END;
 """
 
+# Migrações simples e idempotentes: cada item roda uma vez, em ordem (tabela schema_version).
+MIGRATIONS = [
+    # 1 · flags de casos especiais (calculadas por futdados.quality.compute_flags)
+    "ALTER TABLE matches ADD COLUMN postponed INTEGER NOT NULL DEFAULT 0",
+    "ALTER TABLE matches ADD COLUMN rescheduled INTEGER NOT NULL DEFAULT 0",
+    "ALTER TABLE matches ADD COLUMN neutral_venue INTEGER NOT NULL DEFAULT 0",
+    "ALTER TABLE matches ADD COLUMN behind_closed_doors INTEGER NOT NULL DEFAULT 0",
+]
+FLAG_COLS = ["postponed", "rescheduled", "neutral_venue", "behind_closed_doors"]
+
 MATCH_COLS = [
     "season", "home_id", "away_id", "round", "kickoff_utc", "home_goals", "away_goals",
     "status", "home_coach", "away_coach", "source", "ext_id",
@@ -102,7 +113,7 @@ MATCH_COLS = [
 
 
 def utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class Repository:
@@ -113,6 +124,32 @@ class Repository:
         self.conn = sqlite3.connect(self.path)
         self.conn.row_factory = sqlite3.Row
         self.conn.executescript(SCHEMA)
+        self._migrate()
+
+    def _migrate(self) -> None:
+        self.conn.execute("CREATE TABLE IF NOT EXISTS schema_version (version INTEGER NOT NULL)")
+        row = self.conn.execute("SELECT MAX(version) FROM schema_version").fetchone()
+        current = row[0] or 0
+        for i, sql in enumerate(MIGRATIONS, start=1):
+            if i <= current:
+                continue
+            with self.conn:
+                try:
+                    self.conn.execute(sql)
+                except sqlite3.OperationalError as exc:  # coluna já existe (banco criado à mão)
+                    if "duplicate column" not in str(exc):
+                        raise
+                self.conn.execute("INSERT INTO schema_version VALUES (?)", (i,))
+
+    def set_match_flags(self, flags: pd.DataFrame) -> int:
+        """Grava as flags (colunas FLAG_COLS) pela chave (temporada, mandante, visitante)."""
+        sql = (f"UPDATE matches SET {', '.join(f'{c}=?' for c in FLAG_COLS)} "
+               "WHERE season=? AND home_id=? AND away_id=?")
+        data = [tuple(int(r[c]) for c in FLAG_COLS) + (int(r["season"]), r["home_id"], r["away_id"])
+                for r in flags.to_dict("records")]
+        with self.conn:
+            self.conn.executemany(sql, data)
+        return len(data)
 
     def close(self) -> None:
         self.conn.close()

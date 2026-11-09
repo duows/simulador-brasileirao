@@ -13,7 +13,7 @@ import hashlib
 import json
 import math
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import numpy as np
 from scipy.optimize import minimize, minimize_scalar
@@ -45,7 +45,7 @@ class Weights:
             json.dump(asdict(self), fh, ensure_ascii=False, indent=2)
 
     @classmethod
-    def load(cls, path) -> "Weights":
+    def load(cls, path) -> Weights:
         with open(path, encoding="utf-8") as fh:
             return cls(**json.load(fh))
 
@@ -132,7 +132,7 @@ def fit(feat, mcfg: dict, half_life_days: float, bootstrap: int | None = None,
         rho=rho, half_life_days=float(half_life_days),
         train_seasons=sorted(int(s) for s in feat["season"].unique()),
         n_matches=int(n),
-        fitted_at=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        fitted_at=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
     )
     digest = hashlib.sha1(json.dumps([w.intercept, w.coef, w.rho, w.half_life_days,
                                       w.train_seasons]).encode()).hexdigest()[:8]

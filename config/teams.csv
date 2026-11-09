@@ -1,48 +1,48 @@
-team_id,display_name,aliases
-america-mg,América-MG,America-MG|América Mineiro|America Mineiro|América FC|América Futebol Clube|America FC (MG)|América MG
-america-rn,América-RN,America-RN|América de Natal
-athletico-pr,Athletico-PR,Athletico-PR|Athletico Paranaense|CA Paranaense|Atlético-PR|Atletico-PR|Club Athletico Paranaense|Athletico|Atlético PR
-atletico-go,Atlético-GO,Atletico-GO|Atlético Goianiense|Atletico Goianiense|AC Goianiense|Atlético Clube Goianiense
-atletico-mg,Atlético-MG,Atletico-MG|Atlético Mineiro|Atletico Mineiro|CA Mineiro|Clube Atlético Mineiro|Atlético
-avai,Avaí,Avai|Avaí FC|Avaí SC
-bahia,Bahia,Bahia|EC Bahia|Esporte Clube Bahia|Bahia BA
-barueri,Barueri,Barueri|Grêmio Barueri
-botafogo,Botafogo,Botafogo-RJ|Botafogo|Botafogo FR|Botafogo de Futebol e Regatas|Botafogo RJ
-bragantino,Bragantino,Bragantino|Red Bull Bragantino|RB Bragantino|Bragantino-SP
-brasiliense,Brasiliense,Brasiliense
-csa,CSA,CSA|CS Alagoano|CSA AL
-ceara,Ceará,Ceara|Ceará|Ceará SC|Ceara SC|Ceará Sporting Club|Ceará CE
-chapecoense,Chapecoense,Chapecoense|Chapecoense AF|Associação Chapecoense de Futebol|Chapecoense-SC
-corinthians,Corinthians,Corinthians|SC Corinthians Paulista|Sport Club Corinthians Paulista|Corinthians SP
-coritiba,Coritiba,Coritiba|Coritiba FBC|Coritiba Foot Ball Club|Coritiba PR
-criciuma,Criciúma,Criciuma|Criciúma|Criciúma EC|Criciuma EC|Criciúma SC
-cruzeiro,Cruzeiro,Cruzeiro|Cruzeiro EC|Cruzeiro Esporte Clube|Cruzeiro MG
-cuiaba,Cuiabá,Cuiaba|Cuiabá|Cuiabá EC|Cuiaba EC|Cuiabá MT
-figueirense,Figueirense,Figueirense|Figueirense SC
-flamengo,Flamengo,Flamengo|CR Flamengo|Clube de Regatas do Flamengo|Flamengo RJ
-fluminense,Fluminense,Fluminense|Fluminense FC|Fluminense RJ
-fortaleza,Fortaleza,Fortaleza|Fortaleza EC|Fortaleza Esporte Clube|Fortaleza CE
-goias,Goiás,Goias|Goiás|Goiás EC|Goias EC|Goiás GO
-gremio,Grêmio,Gremio|Grêmio|Grêmio FBPA|Gremio FBPA|Grêmio Porto Alegre|Grêmio RS
-gremio-prudente,Grêmio Prudente,Gremio Prudente|Grêmio Prudente
-guarani,Guarani,Guarani|Guarani FC|Guarani SP
-internacional,Internacional,Internacional|SC Internacional|Sport Club Internacional|Internacional Porto Alegre
-ipatinga,Ipatinga,Ipatinga
-joinville,Joinville,Joinville|Joinville SC
-juventude,Juventude,Juventude|EC Juventude|Juventude RS
-mirassol,Mirassol,Mirassol|Mirassol FC|Mirassol Futebol Clube
-nautico,Náutico,Nautico|Náutico|Náutico PE
-palmeiras,Palmeiras,Palmeiras|SE Palmeiras|Sociedade Esportiva Palmeiras|Palmeiras SP
-parana,Paraná,Parana|Paraná|Paraná Clube
-paysandu,Paysandu,Paysandu
-ponte-preta,Ponte Preta,Ponte Preta|AA Ponte Preta
-portuguesa,Portuguesa,Portuguesa|Portuguesa SP
-remo,Remo,Remo|Clube do Remo
-santa-cruz,Santa Cruz,Santa Cruz|Santa Cruz PE
-santo-andre,Santo André,Santo Andre|Santo André
-santos,Santos,Santos|Santos FC|Santos SP
-sao-caetano,São Caetano,Sao Caetano|São Caetano
-sao-paulo,São Paulo,Sao Paulo|São Paulo|São Paulo FC|Sao Paulo FC
-sport,Sport,Sport|Sport Recife|Sport Club do Recife|SC Recife|Sport Recife PE
-vasco,Vasco,Vasco|Vasco da Gama|CR Vasco da Gama|Vasco da Gama RJ
-vitoria,Vitória,Vitoria|Vitória|EC Vitória|EC Vitoria|Esporte Clube Vitória|Vitória BA
+team_id,slug,display_name,short_name,color_primary,color_secondary,aliases
+america-mg,america-mg,América-MG,AME,#0b7a3e,#000000,America-MG|América Mineiro|America Mineiro|América FC|América Futebol Clube|America FC (MG)|América MG
+america-rn,america-rn,América-RN,AMR,#c8102e,#ffffff,America-RN|América de Natal|América RN
+athletico-pr,athletico-pr,Athletico-PR,CAP,#c8102e,#000000,Athletico-PR|Athletico Paranaense|CA Paranaense|Atlético-PR|Atletico-PR|Club Athletico Paranaense|Athletico|Atlético PR
+atletico-go,atletico-go,Atlético-GO,ACG,#c8102e,#000000,Atletico-GO|Atlético Goianiense|Atletico Goianiense|AC Goianiense|Atlético Clube Goianiense
+atletico-mg,atletico-mg,Atlético-MG,CAM,#000000,#ffffff,Atletico-MG|Atlético Mineiro|Atletico Mineiro|CA Mineiro|Clube Atlético Mineiro|Atlético
+avai,avai,Avaí,AVA,#0052a5,#ffffff,Avai|Avaí FC|Avaí SC
+bahia,bahia,Bahia,BAH,#0050a0,#e30613,Bahia|EC Bahia|Esporte Clube Bahia|Bahia BA
+barueri,barueri,Barueri,BAR,#004b93,#ffd100,Barueri|Grêmio Barueri|Grêmio Barueri SP|Grêmio Barueri Futebol
+botafogo,botafogo,Botafogo,BOT,#000000,#ffffff,Botafogo-RJ|Botafogo|Botafogo FR|Botafogo de Futebol e Regatas|Botafogo RJ
+bragantino,bragantino,Bragantino,RBB,#d71920,#ffffff,Bragantino|Red Bull Bragantino|RB Bragantino|Bragantino-SP
+brasiliense,brasiliense,Brasiliense,BRA,#ffd100,#006b3f,Brasiliense
+csa,csa,CSA,CSA,#0033a0,#ffffff,CSA|CS Alagoano|CSA AL
+ceara,ceara,Ceará,CEA,#000000,#ffffff,Ceara|Ceará|Ceará SC|Ceara SC|Ceará Sporting Club|Ceará CE
+chapecoense,chapecoense,Chapecoense,CHA,#00843d,#ffffff,Chapecoense|Chapecoense AF|Associação Chapecoense de Futebol|Chapecoense-SC
+corinthians,corinthians,Corinthians,COR,#000000,#ffffff,Corinthians|SC Corinthians Paulista|Sport Club Corinthians Paulista|Corinthians SP
+coritiba,coritiba,Coritiba,CFC,#00543c,#ffffff,Coritiba|Coritiba FBC|Coritiba Foot Ball Club|Coritiba PR
+criciuma,criciuma,Criciúma,CRI,#ffd200,#000000,Criciuma|Criciúma|Criciúma EC|Criciuma EC|Criciúma SC
+cruzeiro,cruzeiro,Cruzeiro,CRU,#0033a0,#ffffff,Cruzeiro|Cruzeiro EC|Cruzeiro Esporte Clube|Cruzeiro MG
+cuiaba,cuiaba,Cuiabá,CUI,#006b3f,#ffd100,Cuiaba|Cuiabá|Cuiabá EC|Cuiaba EC|Cuiabá MT
+figueirense,figueirense,Figueirense,FIG,#000000,#ffffff,Figueirense|Figueirense SC
+flamengo,flamengo,Flamengo,FLA,#c8102e,#000000,Flamengo|CR Flamengo|Clube de Regatas do Flamengo|Flamengo RJ
+fluminense,fluminense,Fluminense,FLU,#7a0026,#006b3f,Fluminense|Fluminense FC|Fluminense RJ
+fortaleza,fortaleza,Fortaleza,FOR,#0033a0,#c8102e,Fortaleza|Fortaleza EC|Fortaleza Esporte Clube|Fortaleza CE
+goias,goias,Goiás,GOI,#00843d,#ffffff,Goias|Goiás|Goiás EC|Goias EC|Goiás GO
+gremio,gremio,Grêmio,GRE,#0d80bf,#000000,Gremio|Grêmio|Grêmio FBPA|Gremio FBPA|Grêmio Porto Alegre|Grêmio RS
+gremio-prudente,gremio-prudente,Grêmio Prudente,GPR,#004b93,#ffd100,Gremio Prudente|Grêmio Prudente
+guarani,guarani,Guarani,GUA,#00843d,#ffffff,Guarani|Guarani FC|Guarani SP
+internacional,internacional,Internacional,INT,#c8102e,#ffffff,Internacional|SC Internacional|Sport Club Internacional|Internacional Porto Alegre
+ipatinga,ipatinga,Ipatinga,IPA,#006b3f,#ffd100,Ipatinga|Ipatinga FC
+joinville,joinville,Joinville,JEC,#c8102e,#000000,Joinville|Joinville SC
+juventude,juventude,Juventude,JUV,#00843d,#ffffff,Juventude|EC Juventude|Juventude RS
+mirassol,mirassol,Mirassol,MIR,#ffd100,#00843d,Mirassol|Mirassol FC|Mirassol Futebol Clube
+nautico,nautico,Náutico,NAU,#c8102e,#ffffff,Nautico|Náutico|Náutico PE
+palmeiras,palmeiras,Palmeiras,PAL,#006437,#ffffff,Palmeiras|SE Palmeiras|Sociedade Esportiva Palmeiras|Palmeiras SP
+parana,parana,Paraná,PAR,#0033a0,#c8102e,Parana|Paraná|Paraná Clube
+paysandu,paysandu,Paysandu,PAY,#0091d2,#ffffff,Paysandu
+ponte-preta,ponte-preta,Ponte Preta,PON,#000000,#ffffff,Ponte Preta|AA Ponte Preta
+portuguesa,portuguesa,Portuguesa,POR,#c8102e,#00843d,Portuguesa|Portuguesa SP
+remo,remo,Remo,REM,#002d72,#ffffff,Remo|Clube do Remo
+santa-cruz,santa-cruz,Santa Cruz,STC,#c8102e,#000000,Santa Cruz|Santa Cruz PE
+santo-andre,santo-andre,Santo André,STA,#0033a0,#ffffff,Santo Andre|Santo André|Santo André SP
+santos,santos,Santos,SAN,#ffffff,#000000,Santos|Santos FC|Santos SP
+sao-caetano,sao-caetano,São Caetano,SCA,#0033a0,#ffffff,Sao Caetano|São Caetano|São Caetano SP
+sao-paulo,sao-paulo,São Paulo,SAO,#c8102e,#000000,Sao Paulo|São Paulo|São Paulo FC|Sao Paulo FC
+sport,sport,Sport,SPT,#c8102e,#000000,Sport|Sport Recife|Sport Club do Recife|SC Recife|Sport Recife PE
+vasco,vasco,Vasco,VAS,#000000,#ffffff,Vasco|Vasco da Gama|CR Vasco da Gama|Vasco da Gama RJ
+vitoria,vitoria,Vitória,VIT,#c8102e,#000000,Vitoria|Vitória|EC Vitória|EC Vitoria|Esporte Clube Vitória|Vitória BA

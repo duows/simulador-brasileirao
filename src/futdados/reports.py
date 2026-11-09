@@ -197,3 +197,38 @@ def projection_markdown(table: pd.DataFrame, meta: dict, display, aviso: str, at
             f"{p1(r.p_rebaixamento)} |")
     lines += ["", f"_{aviso}_", "", f"{atribuicao}.", ""]
     return "\n".join(lines)
+
+
+def coverage_markdown(cov: pd.DataFrame, issues: list[str], flags: pd.DataFrame) -> str:
+    lines = ["# Cobertura de dados 2006-2026", "",
+             "Jogos esperados contra existentes no banco, por temporada, com a fonte usada e a licença.",
+             "Regra de fonte: football-data.org > footballcsv > adaoduque (este só local, nunca no banco).", "",
+             "| Temporada | Esperados | No banco | Encerrados | Adiados | Remarcados | Portões fechados | Fonte | Licença |",
+             "|---|---|---|---|---|---|---|---|---|"]
+    for r in cov.itertuples():
+        f = flags.loc[r.temporada] if r.temporada in flags.index else None
+        fl = (int(f.postponed), int(f.rescheduled), int(f.behind_closed_doors)) if f is not None else (0, 0, 0)
+        ok = "" if r.existentes == r.esperados else " ⚠"
+        lines.append(f"| {r.temporada} | {r.esperados} | {r.existentes}{ok} | {r.encerrados} | {fl[0]} | {fl[1]} | {fl[2]} | {r.fontes} | {r.licenca} |")
+    notes = [(r.temporada, r.notas) for r in cov.itertuples() if r.notas]
+    if notes:
+        lines += ["", "## Notas por temporada", ""] + [f"- **{s}**: {n}" for s, n in notes]
+    lines += ["", "## Checagens de qualidade", ""]
+    lines += [f"- ⚠ {i}" for i in issues] or ["- Nenhum problema: sem duplicados, placares válidos, sem time com dois jogos na mesma rodada, turno e returno simétricos, 38 jogos por time e soma de pontos consistente nas temporadas encerradas."]
+    lines += ["", "Flags: adiado = não disputado numa rodada que já teve jogos; remarcado = disputado a 7+ dias da data "
+              "mediana da rodada; portões fechados = período definido em config/seasons.yaml. Campo neutro: sem fonte (TODO).", ""]
+    return "\n".join(lines)
+
+
+def divergence_markdown(div: pd.DataFrame, summary: list[str]) -> str:
+    lines = ["# Divergências entre fontes", "",
+             "Onde duas fontes cobrem o mesmo jogo, comparamos placar e data. O banco guarda a fonte de maior "
+             "prioridade (football-data.org > footballcsv > adaoduque local); nada é escolhido em silêncio.", ""]
+    lines += [f"- {s}" for s in summary] + [""]
+    if div is None or div.empty:
+        lines.append("Nenhuma divergência de placar ou de data (mais de 1 dia) nos jogos em comum.")
+    else:
+        lines += ["| Temporada | Mandante | Visitante | Tipo | Banco | Outra fonte | Fonte comparada |", "|---|---|---|---|---|---|---|"]
+        for r in div.itertuples():
+            lines.append(f"| {r.season} | {r.home_id} | {r.away_id} | {r.tipo} | {r.banco} | {r.outra} | {r.fonte_comparada} |")
+    return "\n".join(lines) + "\n"

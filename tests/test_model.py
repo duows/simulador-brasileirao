@@ -77,7 +77,7 @@ def test_new_coach_flag_first_n_matches():
     m = synthetic_matches(1)
     m["home_coach"], m["away_coach"] = "A", "A"
     t0 = m[(m.home_id == "t0") | (m.away_id == "t0")].index
-    change_at = t0[5]
+    t0[5]
     for i in t0[5:]:
         col = "home_coach" if m.at[i, "home_id"] == "t0" else "away_coach"
         m.at[i, col] = "B"

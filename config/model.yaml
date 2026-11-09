@@ -22,8 +22,8 @@ api:
 historical:
   # footballcsv (CC0). O repo "world" só tem 2019-2020; cache.wfb tem 2003-2024 (ver DECISIONS D14).
   repo_url: https://github.com/footballcsv/cache.wfb
-  first_season: 2010
-  last_season: 2024        # 2024 incompleta no cache (até set/2024); completar com ingest-api
+  first_season: 2006       # pontos corridos com 20 clubes desde 2006 (cache.wfb tem 2006-2009 completos)
+  last_season: 2024        # 2024 incompleta no cache (até set/2024); a API cobre 2024-2026
 
 model:
   # a. Força de longo prazo (ataque e defesa) com decaimento temporal.

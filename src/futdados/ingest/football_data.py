@@ -11,9 +11,10 @@ import json
 import os
 import time
 from collections import deque
-from datetime import datetime, timezone
+from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import requests
 
@@ -60,7 +61,7 @@ class FootballDataClient:
         self.limiter = limiter or RateLimiter(per_minute)
 
     def get(self, path: str, params: dict[str, Any] | None = None, raw_name: str | None = None) -> dict:
-        for attempt in range(3):
+        for _attempt in range(3):
             self.limiter.wait()
             resp = self.session.get(f"{self.base_url}{path}", params=params, timeout=30)
             if resp.status_code == 429:  # estourou o limite mesmo assim: espera o que a API pedir
@@ -73,7 +74,7 @@ class FootballDataClient:
         raise RuntimeError(f"Falha após 3 tentativas: {path}")
 
     def _save_raw(self, name: str, params: dict | None, data: dict) -> Path:
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         suffix = "_".join(f"{k}-{v}" for k, v in sorted((params or {}).items()))
         out = self.raw_dir / stamp[:8] / f"{name}{'_' + suffix if suffix else ''}_{stamp}.json"
         out.parent.mkdir(parents=True, exist_ok=True)

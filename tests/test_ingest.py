@@ -1,10 +1,13 @@
 import pytest
 
-from futdados.ingest.football_data import (FootballDataClient, MissingTokenError, RateLimiter,
-                                           parse_matches, parse_standings)
+from futdados.ingest.football_data import (
+    FootballDataClient,
+    MissingTokenError,
+    RateLimiter,
+    parse_matches,
+    parse_standings,
+)
 from futdados.ingest.historical import load_season
-
-import pandas as pd
 
 API_MATCHES = {"matches": [
     {"id": 1, "utcDate": "2026-04-01T22:00:00Z", "status": "FINISHED", "matchday": 1,

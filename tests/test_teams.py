@@ -1,4 +1,3 @@
-from pathlib import Path
 
 import pytest
 
@@ -51,7 +50,7 @@ def test_display_name():
 def test_all_historical_names_resolve():
     import pandas as pd
 
-    for season in range(2010, 2025):
+    for season in range(2006, 2025):
         df = pd.read_csv(REPO / str(season) / "br.1.csv", dtype=str)
         for name in set(df["Team 1"]) | set(df["Team 2"]):
             team_id(name)
@@ -63,3 +62,22 @@ def test_all_historical_names_resolve():
 ])
 def test_footballcsv_names(name, expected):
     assert team_id(name) == expected
+
+
+def test_teams_csv_metadata_is_complete_and_unique():
+    import csv
+    import re
+
+    rows = list(csv.DictReader(open(ROOT / "config" / "teams.csv", encoding="utf-8")))
+    ids = [r["team_id"] for r in rows]
+    assert len(ids) == len(set(ids))
+    assert all(r["slug"] == r["team_id"] and re.fullmatch(r"[a-z0-9-]+", r["slug"]) for r in rows)
+    shorts = [r["short_name"] for r in rows]
+    assert len(shorts) == len(set(shorts)) and all(re.fullmatch(r"[A-Z]{3}", s) for s in shorts)
+    assert all(re.fullmatch(r"#[0-9a-f]{6}", r[c]) for r in rows for c in ("color_primary", "color_secondary"))
+
+
+def test_historical_renames_map_to_stable_id():
+    # o mesmo clube com grafias de épocas diferentes
+    assert team_id("Atlético-PR") == team_id("Athletico Paranaense") == "athletico-pr"
+    assert team_id("Bragantino") == team_id("Red Bull Bragantino") == "bragantino"

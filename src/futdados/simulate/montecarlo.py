@@ -11,7 +11,6 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from ..model.features import FEATURES
 from ..model.poisson import Weights, expected_goals, score_matrix
 
 STAT_KEYS = {"points": "pts", "wins": "w", "goal_difference": "gd", "goals_for": "gf"}

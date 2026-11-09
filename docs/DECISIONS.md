@@ -236,3 +236,26 @@ rodada 35.
   imutável `projections`. O histórico usa, para cada rodada-base, a última projeção gravada.
 - Reconstituições com `--as-of-round` não são mais gravadas (antes o `project` gravava).
 - A simulação passou a devolver a distribuição completa da posição final (heatmap 20×20).
+
+## D20 · 2026-11-09 · Fase A do prompt mestre: cobertura 2006-2026 e qualidade
+- **2006-2009 vêm do `footballcsv/cache.wfb`** (CC0, mesma ressalva de procedência do D14), que
+  tem as quatro temporadas completas. Assim a base 2006-2025 fica completa (380 jogos por
+  temporada; 2016 com 379) sem usar dado sem licença. O prompt previa o adaoduque para 2006-2009;
+  preferimos a fonte com licença declarada.
+- **adaoduque/Brasileirao_Dataset**: só validação local, com `LOCAL_ONLY_SOURCES=1`, clonado em
+  `data/external` (gitignored), nunca gravado no banco nem exportado. Resultado da validação de
+  2026-11-09: 7.219 jogos em comum (2006-2024), **zero divergências de placar**, 29 de data
+  (2007-2010). O relatório `reports/divergencias.md` registra essas 29 datas.
+- **Prioridade de fontes:** football-data.org > footballcsv > adaoduque. O ingest histórico não
+  sobrescreve jogo que veio da API. API x footballcsv em 2024: 252 jogos em comum, 0 divergências.
+- **config/seasons.yaml**: regras por temporada (clubes, jogos esperados, desempate, zonas,
+  períodos de portões fechados e notas). Vagas continentais mudaram muito e ficam como TODO; as
+  zonas G4/G6/rebaixamento são configuráveis por temporada.
+- **Flags no banco** (migração 1): postponed, rescheduled, neutral_venue (sem fonte, 0),
+  behind_closed_doors (2020 inteiro e 2021 até outubro, TODO por jogo).
+- **config/teams.csv** ganhou slug, sigla de 3 letras e cores (aproximadas, só para o monograma).
+- **CI local**: `make check` ou `python scripts/check.py` (ruff, pytest, qualidade dos dados com
+  `coverage --strict`, testes e build do site, varredura de token, escudo, odds e vocabulário).
+  Não há `make` nesta máquina Windows; o script roda direto.
+- Os pesos atuais foram ajustados antes de 2006-2009 entrarem no banco; a reestimação fica para
+  a Fase D (modelos), junto com o backtest novo.

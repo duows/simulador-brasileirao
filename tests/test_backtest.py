@@ -1,7 +1,13 @@
 import numpy as np
 
-from futdados.backtest.walkforward import (baseline_freq, baseline_home, brier, calibration_table,
-                                           log_loss, outcome_index)
+from futdados.backtest.walkforward import (
+    baseline_freq,
+    baseline_home,
+    brier,
+    calibration_table,
+    log_loss,
+    outcome_index,
+)
 
 
 def test_metrics_known_values():

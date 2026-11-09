@@ -1,0 +1,39 @@
+# Regras por temporada do Brasileirão Série A (pontos corridos com 20 clubes desde 2006).
+# "default" vale para todas as temporadas; cada ano sobrescreve só o que muda.
+# confirmado: false = não conferido no regulamento oficial da CBF daquela edição (TODO).
+
+default:
+  clubes: 20
+  jogos_esperados: 380
+  # Ordem de desempate. red_cards/yellow_cards não existem nos dados e caem no sorteio
+  # (o simulador sinaliza isso no resultado).
+  desempate: [points, wins, goal_difference, goals_for, head_to_head, red_cards, yellow_cards, draw_lots]
+  # Zonas usadas pelo site e pela simulação (faixas de posição, inclusivas).
+  zonas:
+    titulo: [1, 1]
+    g4: [1, 4]
+    g6: [1, 6]
+    rebaixamento: [17, 20]
+  # Vagas continentais mudaram muito (G4, G6, G7, G8 conforme a Copa do Brasil e a
+  # Libertadores). Ficam como informação, não entram no modelo. TODO: conferir edição a edição.
+  vagas_continentais: null
+  confirmado: false
+  notas: []
+
+temporadas:
+  2016:
+    jogos_esperados: 379
+    notas:
+      - "Chapecoense x Atlético-MG (38ª rodada) não foi disputado após o acidente aéreo da Chapecoense; o resultado não entrou na tabela."
+  2020:
+    notas:
+      - "Temporada disputada de agosto de 2020 a fevereiro de 2021, sem público (pandemia)."
+    portoes_fechados: {inicio: "2020-08-01", fim: "2021-03-01"}
+  2021:
+    notas:
+      - "Público voltou aos poucos a partir de outubro de 2021, com regras diferentes por estado (TODO: datas por jogo)."
+    portoes_fechados: {inicio: "2021-05-01", fim: "2021-10-01"}
+  2026:
+    confirmado: false
+    notas:
+      - "Ordem de desempate pela imprensa sobre o Art. 15 do Regulamento Específico 2026; houve divergência pública na leitura do § 2º."

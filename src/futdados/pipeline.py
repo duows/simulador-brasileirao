@@ -7,16 +7,15 @@ modelo, data de geração e o campo obrigatório "aviso".
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 from .db import Repository, utc_now
+from .model.features import build_features
 from .model.poisson import Weights
 from .model.predict import coach_extra, match_payload
-from .model.features import build_features
 from .simulate.montecarlo import round_plan, simulate_season
 from .teams import display_name
 

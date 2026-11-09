@@ -7,7 +7,7 @@ uma fora) e tem 19 jogos em casa numa liga de 20.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 
 def round_robin(teams: list[str]) -> list[list[tuple[str, str]]]:
@@ -37,7 +37,7 @@ def generate_schedule(teams: list[str], season: int, start_mmdd: str = "04-11",
                       kickoff_hour_utc: int = 22) -> list[dict]:
     """Jogos com datas fictícias: uma rodada por semana, aos sábados, a partir de `start_mmdd`."""
     month, day = (int(x) for x in start_mmdd.split("-"))
-    start = datetime(season, month, day, kickoff_hour_utc, tzinfo=timezone.utc)
+    start = datetime(season, month, day, kickoff_hour_utc, tzinfo=UTC)
     start += timedelta(days=(5 - start.weekday()) % 7)  # próximo sábado
     rows = []
     for r, games in enumerate(round_robin(sorted(teams)), start=1):

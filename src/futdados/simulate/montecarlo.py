@@ -57,6 +57,46 @@ def _sample_scores(lh, la, rho, max_goals, n, rng):
     return idx // (max_goals + 1), idx % (max_goals + 1)
 
 
+POSTPONED_STATUS = {"POSTPONED", "SUSPENDED"}
+
+
+def round_plan(season_feat: pd.DataFrame) -> tuple[int | None, pd.Series]:
+    """Próxima rodada "cheia" e máscara dos jogos adiados.
+
+    Próxima rodada = a primeira rodada em que NENHUM jogo foi disputado. Adiado = jogo ainda
+    por disputar de uma rodada anterior a ela (a rodada dele já andou sem ele), ou com status
+    POSTPONED/SUSPENDED na API. Assim um jogo atrasado da rodada 21 não "vira" a próxima rodada.
+    """
+    pending = season_feat.status != "FINISHED"
+    if not pending.any():
+        return None, pending & False
+    all_pending = pending.groupby(season_feat["round"]).all()
+    full = all_pending[all_pending].index
+    nxt = int(full.min()) if len(full) else None
+    behind = season_feat["round"] < nxt if nxt is not None else pd.Series(True, index=season_feat.index)
+    postponed = pending & (behind | season_feat.status.isin(POSTPONED_STATUS))
+    return nxt, postponed
+
+
+def split_remaining(season_feat: pd.DataFrame, w: Weights):
+    """Separa jogos disputados e restantes e calcula os gols esperados dos restantes.
+
+    Forma e técnico novo só valem para a próxima rodada e para os adiados (jogos próximos);
+    nas rodadas seguintes ficam neutros.
+    """
+    played = season_feat[(season_feat.status == "FINISHED") & season_feat.home_goals.notna()]
+    todo = season_feat.drop(played.index).copy()
+    if todo.empty:
+        return played, todo, np.array([]), np.array([])
+    nxt, postponed = round_plan(season_feat)
+    nxt = todo["round"].min() if nxt is None else nxt
+    later = (todo["round"] > nxt) & ~postponed.loc[todo.index]
+    for c in ("forma", "tecnico_novo"):
+        todo.loc[later, [f"{c}_h", f"{c}_a"]] = 0.0
+    lh, la = expected_goals(todo, w)
+    return played, todo, lh, la
+
+
 def simulate_season(season_feat: pd.DataFrame, w: Weights, cfg: dict, target_round: int,
                     n_sims: int | None = None, seed: int | None = None) -> pd.DataFrame:
     """Projeta a tabela depois da rodada `target_round` e as chances finais.
@@ -70,17 +110,7 @@ def simulate_season(season_feat: pd.DataFrame, w: Weights, cfg: dict, target_rou
     tix = {t: i for i, t in enumerate(teams)}
     T = len(teams)
 
-    played = season_feat[(season_feat.status == "FINISHED") & season_feat.home_goals.notna()]
-    todo = season_feat.drop(played.index).copy()
-    if not todo.empty:
-        # Forma e técnico novo só valem para a próxima rodada; depois ficam neutros.
-        next_round = todo["round"].min()
-        later = todo["round"] > next_round
-        for c in ("forma", "tecnico_novo"):
-            todo.loc[later, [f"{c}_h", f"{c}_a"]] = 0.0
-        lh, la = expected_goals(todo, w)
-    else:
-        lh = la = np.array([])
+    played, todo, lh, la = split_remaining(season_feat, w)
 
     def blank():
         return {k: np.zeros((n, T)) for k in ("pts", "w", "gf", "ga")}

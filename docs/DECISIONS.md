@@ -194,3 +194,18 @@ aberto: o token continua só na variável de ambiente.
   gerado; histórico com mais de 200 dias sem jogos).
 - Demonstração com 2023 (calendário real, resultados escondidos): os pesos atuais foram
   ajustados com dados até 2024, então a demonstração não é uma avaliação limpa.
+
+## D17 · 2026-11-09 · Rodada-alvo e jogos adiados no `predict-round`
+Problema: o `predict-round` escolhia a menor rodada com jogo pendente. Com o jogo adiado
+Chapecoense x Vasco (rodada 21, remarcado para 14/11), ele gravou só essa previsão e ignorou a
+rodada 35.
+- **Próxima rodada** = a primeira rodada em que nenhum jogo foi disputado.
+- **Adiado** = jogo pendente de rodada anterior à próxima rodada, ou com status
+  POSTPONED/SUSPENDED. Recebe previsão própria, com `"adiado": true` no payload do registro e
+  numa seção `adiados` do JSON. O registro guarda a rodada original do jogo.
+- `--round N` estima os jogos pendentes da rodada N (inclusive o adiado dela).
+- **Sem duplicar**: jogo que já tem previsão gravada antes do início não é gravado de novo; o
+  JSON cita a previsão existente (hora, hash, versão do modelo). `--repetir` grava uma nova sem
+  apagar a antiga. O registro imutável existente (1 linha, de 2026-11-09) não foi tocado.
+- Na projeção, forma e técnico novo valem para a próxima rodada **e** para os adiados (jogos
+  próximos); antes, o adiado fazia a forma valer só para ele.

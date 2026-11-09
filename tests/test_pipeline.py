@@ -89,3 +89,39 @@ def test_started_games_are_not_registered(env):
     now = pd.Timestamp("2026-04-01T00:00:01Z")  # rodada 1 começou à 00:00
     _, info = predict_round(repo, cfg, 2026, round_=1, now=now)
     assert info["registered"] == 0 and len(info["skipped"]) == 3
+
+
+def test_postponed_game_is_handled_separately(env):
+    """Rodadas 1 e 2 disputadas, menos um jogo da rodada 1, remarcado para depois."""
+    repo, cfg = env
+    m = repo.matches(2026)
+    m["kickoff_utc"] = m.kickoff_utc.dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    early = m[m["round"] <= 2].copy()
+    early["home_goals"], early["away_goals"], early["status"] = 1, 1, "FINISHED"
+    late = early.iloc[[0]].copy()  # jogo da rodada 1 adiado
+    late["home_goals"], late["away_goals"], late["status"] = None, None, "TIMED"
+    late["kickoff_utc"] = "2026-05-20T22:00:00Z"
+    repo.upsert_matches(early.iloc[1:].to_dict("records") + late.to_dict("records"))
+
+    now = pd.Timestamp("2026-04-07", tz="UTC")
+    path, info = predict_round(repo, cfg, 2026, now=now)
+    assert info["round"] == 3                    # não a rodada 1 do adiado
+    assert info["games"] == 3 and info["postponed"] == 1 and info["registered"] == 4
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    assert all(not j["adiado"] for j in doc["jogos"])
+    assert len(doc["adiados"]) == 1 and doc["adiados"][0]["adiado"] is True
+    assert doc["adiados"][0]["rodada"] == 1
+    reg = repo.predictions(2026)
+    adiado = reg[(reg.home_id == late.iloc[0].home_id) & (reg.away_id == late.iloc[0].away_id)]
+    assert len(adiado) == 1 and json.loads(adiado.iloc[0].payload)["adiado"] is True
+
+    # rodar de novo não duplica nada no registro imutável
+    _, again = predict_round(repo, cfg, 2026, now=now)
+    assert again["registered"] == 0 and len(repo.predictions(2026)) == 4
+    # --round aceita a rodada do adiado: cita a previsão existente
+    _, r1 = predict_round(repo, cfg, 2026, round_=1, now=now)
+    assert r1["round"] == 1 and r1["games"] == 1 and r1["registered"] == 0
+    # com repeat=True grava uma nova sem apagar a antiga
+    _, rep = predict_round(repo, cfg, 2026, round_=1, now=now + pd.Timedelta(hours=1), repeat=True)
+    assert rep["registered"] == 1 and len(repo.predictions(2026)) == 5
+    assert repo.verify_prediction_chain()

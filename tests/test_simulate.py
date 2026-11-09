@@ -77,3 +77,13 @@ def test_simulation_probabilities_are_consistent():
     remaining = 6
     total = tab.exp_points.sum() - tab.pontos_atuais.sum()
     assert 2 * remaining <= total <= 3 * remaining
+
+
+def test_round_plan_skips_rounds_with_a_postponed_game():
+    from futdados.simulate.montecarlo import round_plan
+
+    df = pd.DataFrame({"round": [1, 1, 2, 2, 3, 3],
+                       "status": ["FINISHED", "TIMED", "FINISHED", "FINISHED", "TIMED", "POSTPONED"]})
+    nxt, postponed = round_plan(df)
+    assert nxt == 3
+    assert list(postponed) == [False, True, False, False, False, True]

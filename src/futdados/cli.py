@@ -114,10 +114,12 @@ def cmd_update(args, cfg) -> None:
 def cmd_predict_round(args, cfg) -> None:
     from .pipeline import predict_round
 
-    path, info = predict_round(_repo(cfg), cfg, args.season, args.round)
-    print(f"Rodada {info['round']}: {info['registered']} previsões gravadas no registro imutável.")
+    path, info = predict_round(_repo(cfg), cfg, args.season, args.round, repeat=args.repetir)
+    rotulo = f"Rodada {info['round']}" if info["round"] is not None else "Sem rodada cheia pendente"
+    print(f"{rotulo}: {info['games']} jogos da rodada, {info['postponed']} adiados; "
+          f"{info['registered']} previsões novas gravadas no registro imutável.")
     for s in info["skipped"]:
-        print(f"  Não registrado (já começou): {s}")
+        print(f"  Não gravado de novo: {s}")
     print(f"JSON: {path}")
 
 
@@ -178,7 +180,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--half-life", type=float, help="pula a escolha automática da meia-vida")
     s = sub.add_parser("predict-round", help="estima a próxima rodada e grava no registro")
     s.add_argument("--season", type=int, required=True)
-    s.add_argument("--round", type=int, help="padrão: próxima rodada com jogos pendentes")
+    s.add_argument("--round", type=int,
+                   help="padrão: primeira rodada sem nenhum jogo disputado (adiados à parte)")
+    s.add_argument("--repetir", action="store_true",
+                   help="grava nova previsão mesmo para jogo que já está no registro")
     s = sub.add_parser("post-round", help="compara estimado x real e atualiza a projeção")
     s.add_argument("--season", type=int, required=True)
     s.add_argument("--round", type=int, required=True)

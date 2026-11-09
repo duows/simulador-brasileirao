@@ -17,7 +17,7 @@ from .db import Repository, utc_now
 from .model.poisson import Weights
 from .model.predict import coach_extra, match_payload
 from .model.features import build_features
-from .simulate.montecarlo import simulate_season
+from .simulate.montecarlo import round_plan, simulate_season
 from .teams import display_name
 
 SOURCES = [
@@ -140,57 +140,96 @@ def projection_json(cfg, table: pd.DataFrame, meta: dict) -> Path:
 
 # --------------------------------------------------------- previsão da rodada
 def next_round(feat: pd.DataFrame) -> int | None:
+    """Primeira rodada sem nenhum jogo disputado (adiados de rodadas antigas não contam)."""
+    nxt, _ = round_plan(feat)
+    if nxt is not None:
+        return nxt
     pending = feat[feat.status != "FINISHED"]
     return None if pending.empty else int(pending["round"].min())
 
 
 def predict_round(repo: Repository, cfg, season: int, round_: int | None = None,
-                  now: pd.Timestamp | None = None) -> tuple[Path, dict]:
-    """Estima os jogos da rodada, grava no registro imutável e gera o JSON do vídeo.
+                  now: pd.Timestamp | None = None, repeat: bool = False) -> tuple[Path, dict]:
+    """Estima os jogos da rodada e os adiados, grava no registro imutável e gera o JSON.
 
-    Só jogos que ainda não começaram são registrados (o banco também recusa o contrário).
+    - Sem `round_`: a rodada é a primeira em que nenhum jogo foi disputado. Os adiados
+      (jogos pendentes de rodadas que já andaram) recebem previsão própria, marcada como
+      adiado, numa seção separada.
+    - Com `round_`: estima os jogos pendentes daquela rodada (adiados dela incluídos).
+    - Só jogos que ainda não começaram são registrados (o banco também recusa o contrário).
+    - Um jogo que já tem previsão no registro não é gravado de novo (o registro é imutável
+      e não apagamos nada), a não ser com `repeat=True`; a previsão existente é citada.
     """
     w = load_weights(cfg)
     now = now or pd.Timestamp.now(tz="UTC")
     feat = season_features(repo, cfg, w, season)
-    rnd = round_ or next_round(feat)
-    if rnd is None:
-        raise ValueError(f"Não há jogos pendentes na temporada {season}.")
-    games = feat[(feat["round"] == rnd) & (feat.status != "FINISHED")]
-    jogos, skipped = [], []
+    nxt, postponed = round_plan(feat)
+    pending = feat.status != "FINISHED"
+    if round_ is not None:
+        rnd = int(round_)
+        main = feat[pending & (feat["round"] == rnd)]
+        extra = feat.iloc[0:0]
+    else:
+        rnd = nxt
+        if rnd is None and not postponed.any():
+            raise ValueError(f"Não há jogos pendentes na temporada {season}.")
+        main = feat[pending & (feat["round"] == rnd) & ~postponed] if rnd is not None else feat.iloc[0:0]
+        extra = feat[postponed]
+
+    existing = repo.predictions(season)
     created = now.strftime("%Y-%m-%dT%H:%M:%SZ")
-    for _, row in games.iterrows():
+    skipped: list[str] = []
+
+    def register(row, is_postponed: bool) -> dict | None:
         payload = match_payload(row, w, cfg["model"]["max_goals"])
+        payload["adiado"] = bool(is_postponed)
+        label = f"{payload['inicio_utc']} {row['home_id']} x {row['away_id']}"
         if pd.Timestamp(row["kickoff_utc"]) <= now:
-            skipped.append(payload["inicio_utc"] + f" {row['home_id']} x {row['away_id']}")
-            continue
+            skipped.append(label + " (já começou)")
+            return None
+        prev = existing[(existing.home_id == row["home_id"]) & (existing.away_id == row["away_id"])
+                        & (existing.created_at < existing.kickoff_utc)]
+        if len(prev) and not repeat:
+            last = prev.iloc[-1]
+            payload["registro"] = {"gravado_em": last.created_at, "hash": last.hash, "novo": False,
+                                   "versao_modelo_registrada": last.model_version}
+            skipped.append(label + f" (já registrado em {last.created_at})")
+            return payload
         p = payload["probabilidade_estimada"]
         digest = repo.insert_prediction({
-            "season": season, "round": rnd, "home_id": row["home_id"], "away_id": row["away_id"],
-            "kickoff_utc": payload["inicio_utc"], "model_version": w.model_version,
+            "season": season, "round": int(row["round"]), "home_id": row["home_id"],
+            "away_id": row["away_id"], "kickoff_utc": payload["inicio_utc"],
+            "model_version": w.model_version,
             "lambda_home": payload["gols_esperados"]["mandante"],
             "lambda_away": payload["gols_esperados"]["visitante"],
             "p_home": p["mandante"], "p_draw": p["empate"], "p_away": p["visitante"], "payload": payload,
         }, created_at=created)
-        payload["registro"] = {"gravado_em": created, "hash": digest}
-        jogos.append(payload)
+        payload["registro"] = {"gravado_em": created, "hash": digest, "novo": True}
+        return payload
+
+    jogos = [j for _, r in main.iterrows() if (j := register(r, bool(postponed.loc[r.name])))]
+    adiados = [j for _, r in extra.iterrows() if (j := register(r, True))]
+    n_new = sum(j["registro"]["novo"] for j in jogos + adiados)
 
     # projeção antes da rodada (fica gravada para o pós-rodada comparar)
     table, meta = project(repo, cfg, season, None)
     focus = cfg["output"]["focus_team"]
+    rotulo = f"rodada {rnd}" if rnd is not None else "jogos adiados"
     dados = {
-        "titulo": f"Probabilidades estimadas pelo modelo · rodada {rnd} · {season}",
+        "titulo": f"Probabilidades estimadas pelo modelo · {rotulo} · {season}",
         "temporada": season, "rodada": rnd,
         "jogos": sorted(jogos, key=lambda j: j["inicio_utc"]),
-        "jogos_nao_registrados_ja_iniciados": skipped,
+        "adiados": sorted(adiados, key=lambda j: j["inicio_utc"]),
+        "jogos_nao_registrados": skipped,
         "time_foco": _focus_block(table, focus),
         "explicacao_fatores": ("Para cada time, 'efeito_gols' é quanto o fator somou ou tirou dos gols "
                                "esperados em relação aos gols base. A soma dos efeitos mais os gols base "
                                "dá os gols esperados."),
     }
-    slug = f"rodada-{season}-r{rnd:02d}-estimativas"
-    return video_json(cfg, w, "estimativas_rodada", dados, slug), {"round": rnd, "registered": len(jogos),
-                                                                    "skipped": skipped, "meta": meta}
+    slug = f"rodada-{season}-r{rnd:02d}-estimativas" if rnd is not None else f"adiados-{season}-estimativas"
+    return video_json(cfg, w, "estimativas_rodada", dados, slug), {
+        "round": rnd, "registered": n_new, "games": len(jogos), "postponed": len(adiados),
+        "skipped": skipped, "meta": meta}
 
 
 def _focus_block(table: pd.DataFrame, team: str) -> dict | None:

@@ -120,7 +120,7 @@ futdados simulate-season --season 2026
 | `fit [--half-life D]` | Escolhe a meia-vida no walk-forward, estima os pesos, gera `reports/pesos.md` |
 | `update --season S` | `ingest-api` + `fit` |
 | `backtest` | Walk-forward por temporada, gera `reports/backtest.md` |
-| `predict-round --season S [--round N]` | Estima a rodada, grava no registro imutável e gera `out/videos/rodada-S-rNN-estimativas.json` |
+| `predict-round --season S [--round N] [--repetir]` | Estima a primeira rodada sem jogos disputados e, à parte, os jogos adiados; grava no registro imutável (sem duplicar) e gera `out/videos/rodada-S-rNN-estimativas.json` |
 | `project --season S [--round X]` | Tabela projetada depois da rodada X (padrão: fim do campeonato) |
 | `post-round --season S --round N` | Estimado x real, Brier da rodada, variação das chances do SPFC, tabela atualizada |
 | `verify-registry` | Confere a cadeia de hashes do registro de previsões |

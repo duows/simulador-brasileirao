@@ -354,6 +354,42 @@ def cmd_backtest_sim(args, cfg) -> None:
     print("Relatório: reports/backtest_simulacao.md")
 
 
+def cmd_atualizar(args, cfg) -> None:
+    """Rotina completa da rodada, em ordem, seguindo em frente se uma etapa opcional falhar."""
+    import os
+    import traceback
+    from types import SimpleNamespace
+
+    season = int(args.season or cfg.get("temporada_atual", cfg["cartola"]["season"]))
+    steps = []
+    if os.environ.get("FOOTBALL_DATA_TOKEN"):
+        steps.append(("Jogos da API football-data.org", lambda: cmd_ingest_api(SimpleNamespace(season=season), cfg)))
+        steps.append(("Pesos do modelo", lambda: cmd_fit(SimpleNamespace(half_life=args.half_life), cfg)))
+    else:
+        print("Sem FOOTBALL_DATA_TOKEN: os jogos não serão atualizados (o resto roda com o que já está no banco).")
+    steps += [
+        ("Qualidade e flags dos jogos", lambda: cmd_coverage(SimpleNamespace(current_season=season, strict=False, no_write=False), cfg)),
+        ("Métricas", lambda: cmd_metrics(SimpleNamespace(), cfg)),
+        ("Elo", lambda: cmd_build_ratings(SimpleNamespace(), cfg)),
+        ("Tendências", lambda: cmd_trends(SimpleNamespace(), cfg)),
+        ("Previsões da rodada (registro)", lambda: cmd_predict_round(SimpleNamespace(season=season, round=None, repetir=False), cfg)),
+        ("Cartola", lambda: cmd_cartola(SimpleNamespace(budget=None, esquema=None, no_register=False), cfg)),
+        ("Site", lambda: cmd_export_site(SimpleNamespace(season=season, as_of_round=None, sims=None), cfg)),
+    ]
+    failed = []
+    for name, fn in steps:
+        print(f"\n=== {name} ===", flush=True)
+        try:
+            fn()
+        except SystemExit as exc:
+            if exc.code not in (0, None):
+                failed.append(name)
+        except Exception:  # noqa: BLE001 - uma etapa opcional não derruba as outras
+            traceback.print_exc()
+            failed.append(name)
+    print("\nPronto." if not failed else f"\nTerminou com falha em: {', '.join(failed)}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -394,6 +430,9 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--first", type=int, default=2015)
     s.add_argument("--last", type=int, default=2025)
     s.add_argument("--sims", type=int, default=4000)
+    s = sub.add_parser("atualizar", help="rotina completa: API, pesos, métricas, Elo, previsões, Cartola e site")
+    s.add_argument("--season", type=int, help="padrão: temporada_atual do model.yaml")
+    s.add_argument("--half-life", type=float, default=180, help="meia-vida fixa (pula a escolha automática, mais rápido)")
     sub.add_parser("metrics", help="recalcula o catálogo de métricas (tabelas derivadas)")
     s = sub.add_parser("coverage", help="cobertura 2006-2026, qualidade e divergências entre fontes")
     s.add_argument("--current-season", type=int, default=2026, help="temporada em andamento")
@@ -428,6 +467,7 @@ COMMANDS = {
     "trends": cmd_trends,
     "cartola": cmd_cartola,
     "backtest-sim": cmd_backtest_sim,
+    "atualizar": cmd_atualizar,
 }
 
 

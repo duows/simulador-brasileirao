@@ -2,6 +2,8 @@
 # Todo número aqui é explícito e editável. Mudanças relevantes devem ser
 # registradas em docs/DECISIONS.md.
 
+temporada_atual: 2026   # usada por `futdados atualizar` e pelo atalho ATUALIZAR_E_ABRIR.bat
+
 paths:
   db: data/futdados.sqlite
   raw: data/raw

@@ -379,3 +379,13 @@ rodada 35.
 - **Backtest da simulação** (`futdados backtest-sim`, 2015-2025, cortes nas rodadas 10/20/30):
   Brier de título, G4 e rebaixamento sempre abaixo do baseline (mesma chance para todos); a
   posição final caiu na faixa p10–p90 em 89% dos casos (ideal ~80%: a faixa é conservadora).
+
+## D28 · 2026-11-09 · Escudos e fotos só no modo local; rotina de um clique
+- `CRESTS=local` (ligado por `npm run dev:local` e pelo atalho) mostra escudos dos clubes e fotos
+  dos atletas pelos endereços que já vêm nos dados locais do Cartola. Nada é baixado nem
+  versionado; sem a variável o site usa o monograma. Escudo é marca do clube e foto tem direito
+  de imagem: **um build feito com CRESTS=local não deve ser publicado**.
+- `futdados atualizar` roda a rotina inteira em ordem (API se houver token, pesos com meia-vida
+  fixa de 180 dias, qualidade, métricas, Elo, tendências, registro da rodada, Cartola, site) e
+  segue em frente se uma etapa opcional falhar. `ATUALIZAR_E_ABRIR.bat` chama essa rotina e
+  abre o site.

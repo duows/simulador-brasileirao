@@ -12,6 +12,18 @@ vídeos em Remotion. Foco no São Paulo FC, cobrindo a Série A inteira.
 
 Football data provided by the Football-Data.org API.
 
+## Como usar (o jeito simples)
+
+1. Uma vez só, no PowerShell, salve a sua chave do football-data.org (feche e abra o terminal depois):
+   `setx FOOTBALL_DATA_TOKEN "sua-chave"`
+2. A cada rodada, dê **duplo clique em `ATUALIZAR_E_ABRIR.bat`**. Ele baixa os jogos, reestima o
+   modelo, recalcula métricas e Elo, grava as previsões da rodada (antes dos jogos), roda o Cartola
+   e abre o site em http://localhost:3001, com escudos e fotos (modo local).
+3. No site: **Tabela** (projeção até o fim), **Rodada**, **Times**, **Temporadas**, **Histórico**,
+   **Simulador** ("e se") e **Cartola** (digite as cartoletas e o time sai na hora).
+
+Por baixo, o atalho chama `futdados atualizar` (a mesma rotina pelo terminal).
+
 ## O modelo erra, e mostramos quanto
 
 Backtest walk-forward 2015–2024 (3.671 jogos; 2024 só até setembro, ver Limitações),

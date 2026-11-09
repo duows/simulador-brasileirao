@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 
 from .config import load_config
 from .db import Repository
@@ -296,6 +297,26 @@ def cmd_trends(args, cfg) -> None:
     print("Relatório: reports/tendencias.md")
 
 
+def cmd_cartola(args, cfg) -> None:
+    """Pontuação esperada da próxima rodada e o melhor time para um orçamento (estudo, só local)."""
+    from .cartola.optimize import best_team
+    from .cartola.project import cartola_report, describe_team, players_frame, project, write_site_json
+    from .reports import write
+
+    doc = project(_repo(cfg), cfg)
+    path = write_site_json(doc, Path(cfg["paths"]["site_data"]) / "cartola.json")
+    write(f"{cfg['paths']['reports']}/cartola.md", cartola_report(doc["backtest"]))
+    ev = doc["backtest"]
+    print(f"Rodada {doc['rodada']}: {len(doc['atletas'])} atletas disponíveis. Backtest: erro {ev['mae_modelo']:.2f} "
+          f"x média {ev['mae_media']:.2f}; melhor em {ev['rodadas_modelo_melhor']} de {ev['rodadas']} rodadas.")
+    if doc["jogos_fora_da_rodada"]:
+        print("Jogos fora da rodada (não pontuam):", ", ".join(doc["jogos_fora_da_rodada"]))
+    budget = args.budget if args.budget is not None else float(doc["cartoletas_iniciais"] or 100)
+    res = best_team(players_frame(doc), budget, doc["esquemas"], doc["multiplicador_capitao"], args.esquema)
+    print(describe_team(res))
+    print(f"Dados da página /cartola (local, fora do git): {path}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -328,6 +349,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("verify-registry", help="confere a cadeia de hashes das previsões")
     sub.add_parser("build-ratings", help="calibra o Elo e grava a série de ratings")
     sub.add_parser("trends", help="tendências da liga e dos times (precisa de metrics e build-ratings)")
+    s = sub.add_parser("cartola", help="estudo: pontuação esperada no Cartola e melhor time para um orçamento")
+    s.add_argument("--budget", type=float, help="cartoletas disponíveis (padrão: as iniciais do jogo)")
+    s.add_argument("--esquema", help="fixa o esquema, ex.: 4-3-3 (padrão: o melhor)")
     sub.add_parser("metrics", help="recalcula o catálogo de métricas (tabelas derivadas)")
     s = sub.add_parser("coverage", help="cobertura 2006-2026, qualidade e divergências entre fontes")
     s.add_argument("--current-season", type=int, default=2026, help="temporada em andamento")
@@ -360,6 +384,7 @@ COMMANDS = {
     "metrics": cmd_metrics,
     "build-ratings": cmd_build_ratings,
     "trends": cmd_trends,
+    "cartola": cmd_cartola,
 }
 
 

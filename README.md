@@ -156,6 +156,15 @@ cd site && npm install && npm run dev
 Abra http://localhost:3000. Para gerar o HTML estático: `npm run build` (sai em `site/out/`),
 e `npm start` serve essa pasta em http://localhost:4173.
 
+## Cartola (estudo de caso pessoal, só local)
+
+`futdados cartola --budget 120` baixa os dados da rodada (API pública e não oficial do Cartola),
+calcula a pontuação esperada de cada atleta (média ajustada + contexto do jogo vindo do modelo)
+e monta o melhor time para o orçamento (esquema, atletas e capitão, solução exata). A página
+`/cartola` do site faz o mesmo no navegador: você digita as cartoletas e o time aparece, com os
+fatores de cada atleta. Nada do Cartola vai para o git (ver D24). Backtest em
+[reports/cartola.md](reports/cartola.md): erro 2,84 contra 2,95 da média do Cartola.
+
 ## Saídas para vídeo
 
 Exemplos reais em [docs/exemplos](docs/exemplos). Todo JSON tem `tipo`, `gerado_em`,

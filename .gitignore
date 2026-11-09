@@ -12,3 +12,7 @@ src/*.egg-info/
 out/videos/*.json
 # PDFs de balanço baixados (reprodutíveis pelas URLs dos CSVs)
 data/finance/pdfs/
+
+# Cartola FC: API sem licença clara, só uso local (D24)
+data/cartola/
+site/public/data/cartola.json

@@ -311,3 +311,28 @@ rodada 35.
 - **TODO (próximo passo de maior valor)**: trocar o modelo de produção (rodada, simulação, JSON)
   pelo conjunto Elo + forças por time, mantendo a explicação por fatores (ataque, defesa e
   mando do modelo de forças, mais a nota Elo) e mostrando "o Elo diz X, as forças dizem Y".
+
+## D24 · 2026-11-09 · Cartola FC (estudo de caso pessoal)
+- **Fonte**: API pública e não oficial do Cartola (api.cartola.globo.com; o host antigo
+  api.cartolafc.globo.com redireciona). Não encontrei licença nem termos de uso específicos
+  para ela. **Decisão**: uso pessoal e local. Respostas brutas em `data/cartola/` e o JSON da
+  página em `site/public/data/cartola.json` ficam no .gitignore; nada do Cartola é versionado
+  nem publicado. Só o relatório agregado (`reports/cartola.md`, sem dados de atletas) entra no
+  git. Chamadas com pausa de 1 s; rodadas passadas ficam em cache. **TODO**: ler os termos de
+  uso da Globo antes de qualquer publicação.
+- **Modelo** (`src/futdados/cartola/model.py`): regressão linear por posição da pontuação do
+  atleta em: média do atleta nas rodadas anteriores puxada para a média da posição (5 jogos
+  fictícios), chance de não sofrer gol, gols esperados do time, mando e chance de vitória (as
+  três últimas do modelo de jogos do futdados). Cada pontuação esperada se decompõe por fator.
+- **Validação**: walk-forward dentro de 2026 (rodadas 6 a 34), cada rodada prevista só com as
+  anteriores e com o modelo de jogos ajustado até 2025. Erro médio 2,84 pontos contra 2,95 da
+  média do Cartola; Spearman 0,23 contra 0,19; melhor em 24 de 29 rodadas. Só atletas que
+  entraram em campo: a chance de jogar não é avaliada.
+- **Chance de jogar**: pelo status do mercado (provável 95%, dúvida 50%), fixo e não estimado
+  (não há histórico de status). Jogos marcados como não válidos na rodada do Cartola não
+  pontuam e ficam de fora.
+- **Montagem do time**: programação linear inteira exata (scipy.milp) no Python e programação
+  dinâmica exata no navegador (preços arredondados para cima em décimos, então o time sempre
+  cabe no orçamento). Os dois batem com força bruta nos testes. Capitão ×1,5 (TODO: confirmar a
+  regra vigente).
+- Vocabulário do canal mantido: "pontuação esperada pelo modelo", nada de dica.

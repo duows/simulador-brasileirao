@@ -8,6 +8,7 @@ const LINKS = [
   ["/temporadas/", "Temporadas"],
   ["/historico/", "Histórico"],
   ["/simulador/", "Simulador"],
+  ["/cartola/", "Cartola"],
   ["/modelo/", "Modelo"],
 ];
 

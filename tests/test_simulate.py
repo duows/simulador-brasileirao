@@ -97,7 +97,8 @@ def test_points_needed_and_decisive_games():
     pos = np.argsort(np.argsort(-pts, axis=1), axis=1) + 1  # posição pela pontuação
     zones = {"titulo": [1, 1], "g4": [1, 4], "g6": [1, 6], "rebaixamento": [17, 20]}
     need = points_needed(pts.astype(float), pos, zones)
-    assert need["g4"] is not None and need["titulo"] >= need["g4"] >= need["g6"] >= need["permanencia"]
+    assert need["g4"] is not None and need["g4"] >= need["g6"] >= need["permanencia"]
+    assert need["titulo"] is None or need["titulo"] >= need["g4"]  # None = nenhuma pontuação garantiu 90%
     # um jogo em que o vencedor sempre termina em 1º: diferença máxima para o título
     todo = pd.DataFrame({"round": [38], "home_id": ["a"], "away_id": ["b"]})
     outcomes = rng.integers(0, 3, size=(2000, 1)).astype(np.int8)

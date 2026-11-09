@@ -25,7 +25,7 @@ function Factors({ p, labels }) {
   );
 }
 
-export default function CartolaBuilder({ data }) {
+export default function CartolaBuilder({ data, photos = false }) {
   const [budget, setBudget] = useState(data.cartoletas_iniciais || 100);
   const [scheme, setScheme] = useState("");
   const [withDoubt, setWithDoubt] = useState(true);
@@ -72,7 +72,7 @@ export default function CartolaBuilder({ data }) {
                 {res.time.map((p) => (
                   <tr key={p.id}>
                     <td className="l">{POS[p.posicao]}</td>
-                    <td className="l"><strong>{p.apelido}</strong>{p.capitao && <span className="tag">capitão</span>}{p.status === "duvida" && <span className="tag">dúvida</span>}
+                    <td className="l">{photos && p.foto && <img className="player-photo" src={p.foto} alt="" loading="lazy" />}<strong>{p.apelido}</strong>{p.capitao && <span className="tag">capitão</span>}{p.status === "duvida" && <span className="tag">dúvida</span>}
                       <div className="small muted">{p.time_nome}</div></td>
                     <td className="l small">{p.mando ? "x" : "@"} {p.adversario}<div className="muted">SG {pct(p.contexto.p_sg)} · vitória {pct(p.contexto.p_vitoria)}</div></td>
                     <td>C$ {num(p.preco, 2)}</td><td>{num(p.media_cartola, 2)}</td>

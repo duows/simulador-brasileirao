@@ -1,6 +1,7 @@
 import { load } from "../../lib/data";
 import { pct } from "../../lib/format";
 import { Monogram } from "../../lib/teams";
+import { crestMap } from "../../lib/crests";
 
 export const metadata = { title: "Times · futdados" };
 
@@ -15,7 +16,7 @@ export default function Times() {
       <div className="team-grid">
         {rows.map((l) => (
           <a key={l.time.id} className="team-card" href={`/times/${l.time.id}/`}>
-            <Monogram id={l.time.id} nome={l.time.nome} />
+            <Monogram id={l.time.id} nome={l.time.nome} crest={crestMap()[l.time.id]} />
             <div>
               <div><strong>{l.posicao_atual}º · {l.time.nome}</strong></div>
               <div className="meta">

@@ -6,6 +6,7 @@ import { RangeBar } from "../../../components/ProjectionTable";
 import { load } from "../../../lib/data";
 import { dateTimeBR, num, pct } from "../../../lib/format";
 import { Monogram } from "../../../lib/teams";
+import { crestMap } from "../../../lib/crests";
 
 export const dynamicParams = false;
 
@@ -73,7 +74,7 @@ export default async function TeamPage({ params }) {
     <>
       <p className="eyebrow">Brasileirão {tab.temporada} · resultados reais até a rodada {tab.rodada_base}</p>
       <div className="team-head">
-        <Monogram id={slug} nome={tm.nome} large />
+        <Monogram id={slug} nome={tm.nome} large crest={crestMap()[slug]} />
         <h1 style={{ margin: 0 }}>{tm.nome}</h1>
       </div>
 

@@ -12,6 +12,10 @@ export function sigla(id, nome) {
   return (nome || id).normalize("NFD").replace(/[^A-Za-z]/g, "").slice(0, 3).toUpperCase();
 }
 
-export function Monogram({ id, nome, large = false }) {
+export function Monogram({ id, nome, large = false, crest = null }) {
+  if (crest) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img className={`mono crest${large ? " lg" : ""}`} src={crest} alt="" loading="lazy" />;
+  }
   return <span className={`mono${large ? " lg" : ""}`} aria-hidden="true">{sigla(id, nome)}</span>;
 }

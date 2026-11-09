@@ -30,7 +30,7 @@ export default function Cartola() {
         esquema, atletas e capitão. O cálculo é exato e roda no seu navegador.
         {f && <> Mercado fecha em {String(f.dia).padStart(2, "0")}/{String(f.mes).padStart(2, "0")} às {String(f.hora).padStart(2, "0")}h{String(f.minuto).padStart(2, "0")}.</>}
       </p>
-      <CartolaBuilder data={d} />
+      <CartolaBuilder data={d} photos={process.env.CRESTS === "local"} />
 
       <h2>Quanto o modelo erra</h2>
       <p className="lead">

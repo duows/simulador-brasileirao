@@ -308,20 +308,22 @@ def cmd_cartola(args, cfg) -> None:
         players_frame,
         project,
         register,
+        registered_teams,
         write_site_json,
     )
     from .reports import write
 
     repo = _repo(cfg)
     doc = project(repo, cfg)
-    digest = None if args.no_register else register(repo, cfg, doc)
+    digest = None if args.no_register else register(repo, cfg, doc, again=getattr(args, "regravar", False))
     doc["ao_vivo"] = live_record(repo, cfg, doc["temporada"], doc["rodada"])
+    doc["times_gravados"] = registered_teams(repo, doc)
     path = write_site_json(doc, Path(cfg["paths"]["site_data"]) / "cartola.json")
     write(f"{cfg['paths']['reports']}/cartola.md", cartola_report(doc["backtest"], doc["ao_vivo"]))
     ev = doc["backtest"]
     print(f"Rodada {doc['rodada']}: {len(doc['atletas'])} atletas disponíveis. Temporadas no treino: {doc['temporadas_no_treino']}.")
     print(f"Backtest: erro {ev['mae_modelo']:.2f} x média {ev['mae_media']:.2f}; melhor em {ev['rodadas_modelo_melhor']} de {ev['rodadas']} rodadas.")
-    print(f"Previsões gravadas no registro: {digest[:12] + '…' if digest else 'não (mercado fechado ou --no-register)'}")
+    print(f"Previsões gravadas no registro: {digest[:12] + '…' if digest else 'não (já gravada nesta rodada, mercado fechado ou --no-register)'}")
     for x in doc["ao_vivo"]:
         print(f"  Rodada {x['rodada']}: erro {x['erro_modelo']:.2f} x média {x['erro_media_cartola']:.2f}; "
               + "; ".join(f"C$ {b}: {v['esperado']:.1f} esperado, {v['real']:.1f} real" for b, v in x["times"].items()))
@@ -373,7 +375,7 @@ def cmd_atualizar(args, cfg) -> None:
         ("Elo", lambda: cmd_build_ratings(SimpleNamespace(), cfg)),
         ("Tendências", lambda: cmd_trends(SimpleNamespace(), cfg)),
         ("Previsões da rodada (registro)", lambda: cmd_predict_round(SimpleNamespace(season=season, round=None, repetir=False), cfg)),
-        ("Cartola", lambda: cmd_cartola(SimpleNamespace(budget=None, esquema=None, no_register=False), cfg)),
+        ("Cartola", lambda: cmd_cartola(SimpleNamespace(budget=None, esquema=None, no_register=False, regravar=False), cfg)),
         ("Site", lambda: cmd_export_site(SimpleNamespace(season=season, as_of_round=None, sims=None), cfg)),
     ]
     failed = []
@@ -426,6 +428,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--budget", type=float, help="cartoletas disponíveis (padrão: as iniciais do jogo)")
     s.add_argument("--esquema", help="fixa o esquema, ex.: 4-3-3 (padrão: o melhor)")
     s.add_argument("--no-register", action="store_true", help="não grava as previsões no registro")
+    s.add_argument("--regravar", action="store_true", help="grava de novo mesmo que a rodada já tenha previsão gravada")
     s = sub.add_parser("backtest-sim", help="backtest da simulação de campeonato (rodadas 10, 20 e 30)")
     s.add_argument("--first", type=int, default=2015)
     s.add_argument("--last", type=int, default=2025)

@@ -30,6 +30,33 @@ export default function Cartola() {
         esquema, atletas e capitão. O cálculo é exato e roda no seu navegador.
         {f && <> Mercado fecha em {String(f.dia).padStart(2, "0")}/{String(f.mes).padStart(2, "0")} às {String(f.hora).padStart(2, "0")}h{String(f.minuto).padStart(2, "0")}.</>}
       </p>
+      {d.times_gravados && (
+        <>
+          <h2>Times gravados desta rodada</h2>
+          <p className="lead">
+            Estes são os times que ficaram registrados antes do fechamento (gravação de {String(d.times_gravados.gravado_em).slice(0, 16).replace("T", " ")} UTC)
+            e que vão ser comparados com a pontuação real. Para o teste valer, escale exatamente um deles.
+          </p>
+          <div className="grid">
+            {Object.entries(d.times_gravados.times).map(([b, t]) => (
+              <section key={b} className="card">
+                <h3>C$ {b} · {t.esquema} · esperado {num(t.esperado, 1)}</h3>
+                <p className="small muted" style={{ margin: "0 0 6px" }}>custo C$ {num(t.custo, 2)}</p>
+                <ul className="plain small">
+                  {t.titulares.map((p) => (
+                    <li key={p.id}><strong>{p.posicao.toUpperCase()}</strong> {p.apelido} <span className="muted">{p.time_nome}</span>{p.capitao && <span className="tag">capitão</span>}</li>
+                  ))}
+                </ul>
+                <p className="small" style={{ margin: "6px 0 0" }}>
+                  Banco: {t.banco.map((p) => `${p.posicao.toUpperCase()} ${p.apelido}${p.luxo ? " (luxo)" : ""}`).join(" · ")}
+                </p>
+              </section>
+            ))}
+          </div>
+          <h2>Montar para outro orçamento</h2>
+          <p className="small muted">Calculado agora com os dados mais recentes; pode diferir do time gravado se preços ou status mudaram.</p>
+        </>
+      )}
       <CartolaBuilder data={d} photos={process.env.CRESTS === "local"} />
 
       <h2>Ao vivo: previsto x real</h2>

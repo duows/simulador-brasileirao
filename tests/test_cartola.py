@@ -153,3 +153,22 @@ def test_coach_rule_formula():
     coef = np.array([10.0, 20.0, 0.0, 0.0])  # soma = 10 + 20 × gols_time
     rows = pd.DataFrame({"gols_time": [1.0], "p_sg": [0.3], "mando": [1], "p_vitoria": [0.5]})
     assert cm.coach_prediction(rows, coef)[0] == pytest.approx(30 / 11 + 0.5)
+
+
+def test_register_only_once_per_round(tmp_path, monkeypatch):
+    from futdados.cartola import project as cp
+    from futdados.db import Repository
+
+    repo = Repository(tmp_path / "t.sqlite")
+    cfg = {"cartola": {"registro_orcamentos": [100]}}
+    doc = {"mercado_aberto": True, "fechamento_utc": "2099-01-01T00:00:00Z", "temporada": 2026, "rodada": 35,
+           "versao_modelo": "x", "esquemas": SCHEMES, "multiplicador_capitao": 1.5, "reservas": {"ativo": False},
+           "vice_capitao": False,
+           "atletas": [{**r, "id": r["atleta_id"], "status": "provavel", "media_cartola": 1.0, "previsto_se_jogar": r["esperado"],
+                        "p_jogar": 1.0} for r in _players(1).to_dict("records")]}
+    assert cp.register(repo, cfg, doc) is not None
+    assert cp.register(repo, cfg, doc) is None              # segunda vez na mesma rodada: não grava
+    assert cp.register(repo, cfg, doc, again=True) is not None
+    assert len(repo.cartola_predictions(2026)) == 2
+    teams = cp.registered_teams(repo, doc)
+    assert teams and "100" in teams["times"] and len(teams["times"]["100"]["titulares"]) == 12

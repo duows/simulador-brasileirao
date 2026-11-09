@@ -124,9 +124,17 @@ def players_frame(doc: dict) -> pd.DataFrame:
     return df.assign(atleta_id=df["id"])
 
 
-def register(repo: Repository, cfg: dict, doc: dict) -> str | None:
-    """Grava as previsões e os times sugeridos antes do fechamento. Fora do prazo, não grava."""
+def register(repo: Repository, cfg: dict, doc: dict, again: bool = False) -> str | None:
+    """Grava as previsões e os times sugeridos antes do fechamento. Fora do prazo, não grava.
+
+    Uma gravação por rodada: se a rodada já tem previsão gravada, não grava de novo (a não ser com
+    `again`). Assim a atualização automática não troca o time que a pessoa escalou e que vai ser
+    comparado depois.
+    """
     if not doc["mercado_aberto"] or not doc["fechamento_utc"] or utc_now() >= doc["fechamento_utc"]:
+        return None
+    reg = repo.cartola_predictions(doc["temporada"])
+    if not again and len(reg[reg.rodada == doc["rodada"]]):
         return None
     pf = players_frame(doc)
     times = {}
@@ -148,6 +156,28 @@ def register(repo: Repository, cfg: dict, doc: dict) -> str | None:
     return repo.insert_cartola_prediction({"season": doc["temporada"], "rodada": doc["rodada"],
                                            "fechamento_utc": doc["fechamento_utc"], "model_version": doc["versao_modelo"],
                                            "atletas": atletas, "times": times})
+
+
+def registered_teams(repo: Repository, doc: dict) -> dict | None:
+    """Times gravados da rodada atual (última gravação antes do fechamento), com nomes, para a página."""
+    reg = repo.cartola_predictions(doc["temporada"])
+    reg = reg[(reg.rodada == doc["rodada"]) & (reg.created_at < reg.fechamento_utc)]
+    if reg.empty:
+        return None
+    last = reg.iloc[-1]
+    names = {p["id"]: p for p in doc["atletas"]}
+    out = {"gravado_em": last.created_at, "hash": last.hash[:12], "times": {}}
+    for b, t in json.loads(last.times).items():
+        def info(aid):
+            p = names.get(int(aid), {})
+            return {"id": int(aid), "apelido": p.get("apelido", f"#{aid}"), "time_nome": p.get("time_nome", ""),
+                    "preco": p.get("preco")}
+        out["times"][b] = {
+            "esquema": t["esquema"], "custo": t["custo"], "esperado": t["esperado"],
+            "titulares": [{**info(a), "posicao": t["posicoes"][str(a)], "capitao": int(a) == t["capitao"]} for a in t["atletas"]],
+            "banco": [{**info(r), "posicao": p, "luxo": r == t.get("luxo")} for p, r in t.get("reservas", {}).items()],
+        }
+    return out
 
 
 def live_record(repo: Repository, cfg: dict, season: int, current_round: int) -> list[dict]:

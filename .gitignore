@@ -16,3 +16,6 @@ data/finance/pdfs/
 # Cartola FC: API sem licença clara, só uso local (D24)
 data/cartola/
 site/public/data/cartola.json
+
+# logs da atualização automática
+logs/

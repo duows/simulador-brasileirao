@@ -424,3 +424,10 @@ rodada 35.
   dos atletas**. Nos dados, a conta exata é soma dos atletas do time que jogaram ÷ 11 + 1 se vencer
   (95% exato em 642 casos). Prever o técnico por essa fórmula errou um pouco mais (1,79) que a
   regressão por posição (1,756), que continua em uso (`cartola.tecnico_pela_regra: false`).
+
+## D30 · 2026-11-09 · Atualização automática e uma gravação por rodada no Cartola
+- `scripts/agendar_atualizacao.bat` cria duas tarefas agendadas do Windows (10h e 17h) que rodam
+  `futdados atualizar` sem abrir nada (log em `logs/`, fora do git). `ABRIR_SITE.bat` só abre o site.
+- **Uma gravação de previsões do Cartola por rodada** (`--regravar` força outra): com a atualização
+  automática, gravar a cada execução trocaria o time comparado depois. A página mostra os times
+  gravados da rodada para a pessoa escalar exatamente o que vai ser comparado.

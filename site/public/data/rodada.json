@@ -1,7 +1,7 @@
 {
  "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
  "atribuicao": "Football data provided by the Football-Data.org API",
- "gerado_em": "2026-11-09T18:29:56Z",
+ "gerado_em": "2026-11-09T19:37:34Z",
  "versao_modelo": "futdados-0.1.0+21d22b71",
  "temporada": 2026,
  "rodada": 35,
@@ -27,20 +27,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-14T21:30:00Z",
    "gols_esperados": {
-    "mandante": 1.42,
-    "visitante": 1.005
+    "mandante": 1.472,
+    "visitante": 1.008
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.4658,
-    "empate": 0.2747,
-    "visitante": 0.2595
+    "mandante": 0.4735,
+    "empate": 0.2716,
+    "visitante": 0.2549
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.4655,
-     "empate": 0.2677,
-     "visitante": 0.2668
+     "mandante": 0.4786,
+     "empate": 0.2624,
+     "visitante": 0.259
     },
     "elo": {
      "mandante": 0.4662,
@@ -51,7 +51,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1263
+    "probabilidade": 0.1243
    },
    "fatores": [
     {
@@ -59,12 +59,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -74,9 +74,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.415,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.427,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -89,14 +89,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": 0.072,
-      "efeito_gols": 0.088,
-      "multiplicador": 1.075
+      "valor": 0.092,
+      "efeito_gols": 0.114,
+      "multiplicador": 1.096
      },
      "visitante": {
-      "valor": 0.009,
-      "efeito_gols": 0.009,
-      "multiplicador": 1.009
+      "valor": 0.023,
+      "efeito_gols": 0.023,
+      "multiplicador": 1.023
      }
     },
     {
@@ -104,14 +104,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": -0.11,
-      "efeito_gols": -0.135,
-      "multiplicador": 0.896
+      "valor": -0.097,
+      "efeito_gols": -0.121,
+      "multiplicador": 0.907
      },
      "visitante": {
-      "valor": -0.054,
-      "efeito_gols": -0.056,
-      "multiplicador": 0.947
+      "valor": -0.064,
+      "efeito_gols": -0.066,
+      "multiplicador": 0.938
      }
     }
    ],
@@ -145,20 +145,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-18T22:30:00Z",
    "gols_esperados": {
-    "mandante": 1.429,
-    "visitante": 1.331
+    "mandante": 1.332,
+    "visitante": 1.301
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.4016,
-    "empate": 0.2713,
-    "visitante": 0.3271
+    "mandante": 0.3905,
+    "empate": 0.2757,
+    "visitante": 0.3338
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.395,
-     "empate": 0.2546,
-     "visitante": 0.3504
+     "mandante": 0.3763,
+     "empate": 0.2619,
+     "visitante": 0.3618
     },
     "elo": {
      "mandante": 0.4112,
@@ -169,7 +169,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1204
+    "probabilidade": 0.1245
    },
    "fatores": [
     {
@@ -177,12 +177,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -192,9 +192,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.416,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.406,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -207,14 +207,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": -0.062,
-      "efeito_gols": -0.076,
-      "multiplicador": 0.94
+      "valor": -0.097,
+      "efeito_gols": -0.115,
+      "multiplicador": 0.908
      },
      "visitante": {
-      "valor": 0.089,
-      "efeito_gols": 0.106,
-      "multiplicador": 1.093
+      "valor": 0.056,
+      "efeito_gols": 0.065,
+      "multiplicador": 1.057
      }
     },
     {
@@ -222,14 +222,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": 0.031,
-      "efeito_gols": 0.038,
-      "multiplicador": 1.031
+      "valor": -0.008,
+      "efeito_gols": -0.01,
+      "multiplicador": 0.992
      },
      "visitante": {
-      "valor": 0.147,
-      "efeito_gols": 0.174,
-      "multiplicador": 1.158
+      "valor": 0.157,
+      "efeito_gols": 0.184,
+      "multiplicador": 1.17
      }
     }
    ],
@@ -263,20 +263,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-18T23:00:00Z",
    "gols_esperados": {
-    "mandante": 1.943,
-    "visitante": 1.074
+    "mandante": 1.874,
+    "visitante": 1.042
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.5702,
-    "empate": 0.2329,
-    "visitante": 0.1969
+    "mandante": 0.5656,
+    "empate": 0.2363,
+    "visitante": 0.1981
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.5759,
-     "empate": 0.2185,
-     "visitante": 0.2057
+     "mandante": 0.5682,
+     "empate": 0.2242,
+     "visitante": 0.2077
     },
     "elo": {
      "mandante": 0.5619,
@@ -287,7 +287,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1021
+    "probabilidade": 0.1057
    },
    "fatores": [
     {
@@ -295,12 +295,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -310,9 +310,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.491,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.487,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -325,14 +325,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": -0.085,
-      "efeito_gols": -0.123,
-      "multiplicador": 0.919
+      "valor": -0.073,
+      "efeito_gols": -0.105,
+      "multiplicador": 0.929
      },
      "visitante": {
-      "valor": -0.142,
-      "efeito_gols": -0.151,
-      "multiplicador": 0.867
+      "valor": -0.136,
+      "efeito_gols": -0.143,
+      "multiplicador": 0.873
      }
     },
     {
@@ -340,14 +340,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": 0.361,
-      "efeito_gols": 0.524,
-      "multiplicador": 1.435
+      "valor": 0.309,
+      "efeito_gols": 0.441,
+      "multiplicador": 1.363
      },
      "visitante": {
-      "valor": 0.164,
-      "efeito_gols": 0.174,
-      "multiplicador": 1.178
+      "valor": 0.127,
+      "efeito_gols": 0.133,
+      "multiplicador": 1.136
      }
     }
    ],
@@ -381,20 +381,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-18T23:30:00Z",
    "gols_esperados": {
-    "mandante": 1.12,
-    "visitante": 1.262
+    "mandante": 1.213,
+    "visitante": 1.198
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.3357,
-    "empate": 0.2865,
-    "visitante": 0.3778
+    "mandante": 0.3587,
+    "empate": 0.2858,
+    "visitante": 0.3554
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.3269,
-     "empate": 0.277,
-     "visitante": 0.3961
+     "mandante": 0.3658,
+     "empate": 0.2759,
+     "visitante": 0.3583
     },
     "elo": {
      "mandante": 0.3485,
@@ -405,7 +405,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1306
+    "probabilidade": 0.1304
    },
    "fatores": [
     {
@@ -413,12 +413,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -428,9 +428,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.367,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.386,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -443,14 +443,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": 0.149,
-      "efeito_gols": 0.162,
-      "multiplicador": 1.161
+      "valor": 0.132,
+      "efeito_gols": 0.149,
+      "multiplicador": 1.141
      },
      "visitante": {
-      "valor": 0.316,
-      "efeito_gols": 0.365,
-      "multiplicador": 1.372
+      "valor": 0.289,
+      "efeito_gols": 0.325,
+      "multiplicador": 1.335
      }
     },
     {
@@ -458,14 +458,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": -0.424,
-      "efeito_gols": -0.46,
-      "multiplicador": 0.654
+      "valor": -0.331,
+      "efeito_gols": -0.374,
+      "multiplicador": 0.718
      },
      "visitante": {
-      "valor": -0.133,
-      "efeito_gols": -0.154,
-      "multiplicador": 0.875
+      "valor": -0.159,
+      "efeito_gols": -0.178,
+      "multiplicador": 0.853
      }
     }
    ],
@@ -499,20 +499,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-18T23:30:00Z",
    "gols_esperados": {
-    "mandante": 2.198,
-    "visitante": 0.844
+    "mandante": 2.109,
+    "visitante": 0.879
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.7113,
-    "empate": 0.176,
-    "visitante": 0.1127
+    "mandante": 0.6963,
+    "empate": 0.182,
+    "visitante": 0.1217
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.6823,
-     "empate": 0.1869,
-     "visitante": 0.1307
+     "mandante": 0.657,
+     "empate": 0.1971,
+     "visitante": 0.1459
     },
     "elo": {
      "mandante": 0.7535,
@@ -523,7 +523,7 @@
    "placar_mais_provavel": {
     "mandante": 2,
     "visitante": 0,
-    "probabilidade": 0.1153
+    "probabilidade": 0.112
    },
    "fatores": [
     {
@@ -531,12 +531,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -546,9 +546,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.526,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.52,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -561,14 +561,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": 0.427,
-      "efeito_gols": 0.664,
-      "multiplicador": 1.533
+      "valor": 0.382,
+      "efeito_gols": 0.581,
+      "multiplicador": 1.465
      },
      "visitante": {
-      "valor": 0.103,
-      "efeito_gols": 0.098,
-      "multiplicador": 1.109
+      "valor": 0.117,
+      "efeito_gols": 0.112,
+      "multiplicador": 1.124
      }
     },
     {
@@ -577,13 +577,13 @@
      "peso": null,
      "mandante": {
       "valor": -0.028,
-      "efeito_gols": -0.043,
+      "efeito_gols": -0.042,
       "multiplicador": 0.973
      },
      "visitante": {
-      "valor": -0.323,
-      "efeito_gols": -0.305,
-      "multiplicador": 0.724
+      "valor": -0.295,
+      "efeito_gols": -0.284,
+      "multiplicador": 0.744
      }
     }
    ],
@@ -617,20 +617,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-19T00:30:00Z",
    "gols_esperados": {
-    "mandante": 1.325,
-    "visitante": 1.112
+    "mandante": 1.352,
+    "visitante": 1.129
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.4177,
-    "empate": 0.2811,
-    "visitante": 0.3012
+    "mandante": 0.4199,
+    "empate": 0.2793,
+    "visitante": 0.3008
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.4149,
-     "empate": 0.2722,
-     "visitante": 0.3128
+     "mandante": 0.4187,
+     "empate": 0.2692,
+     "visitante": 0.3121
     },
     "elo": {
      "mandante": 0.4216,
@@ -641,7 +641,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1288
+    "probabilidade": 0.1277
    },
    "fatores": [
     {
@@ -649,12 +649,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -664,9 +664,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.4,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.409,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -679,14 +679,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": -0.043,
-      "efeito_gols": -0.051,
-      "multiplicador": 0.958
+      "valor": -0.023,
+      "efeito_gols": -0.027,
+      "multiplicador": 0.978
      },
      "visitante": {
-      "valor": 0.118,
-      "efeito_gols": 0.127,
-      "multiplicador": 1.125
+      "valor": 0.145,
+      "efeito_gols": 0.158,
+      "multiplicador": 1.156
      }
     },
     {
@@ -694,14 +694,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": -0.064,
-      "efeito_gols": -0.076,
-      "multiplicador": 0.938
+      "valor": -0.068,
+      "efeito_gols": -0.081,
+      "multiplicador": 0.934
      },
      "visitante": {
-      "valor": -0.061,
-      "efeito_gols": -0.066,
-      "multiplicador": 0.941
+      "valor": -0.074,
+      "efeito_gols": -0.081,
+      "multiplicador": 0.929
      }
     }
    ],
@@ -735,20 +735,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-19T00:30:00Z",
    "gols_esperados": {
-    "mandante": 1.449,
-    "visitante": 1.196
+    "mandante": 1.547,
+    "visitante": 1.216
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.4141,
-    "empate": 0.2748,
-    "visitante": 0.311
+    "mandante": 0.4264,
+    "empate": 0.2701,
+    "visitante": 0.3036
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.4292,
-     "empate": 0.2588,
-     "visitante": 0.312
+     "mandante": 0.4498,
+     "empate": 0.2508,
+     "visitante": 0.2994
     },
     "elo": {
      "mandante": 0.3922,
@@ -759,7 +759,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.123
+    "probabilidade": 0.1187
    },
    "fatores": [
     {
@@ -767,12 +767,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -782,9 +782,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.419,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.439,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -797,14 +797,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": -0.005,
-      "efeito_gols": -0.007,
-      "multiplicador": 0.995
+      "valor": 0.005,
+      "efeito_gols": 0.007,
+      "multiplicador": 1.005
      },
      "visitante": {
-      "valor": 0.11,
-      "efeito_gols": 0.123,
-      "multiplicador": 1.116
+      "valor": 0.091,
+      "efeito_gols": 0.103,
+      "multiplicador": 1.095
      }
     },
     {
@@ -812,14 +812,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": -0.012,
-      "efeito_gols": -0.015,
-      "multiplicador": 0.988
+      "valor": 0.039,
+      "efeito_gols": 0.05,
+      "multiplicador": 1.039
      },
      "visitante": {
-      "valor": 0.019,
-      "efeito_gols": 0.022,
-      "multiplicador": 1.019
+      "valor": 0.054,
+      "efeito_gols": 0.062,
+      "multiplicador": 1.056
      }
     }
    ],
@@ -853,20 +853,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-19T22:30:00Z",
    "gols_esperados": {
-    "mandante": 1.528,
-    "visitante": 1.145
+    "mandante": 1.518,
+    "visitante": 1.107
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.4666,
-    "empate": 0.2657,
-    "visitante": 0.2676
+    "mandante": 0.4702,
+    "empate": 0.2668,
+    "visitante": 0.263
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.461,
-     "empate": 0.2541,
-     "visitante": 0.2849
+     "mandante": 0.4671,
+     "empate": 0.2559,
+     "visitante": 0.277
     },
     "elo": {
      "mandante": 0.4749,
@@ -877,7 +877,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1208
+    "probabilidade": 0.1217
    },
    "fatores": [
     {
@@ -885,12 +885,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -900,9 +900,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.431,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.434,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -915,14 +915,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": 0.076,
-      "efeito_gols": 0.097,
-      "multiplicador": 1.079
+      "valor": 0.087,
+      "efeito_gols": 0.111,
+      "multiplicador": 1.091
      },
      "visitante": {
-      "valor": -0.023,
-      "efeito_gols": -0.025,
-      "multiplicador": 0.977
+      "valor": -0.012,
+      "efeito_gols": -0.013,
+      "multiplicador": 0.988
      }
     },
     {
@@ -930,14 +930,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": -0.04,
-      "efeito_gols": -0.051,
-      "multiplicador": 0.961
+      "valor": -0.062,
+      "efeito_gols": -0.079,
+      "multiplicador": 0.94
      },
      "visitante": {
-      "valor": 0.109,
-      "efeito_gols": 0.119,
-      "multiplicador": 1.115
+      "valor": 0.064,
+      "efeito_gols": 0.069,
+      "multiplicador": 1.066
      }
     }
    ],
@@ -971,20 +971,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-19T22:30:00Z",
    "gols_esperados": {
-    "mandante": 1.206,
-    "visitante": 1.125
+    "mandante": 1.267,
+    "visitante": 1.152
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.3871,
-    "empate": 0.2878,
-    "visitante": 0.3251
+    "mandante": 0.3937,
+    "empate": 0.284,
+    "visitante": 0.3223
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.3792,
-     "empate": 0.2812,
-     "visitante": 0.3396
+     "mandante": 0.3904,
+     "empate": 0.2748,
+     "visitante": 0.3348
     },
     "elo": {
      "mandante": 0.3986,
@@ -995,7 +995,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1319
+    "probabilidade": 0.1299
    },
    "fatores": [
     {
@@ -1003,12 +1003,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -1018,9 +1018,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.381,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.395,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -1033,14 +1033,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": -0.152,
-      "efeito_gols": -0.172,
-      "multiplicador": 0.859
+      "valor": -0.133,
+      "efeito_gols": -0.153,
+      "multiplicador": 0.876
      },
      "visitante": {
-      "valor": 0.012,
-      "efeito_gols": 0.014,
-      "multiplicador": 1.013
+      "valor": 0.055,
+      "efeito_gols": 0.06,
+      "multiplicador": 1.056
      }
     },
     {
@@ -1048,14 +1048,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": -0.049,
-      "efeito_gols": -0.055,
-      "multiplicador": 0.952
+      "valor": -0.023,
+      "efeito_gols": -0.027,
+      "multiplicador": 0.977
      },
      "visitante": {
-      "valor": 0.055,
-      "efeito_gols": 0.06,
-      "multiplicador": 1.057
+      "valor": 0.036,
+      "efeito_gols": 0.04,
+      "multiplicador": 1.037
      }
     }
    ],
@@ -1089,20 +1089,20 @@
    "rodada": 35,
    "inicio_utc": "2026-11-20T00:30:00Z",
    "gols_esperados": {
-    "mandante": 1.212,
-    "visitante": 1.058
+    "mandante": 1.247,
+    "visitante": 1.052
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.3906,
-    "empate": 0.2906,
-    "visitante": 0.3189
+    "mandante": 0.3973,
+    "empate": 0.2889,
+    "visitante": 0.3138
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.3957,
-     "empate": 0.2848,
-     "visitante": 0.3194
+     "mandante": 0.4072,
+     "empate": 0.282,
+     "visitante": 0.3108
     },
     "elo": {
      "mandante": 0.383,
@@ -1113,7 +1113,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1325
+    "probabilidade": 0.1316
    },
    "fatores": [
     {
@@ -1121,12 +1121,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -1136,9 +1136,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.382,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.392,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -1151,14 +1151,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": -0.052,
-      "efeito_gols": -0.058,
-      "multiplicador": 0.95
+      "valor": -0.045,
+      "efeito_gols": -0.052,
+      "multiplicador": 0.956
      },
      "visitante": {
-      "valor": 0.114,
-      "efeito_gols": 0.12,
-      "multiplicador": 1.121
+      "valor": 0.108,
+      "efeito_gols": 0.114,
+      "multiplicador": 1.114
      }
     },
     {
@@ -1166,12 +1166,12 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": -0.144,
-      "efeito_gols": -0.163,
-      "multiplicador": 0.866
+      "valor": -0.126,
+      "efeito_gols": -0.145,
+      "multiplicador": 0.881
      },
      "visitante": {
-      "valor": -0.107,
+      "valor": -0.108,
       "efeito_gols": -0.113,
       "multiplicador": 0.898
      }
@@ -1209,20 +1209,20 @@
    "rodada": 21,
    "inicio_utc": "2026-11-14T23:30:00Z",
    "gols_esperados": {
-    "mandante": 1.425,
-    "visitante": 1.627
+    "mandante": 1.377,
+    "visitante": 1.563
    },
-   "gols_base": 1.051,
+   "gols_base": 1.052,
    "probabilidade_estimada": {
-    "mandante": 0.3405,
-    "empate": 0.2642,
-    "visitante": 0.3953
+    "mandante": 0.3406,
+    "empate": 0.2673,
+    "visitante": 0.3921
    },
    "probabilidade_por_modelo": {
     "forcas": {
-     "mandante": 0.3363,
-     "empate": 0.2393,
-     "visitante": 0.4244
+     "mandante": 0.3365,
+     "empate": 0.2446,
+     "visitante": 0.4189
     },
     "elo": {
      "mandante": 0.3465,
@@ -1233,7 +1233,7 @@
    "placar_mais_provavel": {
     "mandante": 1,
     "visitante": 1,
-    "probabilidade": 0.1096
+    "probabilidade": 0.1138
    },
    "fatores": [
     {
@@ -1241,12 +1241,12 @@
      "rotulo": "Média de gols da liga",
      "peso": null,
      "mandante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      },
      "visitante": {
-      "valor": 1.0512620161668327,
+      "valor": 1.051557257915813,
       "efeito_gols": 0.0,
       "multiplicador": 1.0
      }
@@ -1256,9 +1256,9 @@
      "rotulo": "Mando de campo",
      "peso": null,
      "mandante": {
-      "valor": 0.338,
-      "efeito_gols": 0.416,
-      "multiplicador": 1.402
+      "valor": 0.342,
+      "efeito_gols": 0.413,
+      "multiplicador": 1.408
      },
      "visitante": {
       "valor": 0.0,
@@ -1271,14 +1271,14 @@
      "rotulo": "Ataque do time",
      "peso": null,
      "mandante": {
-      "valor": -0.142,
-      "efeito_gols": -0.175,
-      "multiplicador": 0.867
+      "valor": -0.136,
+      "efeito_gols": -0.165,
+      "multiplicador": 0.873
      },
      "visitante": {
-      "valor": 0.076,
-      "efeito_gols": 0.1,
-      "multiplicador": 1.079
+      "valor": 0.087,
+      "efeito_gols": 0.112,
+      "multiplicador": 1.091
      }
     },
     {
@@ -1286,14 +1286,14 @@
      "rotulo": "Defesa do adversário",
      "peso": null,
      "mandante": {
-      "valor": 0.109,
-      "efeito_gols": 0.133,
-      "multiplicador": 1.115
+      "valor": 0.064,
+      "efeito_gols": 0.077,
+      "multiplicador": 1.066
      },
      "visitante": {
-      "valor": 0.361,
-      "efeito_gols": 0.476,
-      "multiplicador": 1.435
+      "valor": 0.309,
+      "efeito_gols": 0.399,
+      "multiplicador": 1.363
      }
     }
    ],

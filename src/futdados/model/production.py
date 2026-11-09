@@ -30,12 +30,50 @@ FACTOR_LABELS = {"media_liga": "Média de gols da liga", "mando": "Mando de camp
                  "ataque": "Ataque do time", "defesa_adversario": "Defesa do adversário"}
 
 
+def blend_shots(train: pd.DataFrame, shots: pd.DataFrame | None, peso_gols: float) -> pd.DataFrame:
+    """Troca os gols de cada jogo com finalizações conhecidas por "gols ajustados":
+    peso_gols × gols reais + (1 − peso_gols) × finalizações no alvo × conversão da liga.
+
+    A conversão (gols por finalização no alvo, separada para mandante e visitante) sai dos próprios
+    jogos de treino, então não usa nada do futuro.
+    """
+    if shots is None or shots.empty or peso_gols >= 1:
+        return train
+    t = train.reset_index(drop=True).merge(shots, on=["season", "home_id", "away_id"], how="left")
+    has = (t.sot_h.notna() & t.sot_a.notna()).to_numpy()
+    if has.sum() < 30 or t.loc[has, "sot_h"].sum() <= 0 or t.loc[has, "sot_a"].sum() <= 0:
+        return train
+    conv_h = t.loc[has, "home_goals"].sum() / t.loc[has, "sot_h"].sum()
+    conv_a = t.loc[has, "away_goals"].sum() / t.loc[has, "sot_a"].sum()
+    t["home_goals"] = t.home_goals.astype(float)
+    t["away_goals"] = t.away_goals.astype(float)
+    t.loc[has, "home_goals"] = peso_gols * t.loc[has, "home_goals"] + (1 - peso_gols) * conv_h * t.loc[has, "sot_h"]
+    t.loc[has, "away_goals"] = peso_gols * t.loc[has, "away_goals"] + (1 - peso_gols) * conv_a * t.loc[has, "sot_a"]
+    return t.drop(columns=["sot_h", "sot_a"])
+
+
+def shots_source(cfg: dict) -> tuple[pd.DataFrame | None, float]:
+    """Finalizações do cache local do Cartola, se `production.finalizacoes_cartola.ativo`.
+    Dado sem licença clara: só existe na máquina local (data/cartola, fora do git)."""
+    f = (cfg.get("production") or {}).get("finalizacoes_cartola") or {}
+    if not f.get("ativo"):
+        return None, 1.0
+    from ..cartola.ingest import team_shots
+
+    s = team_shots(Path(cfg["paths"]["db"]).parent / "cartola")
+    return (s if len(s) else None), float(f.get("peso_gols", 0.5))
+
+
 def fit_strengths(matches: pd.DataFrame, before: pd.Timestamp, seasons_back: int = 3, half_life: float = 365,
-                  prior_sd: float = 0.3) -> dict:
+                  prior_sd: float = 0.3, shots: pd.DataFrame | None = None, peso_gols: float = 1.0) -> dict:
     hist = matches[(matches.status == "FINISHED") & matches.home_goals.notna()].copy()
     hist["kickoff_utc"] = pd.to_datetime(hist.kickoff_utc, utc=True)
     season_now = int(hist[hist.kickoff_utc < before].season.max())
     train = hist[(hist.kickoff_utc < before) & (hist.season >= season_now - seasons_back)]
+    n_shots = 0
+    if shots is not None and peso_gols < 1:
+        n_shots = int(train.merge(shots, on=["season", "home_id", "away_id"]).shape[0])
+        train = blend_shots(train, shots, peso_gols)
     teams = sorted(set(train.home_id) | set(train.away_id) | set(matches[matches.season == matches.season.max()].home_id))
     ix = {t: i for i, t in enumerate(teams)}
     T = len(teams)
@@ -73,7 +111,7 @@ def fit_strengths(matches: pd.DataFrame, before: pd.Timestamp, seasons_back: int
     se = 1 / np.sqrt(info)
     return {"teams": teams, "atk": dict(zip(teams, th[:T], strict=True)), "def": dict(zip(teams, th[T:2 * T], strict=True)),
             "atk_se": dict(zip(teams, se[:T], strict=True)), "def_se": dict(zip(teams, se[T:2 * T], strict=True)),
-            "mu": float(th[2 * T]), "home": float(th[2 * T + 1]), "jogos": len(train),
+            "mu": float(th[2 * T]), "home": float(th[2 * T + 1]), "jogos": len(train), "jogos_com_finalizacoes": n_shots,
             "ate": before.strftime("%Y-%m-%dT%H:%M:%SZ")}
 
 
@@ -116,7 +154,9 @@ def attach(feat: pd.DataFrame, matches: pd.DataFrame, cfg: dict, elo_params: dic
         return out
     done = matches[(matches.status == "FINISHED") & matches.home_goals.notna()]
     before = pd.to_datetime(done.kickoff_utc, utc=True).max() + pd.Timedelta(seconds=1)
-    s = fit_strengths(matches, before, half_life=float(cfg.get("production", {}).get("half_life_days", 365)))
+    shots, peso_gols = shots_source(cfg)
+    s = fit_strengths(matches, before, half_life=float(cfg.get("production", {}).get("half_life_days", 365)),
+                      shots=shots, peso_gols=peso_gols)
     rows = out[pending]
     lh, la = lambdas(s, rows.home_id, rows.away_id)
     p_f = outcome_probs(lh, la)
@@ -143,7 +183,9 @@ def attach(feat: pd.DataFrame, matches: pd.DataFrame, cfg: dict, elo_params: dic
     else:
         p_c = p_f
     out.loc[pending, ["p_conj_h", "p_conj_d", "p_conj_a"]] = p_c
-    out.attrs["production"] = {"pesos_conjunto": w, "forcas_ate": s["ate"], "jogos_forcas": s["jogos"]}
+    out.attrs["production"] = {"pesos_conjunto": w, "forcas_ate": s["ate"], "jogos_forcas": s["jogos"],
+                               "jogos_com_finalizacoes": s["jogos_com_finalizacoes"],
+                               "peso_gols_reais": peso_gols if s["jogos_com_finalizacoes"] else 1.0}
     return out
 
 

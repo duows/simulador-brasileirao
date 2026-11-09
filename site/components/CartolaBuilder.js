@@ -5,7 +5,7 @@ import { addReserves, bestTeam, viceCaptain } from "../lib/cartola.mjs";
 import { num, pct, signed } from "../lib/format";
 
 const POS = { gol: "Goleiro", lat: "Lateral", zag: "Zagueiro", mei: "Meia", ata: "Atacante", tec: "Técnico" };
-const FACTORS = ["base", "media_ajustada", "p_sg", "gols_time", "mando", "p_vitoria"];
+const FACTORS = ["base", "media_ajustada", "regularidade", "p_sg", "gols_time", "mando", "p_vitoria"];
 const COACH_FACTORS = ["soma_time_11", "p_vitoria"];
 
 function Factors({ p, labels }) {

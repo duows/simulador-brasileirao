@@ -436,3 +436,55 @@ rodada 35.
   de SG, gols esperados, mando e vitória), o erro sobe de 2,838 para 2,868 e a correlação de ordem
   dentro da posição cai de 0,237 para 0,160 (a média do Cartola tem 0,193). Ou seja, o contexto é o
   que faz o modelo ordenar melhor os atletas que a média, e é a ordem que decide a escalação.
+
+## D31 · 2026-11-09 · Mais acerto: finalizações, regularidade e chance de jogar estimada
+
+Três mudanças, cada uma testada no walk-forward de 2026 antes de entrar (só fica o que ganha).
+
+**1. Finalizações no alvo como aproximação de xG (modelo de jogos).** Os scouts do Cartola trazem,
+por atleta e rodada, gol (G), finalização defendida (FD) e na trave (FT). Somando por time, temos
+finalizações no alvo de cada jogo de 2026 (320 jogos). Nas forças por time, os jogos com esse dado
+passam a usar "gols ajustados" = peso × gols reais + (1 − peso) × finalizações no alvo × conversão
+da liga (gols por finalização, de mandante e visitante, só com jogos anteriores).
+
+Backtest (2026, rodadas 6 a 34, 288 jogos; forças reajustadas antes de cada rodada):
+
+| Peso dos gols reais | RPS forças | RPS conjunto (59% forças + 41% Elo) | Ganho do conjunto, IC 90% |
+|---|---|---|---|
+| 1 (só gols, antes) | 0,2016 | 0,2009 | — |
+| 0,5 (escolhido) | 0,2003 | 0,2000 | −0,0009 [−0,0016; −0,0001] |
+| 0,25 | 0,1999 | 0,1997 | −0,0012 [−0,0024; −0,0001] |
+| 0 | 0,1997 | 0,1994 | −0,0015 [−0,0030; +0,0000] |
+
+Finalizações totais (com as para fora) ajudam menos (correlação com gols 0,16 contra 0,39 das no
+alvo). Escolhemos 0,5 e não o melhor valor da tabela porque a tabela foi feita nos mesmos jogos:
+pegar o melhor seria ajustar no teste. É o meio-termo e o único com intervalo longe do zero nas
+duas versões. Ganho pequeno (cerca de 0,4% no RPS) e medido numa temporada só: em 2027, com
+outra temporada no cache, dá para refazer a conta. `production.finalizacoes_cartola`.
+
+Licença: o dado do Cartola não tem licença clara (D24). Os scouts ficam só em data/cartola
+(fora do git); o que sai do modelo são probabilidades derivadas. Os JSON do site versionados
+passam a refletir esse ajuste. **Antes de qualquer publicação, desligar
+`finalizacoes_cartola.ativo`** e regenerar.
+
+**2. Regularidade (Cartola).** Nova variável: fração dos últimos 5 jogos do time em que o atleta
+entrou em campo. Separa o titular de sempre de quem entra no fim (que pontua menos quando entra).
+Taxas por jogo de scouts (finalizações, desarmes, assistências, gols do atleta) foram testadas
+também e não acrescentaram nada além disso; ficaram de fora.
+
+| Backtest Cartola 2026 (rodadas 6-34) | Erro médio | Spearman | Rodadas melhor que a média |
+|---|---|---|---|
+| Antes | 2,838 | 0,237 | 24 de 29 |
+| + finalizações no contexto do jogo | 2,836 | 0,241 | 24 de 29 |
+| + regularidade | 2,831 | 0,252 | 27 de 29 |
+| + as duas (em uso) | 2,828 | 0,255 | 27 de 29 |
+| Média do Cartola | 2,946 | 0,193 | — |
+
+**3. Chance de jogar estimada.** O cache só guarda o mercado do momento, então não havia histórico
+de status para calibrar 95% (provável) e 50% (dúvida). Desde a rodada 35 o mercado de cada rodada
+fica salvo (`atletas_mercado_r{r}.json`, sobrescrito a cada atualização, então vale o status da
+última antes do fechamento). `estimate_p_jogar` cruza esse status com quem entrou em campo e
+puxa a taxa para o valor configurado com 50 casos fictícios (`cartola.p_jogar_casos_ficticios`):
+com pouco histórico vale a configuração, com muito vale o observado. Técnicos e times com jogo
+fora da rodada não entram na conta. Ainda não testável (nenhuma rodada com mercado guardado
+terminou); começa a valer sozinho depois da rodada 35.

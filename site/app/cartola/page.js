@@ -95,7 +95,14 @@ export default function Cartola() {
         É um ganho real, mas pequeno: a pontuação do Cartola tem muito acaso, e o modelo não sabe a escalação nem quem vai ser poupado.
       </p>
       <ul className="plain small">
-        <li>A chance de jogar vem do status do mercado (provável {Math.round(d.p_jogar.provavel * 100)}%, dúvida {Math.round(d.p_jogar.duvida * 100)}%) e não foi estimada: não há histórico de status.</li>
+        <li>
+          Chance de jogar pelo status do mercado: provável {Math.round(d.p_jogar.provavel * 100)}%, dúvida {Math.round(d.p_jogar.duvida * 100)}%.
+          {d.p_jogar_estimativa && (d.p_jogar_estimativa.provavel?.casos ?? 0) > 0
+            ? <> Estimada com o histórico guardado: {Object.entries(d.p_jogar_estimativa).map(([s, v]) => `${s === "duvida" ? "dúvida" : "provável"} ${v.jogaram} de ${v.casos} jogaram`).join(", ")} (puxado para o valor inicial enquanto há pouco histórico).</>
+            : <> Ainda sem histórico: o sistema guarda o mercado de cada rodada e passa a estimar sozinho depois que ela termina.</>}
+        </li>
+        <li>Regularidade: fração dos últimos 5 jogos do time em que o atleta entrou em campo (titular de sempre pontua mais que quem entra no fim).</li>
+        {d.finalizacoes_no_modelo && <li>Os gols esperados de cada time usam também as finalizações no alvo (scouts do Cartola), não só os gols.</li>}
         {d.jogos_fora_da_rodada.length > 0 && <li>Fora desta rodada do Cartola (não pontuam): {d.jogos_fora_da_rodada.join(", ")}.</li>}
         <li>Capitão pontua ×{num(d.multiplicador_capitao, 1)} (regra a confirmar no regulamento do Cartola).</li>
         <li>Dados: API pública do Cartola FC, para uso pessoal e local, gerados em {dateTimeBR(d.gerado_em)}.</li>

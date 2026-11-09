@@ -85,6 +85,13 @@ production:
   # forças + Elo (pesos do backtest). false = volta ao Poisson de 7 fatores.
   enabled: true
   half_life_days: 365
+  # Finalizações no alvo do cache local do Cartola como aproximação de xG: nos jogos com scouts,
+  # o ajuste das forças usa peso_gols × gols reais + (1 − peso_gols) × finalizações × conversão.
+  # Backtest 2026 (rodadas 6-34, 288 jogos): RPS do conjunto 0,2009 -> 0,2000 (IC 90% do ganho
+  # sem incluir zero). Dado só local: desligar antes de qualquer publicação (DECISIONS D31).
+  finalizacoes_cartola:
+    ativo: true
+    peso_gols: 0.5
 
 cartola:
   # Estudo de caso pessoal (só local): pontuação esperada no Cartola FC e time por orçamento.
@@ -103,7 +110,8 @@ cartola:
     ativo: true
     preco_maximo: titular_mais_barato   # TODO confirmar a regra vigente; "livre" = sem limite de preço
     reserva_de_luxo: true     # 1 reserva indicado substitui o titular da posição que pontuou menos, se fizer mais
-  p_jogar:                  # chance de jogar pelo status do mercado (não estimada: sem histórico de status)
+  p_jogar_casos_ficticios: 50   # peso do valor abaixo frente ao observado (mercados guardados x quem jogou)
+  p_jogar:                  # chance de jogar a priori; o sistema estima a real com os mercados guardados
     provavel: 0.95
     duvida: 0.5
 

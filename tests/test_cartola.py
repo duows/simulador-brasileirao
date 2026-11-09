@@ -67,7 +67,8 @@ def test_prior_means_do_not_use_current_round():
 
 def test_decomposition_sums_to_prediction():
     rows = pd.DataFrame({"posicao": ["zag"] * 50, "media_ajustada": np.linspace(1, 6, 50), "p_sg": np.linspace(0.1, 0.6, 50),
-                         "gols_time": 1.2, "mando": [0, 1] * 25, "p_vitoria": 0.4})
+                         "gols_time": 1.2, "mando": [0, 1] * 25, "p_vitoria": 0.4,
+                         "regularidade": np.linspace(1, 0.2, 50)})
     rows["pontos"] = 0.5 + 0.8 * rows.media_ajustada + 4 * rows.p_sg
     coefs = cm.fit_position_models(rows, alpha=0.01)
     pred = cm.predict(rows, coefs)
@@ -172,3 +173,31 @@ def test_register_only_once_per_round(tmp_path, monkeypatch):
     assert len(repo.cartola_predictions(2026)) == 2
     teams = cp.registered_teams(repo, doc)
     assert teams and "100" in teams["times"] and len(teams["times"]["100"]["titulares"]) == 12
+
+
+def test_regularity_counts_last_team_games():
+    pts = pd.DataFrame({"atleta_id": [1, 2, 1, 2, 2], "team_id": ["x"] * 5, "rodada": [1, 1, 2, 2, 3],
+                        "jogou": [True] * 5, "posicao": ["ata"] * 5, "pontos": [1.0] * 5})
+    rows = pd.DataFrame({"atleta_id": [1, 2, 3], "team_id": ["x", "x", "y"], "rodada": [4, 4, 4]})
+    out = cm.add_regularity(rows, pts)
+    assert list(out.regularidade) == pytest.approx([2 / 3, 1.0, 0.5])  # 3: time sem jogos -> 0,5
+
+
+def test_estimate_p_jogar(tmp_path):
+    import json
+
+    from futdados.cartola.project import estimate_p_jogar
+
+    d = tmp_path / "2026"
+    d.mkdir()
+    merc = {"atletas": [{"atleta_id": i, "status_id": 7, "posicao_id": 5, "clube_id": 1} for i in range(10)]
+            + [{"atleta_id": 99, "status_id": 2, "posicao_id": 5, "clube_id": 2}]}
+    (d / "atletas_mercado_r3.json").write_text(json.dumps(merc), encoding="utf-8")
+    (d / "atletas_pontuados_3.json").write_text(json.dumps(
+        {"atletas": {str(i): {"entrou_em_campo": True} for i in range(8)}}), encoding="utf-8")
+    (d / "partidas_3.json").write_text(json.dumps({"partidas": [
+        {"clube_casa_id": 2, "clube_visitante_id": 3, "valida": False}]}), encoding="utf-8")
+    est = estimate_p_jogar(tmp_path, {"provavel": 0.95, "duvida": 0.5}, n0=10)
+    assert (est["provavel"]["jogaram"], est["provavel"]["casos"]) == (8, 10)
+    assert est["provavel"]["taxa"] == pytest.approx((8 + 9.5) / 20)
+    assert est["duvida"]["casos"] == 0 and est["duvida"]["taxa"] == pytest.approx(0.5)  # jogo fora da rodada

@@ -152,3 +152,30 @@ def load_offline(root: str | Path, season: int) -> dict | None:
     if not pts:
         return None
     return {"pontos": _frame(pts), "partidas": pd.DataFrame(partidas)}
+
+
+def team_shots(root: str | Path) -> pd.DataFrame:
+    """Finalizações no alvo de cada time em cada jogo (gol + defendida + na trave), somando os scouts
+    dos atletas, para todas as temporadas no cache local. Colunas: season, home_id, away_id, sot_h, sot_a.
+
+    Serve de aproximação de "gols esperados" (não há xG em fonte aberta): finalização acontece bem
+    mais que gol e mostra melhor quem cria chances.
+    """
+    cols = ["season", "home_id", "away_id", "sot_h", "sot_a"]
+    rows = []
+    for d in sorted(Path(root).glob("[0-9]*")) if Path(root).exists() else []:
+        if not d.is_dir() or not d.name.isdigit():
+            continue
+        off = load_offline(root, int(d.name))
+        if off is None:
+            continue
+        pts = off["pontos"]
+        sot = sum(pts[c] if c in pts else 0 for c in ("s_G", "s_FD", "s_FT"))
+        by = pts.assign(sot=sot).groupby(["rodada", "team_id"]).sot.sum()
+        games = off["partidas"].dropna(subset=["home_id", "away_id"])
+        for g in games[games.valida].itertuples():
+            h, a = by.get((g.rodada, g.home_id)), by.get((g.rodada, g.away_id))
+            if h is not None and a is not None:
+                rows.append({"season": int(d.name), "home_id": g.home_id, "away_id": g.away_id,
+                             "sot_h": float(h), "sot_a": float(a)})
+    return pd.DataFrame(rows, columns=cols).drop_duplicates(["season", "home_id", "away_id"], keep="last")

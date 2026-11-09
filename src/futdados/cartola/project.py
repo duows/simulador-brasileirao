@@ -11,9 +11,10 @@ import pandas as pd
 
 from ..db import Repository, utc_now
 from ..model.poisson import Weights
+from ..model.production import shots_source
 from ..teams import display_name
 from . import model as cm
-from .ingest import fetch_round_points, ingest, load_offline
+from .ingest import STATUS, fetch_round_points, ingest, load_offline
 from .optimize import best_team
 
 
@@ -32,7 +33,8 @@ def backtest(repo: Repository, cfg: dict, data: dict, prev_means: dict | None) -
     anteriores a ela, e coeficientes só com rodadas anteriores."""
     c = cfg["cartola"]
     season = int(data["status"]["temporada"])
-    ctx = cm.production_context(data["partidas"], repo.matches(), season)
+    shots, pg = shots_source(cfg)
+    ctx = cm.production_context(data["partidas"], repo.matches(), season, shots=shots, peso_gols=pg)
     table = cm.training_table(data["pontos"], ctx, c["shrink"], prev_means)
     rule = bool(c.get("tecnico_pela_regra", False))
     pred = cm.walk_forward(table, c["first_backtest_round"], c["alpha"], cm.team_sums(data["pontos"]) if rule else None,
@@ -48,6 +50,7 @@ def project(repo: Repository, cfg: dict) -> dict:
     status = data["status"]
     rnd = int(status["rodada_atual"])
     w = Weights.load(cfg["paths"]["weights"])
+    shots, pg = shots_source(cfg)
 
     # tabelas de treino: temporadas anteriores do cache + a atual
     tables, prev_means = [], None
@@ -55,10 +58,10 @@ def project(repo: Repository, cfg: dict) -> dict:
         off = load_offline(root, s)
         if off is None:
             continue
-        ctx_s = cm.production_context(off["partidas"], repo.matches(), s)
+        ctx_s = cm.production_context(off["partidas"], repo.matches(), s, shots=shots, peso_gols=pg)
         tables.append(cm.training_table(off["pontos"], ctx_s, c["shrink"], prev_means))
         prev_means = cm.season_means(off["pontos"])
-    ctx = cm.production_context(data["partidas"], repo.matches(), season)
+    ctx = cm.production_context(data["partidas"], repo.matches(), season, shots=shots, peso_gols=pg)
     tables.append(cm.training_table(data["pontos"], ctx, c["shrink"], prev_means))
     coefs = cm.fit_position_models(pd.concat(tables, ignore_index=True), c["alpha"])
     coach_coef = cm.fit_team_sum(cm.team_sums(data["pontos"]), ctx, c["alpha"])
@@ -74,12 +77,14 @@ def project(repo: Repository, cfg: dict) -> dict:
     a["media_ajustada"] = (a["sum"] + c["shrink"] * prior) / (a["count"] + c["shrink"])
     a = a.merge(ctx[ctx.rodada == rnd], on="team_id", how="inner")
     a = a[a.valida]
+    a = cm.add_regularity(a, data["pontos"])
     a["previsto"] = cm.predict(a, coefs)
     use_rule = bool(c.get("tecnico_pela_regra", False))
     if use_rule:
         is_tec = a.posicao == "tec"
         a.loc[is_tec, "previsto"] = cm.coach_prediction(a[is_tec], coach_coef)
-    a["p_jogar"] = a.status.map(c["p_jogar"]).astype(float)
+    pj_est = estimate_p_jogar(root, c["p_jogar"], float(c.get("p_jogar_casos_ficticios", 50)))
+    a["p_jogar"] = a.status.map({s: v["taxa"] for s, v in pj_est.items()}).astype(float)
     a["esperado"] = a.p_jogar * a.previsto
     players = []
     for _, r in a.iterrows():
@@ -88,7 +93,8 @@ def project(repo: Repository, cfg: dict) -> dict:
             "id": int(r.atleta_id), "apelido": r.apelido, "time": r.team_id, "time_nome": display_name(r.team_id),
             "adversario": display_name(r.adversario), "adversario_id": r.adversario, "mando": bool(r.mando),
             "posicao": r.posicao, "status": r.status, "preco": float(r.preco), "media_cartola": float(r.media),
-            "jogos": int(r.jogos), "media_ajustada": round(float(r.media_ajustada), 2), "p_jogar": float(r.p_jogar),
+            "jogos": int(r.jogos), "media_ajustada": round(float(r.media_ajustada), 2),
+            "regularidade": round(float(r.regularidade), 2), "p_jogar": round(float(r.p_jogar), 3),
             "previsto_se_jogar": round(float(r.previsto), 2), "esperado": round(float(r.esperado), 2),
             "foto": r.foto,
             "contexto": {"p_sg": round(float(r.p_sg), 3), "gols_time": round(float(r.gols_time), 2),
@@ -106,7 +112,8 @@ def project(repo: Repository, cfg: dict) -> dict:
         "versao_modelo": w.model_version, "temporada": season, "rodada": rnd, "mercado_aberto": status.get("status_mercado") == 1,
         "fechamento": fech, "fechamento_utc": fech_utc, "cartoletas_iniciais": status.get("cartoleta_inicial"),
         "multiplicador_capitao": c["captain_multiplier"], "vice_capitao": bool(c.get("vice_capitao", False)),
-        "p_jogar": c["p_jogar"],
+        "p_jogar": {s: round(v["taxa"], 3) for s, v in pj_est.items()}, "p_jogar_estimativa": pj_est,
+        "finalizacoes_no_modelo": shots is not None,
         "reservas": {**c["reservas"], "multiplicador_capitao": c["captain_multiplier"],
                      "desvio_por_posicao": played.groupby("posicao").pontos.std().round(2).to_dict()},
         "esquemas": schemes, "atletas": sorted(players, key=lambda x: -x["esperado"]),
@@ -117,6 +124,38 @@ def project(repo: Repository, cfg: dict) -> dict:
         "backtest": ev,
         "fonte": "API pública (não oficial) do Cartola FC, uso pessoal e local; contexto dos jogos: modelo futdados.",
     }
+
+
+def estimate_p_jogar(root: Path, prior: dict[str, float], n0: float = 50) -> dict[str, dict]:
+    """Chance real de entrar em campo por status do mercado.
+
+    Para cada rodada com o mercado guardado (atletas_mercado_r{r}.json, gravado a cada atualização,
+    então vale o status da última antes do fechamento) e a pontuação já baixada, conta quem de cada
+    status entrou em campo. Times com jogo fora da rodada ficam de fora; técnicos também. A taxa
+    é puxada para o valor da configuração com `n0` casos fictícios: com pouco histórico, vale a
+    configuração; com muito, vale o observado.
+    """
+    counts = {s: [0, 0] for s in prior}
+    for d in sorted(root.glob("[0-9]*")) if root.exists() else []:
+        for f in d.glob("atletas_mercado_r*.json"):
+            r = int(f.stem.rsplit("_r", 1)[1])
+            pf, pa = d / f"atletas_pontuados_{r}.json", d / f"partidas_{r}.json"
+            if not pf.exists():
+                continue
+            pts = json.loads(pf.read_text(encoding="utf-8")).get("atletas") or {}
+            jogou = {int(k) for k, v in pts.items() if v.get("entrou_em_campo")}
+            fora = set()
+            if pa.exists():
+                for g in json.loads(pa.read_text(encoding="utf-8"))["partidas"]:
+                    if not g.get("valida", True):
+                        fora |= {g["clube_casa_id"], g["clube_visitante_id"]}
+            for at in json.loads(f.read_text(encoding="utf-8"))["atletas"]:
+                s = STATUS.get(at["status_id"])
+                if s in counts and at["posicao_id"] != 6 and at["clube_id"] not in fora:
+                    counts[s][0] += int(at["atleta_id"] in jogou)
+                    counts[s][1] += 1
+    return {s: {"taxa": float((k + n0 * prior[s]) / (n + n0)), "jogaram": k, "casos": n,
+                "configurado": float(prior[s])} for s, (k, n) in counts.items()}
 
 
 def players_frame(doc: dict) -> pd.DataFrame:

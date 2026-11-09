@@ -2,19 +2,22 @@
 
 Para cada posição, uma regressão linear (ridge leve) da pontuação de um atleta numa rodada:
 
-    pontos ≈ a + b1·média_ajustada + b2·P(SG) + b3·gols_esperados_time + b4·mando + b5·P(vitória)
+    pontos ≈ a + b1·média_ajustada + b2·regularidade + b3·P(SG) + b4·gols_esperados_time
+             + b5·mando + b6·P(vitória)
 
 - média_ajustada: média do atleta nas rodadas ANTERIORES, puxada para a média da posição com
   `shrink` jogos fictícios (pouca amostra = mais perto da média da posição).
 - P(SG): chance do time não sofrer gol, exp(-gols esperados do adversário), do nosso modelo.
 - gols_esperados_time, P(vitória): do nosso modelo de jogos, com fatores que só usam o passado.
 - mando: 1 se o time joga em casa.
+- regularidade: fração dos últimos 5 jogos do time em que o atleta entrou em campo.
 
 Validação walk-forward dentro da temporada: para a rodada r, coeficientes ajustados só com
 rodadas < r e médias calculadas só com rodadas < r. Baseline: a média do atleta (o que o
 próprio Cartola mostra).
 
-Pontuação esperada final = P(jogar) × pontos previstos, com P(jogar) pelo status do mercado.
+Pontuação esperada final = P(jogar) × pontos previstos, com P(jogar) pelo status do mercado,
+estimada com o histórico de status guardado (ver project.estimate_p_jogar).
 """
 
 from __future__ import annotations
@@ -22,9 +25,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-FEATURES = ["media_ajustada", "p_sg", "gols_time", "mando", "p_vitoria"]
+FEATURES = ["media_ajustada", "regularidade", "p_sg", "gols_time", "mando", "p_vitoria"]
+REG_WINDOW = 5
 LABELS = {"soma_time_11": "Soma esperada do time ÷ 11",
-          "base": "Base da posição", "media_ajustada": "Média do atleta (ajustada)", "p_sg": "Chance de não sofrer gol",
+          "base": "Base da posição", "media_ajustada": "Média do atleta (ajustada)",
+          "regularidade": "Regularidade (jogou nos últimos 5 jogos do time)", "p_sg": "Chance de não sofrer gol",
           "gols_time": "Gols esperados do time", "mando": "Jogar em casa", "p_vitoria": "Chance de vitória"}
 
 
@@ -71,6 +76,26 @@ def add_prior_means(pontos: pd.DataFrame, shrink: float, prev_means: dict[int, f
     return df
 
 
+def add_regularity(rows: pd.DataFrame, pontos: pd.DataFrame, window: int = REG_WINDOW) -> pd.DataFrame:
+    """Fração dos últimos `window` jogos do time (antes da rodada) em que o atleta entrou em campo.
+
+    Separa o titular de sempre do reserva que entra no fim: quem joga pouco pontua menos quando
+    entra. Sem jogo anterior do time, 0,5.
+    """
+    pl = pontos[pontos.jogou]
+    team_rounds = {t: np.sort(s.unique()) for t, s in pl.groupby("team_id").rodada}
+    played = set(zip(pl.atleta_id, pl.rodada, strict=True))
+
+    def reg(a, t, r):
+        rs = team_rounds.get(t)
+        rs = rs[rs < r][-window:] if rs is not None else []
+        return float(np.mean([(a, x) in played for x in rs])) if len(rs) else 0.5
+
+    out = rows.copy()
+    out["regularidade"] = [reg(a, t, r) for a, t, r in zip(out.atleta_id, out.team_id, out.rodada, strict=True)]
+    return out
+
+
 def _fit(X: np.ndarray, y: np.ndarray, alpha: float) -> np.ndarray:
     Xb = np.hstack([np.ones((len(X), 1)), X])
     pen = alpha * np.eye(Xb.shape[1])
@@ -101,7 +126,7 @@ def decompose(row: pd.Series, coef: np.ndarray) -> dict[str, float]:
 
 def training_table(pontos: pd.DataFrame, ctx: pd.DataFrame, shrink: float,
                    prev_means: dict[int, float] | None = None) -> pd.DataFrame:
-    df = add_prior_means(pontos, shrink, prev_means)
+    df = add_regularity(add_prior_means(pontos, shrink, prev_means), pontos)
     return df.merge(ctx, on=["rodada", "team_id"], how="inner").dropna(subset=FEATURES)
 
 
@@ -149,7 +174,8 @@ def evaluate(pred: pd.DataFrame) -> dict:
     return res
 
 
-def production_context(partidas: pd.DataFrame, matches: pd.DataFrame, season: int, half_life: float = 365) -> pd.DataFrame:
+def production_context(partidas: pd.DataFrame, matches: pd.DataFrame, season: int, half_life: float = 365,
+                       shots: pd.DataFrame | None = None, peso_gols: float = 1.0) -> pd.DataFrame:
     """Contexto por time e rodada com o motor de produção (forças por time), reajustado antes de
     cada rodada com os jogos anteriores a ela: sem vazamento, igual para treino e previsão."""
     from ..model.poisson import outcome_probs
@@ -162,7 +188,7 @@ def production_context(partidas: pd.DataFrame, matches: pd.DataFrame, season: in
         start = pd.to_datetime(keys.kickoff_utc, utc=True).min()
         if pd.isna(start):
             start = pd.Timestamp(g.data.min(), tz="America/Sao_Paulo").tz_convert("UTC")
-        s = fit_strengths(matches, start, half_life=half_life)
+        s = fit_strengths(matches, start, half_life=half_life, shots=shots, peso_gols=peso_gols)
         lh, la = lambdas(s, g.home_id, g.away_id)
         p = outcome_probs(lh, la)
         for (h, a, v), x, y, ph, pa in zip(g[["home_id", "away_id", "valida"]].itertuples(index=False), lh, la,

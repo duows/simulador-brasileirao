@@ -88,3 +88,20 @@ def test_new_coach_flag_first_n_matches():
     assert list(flag[:5]) == [0] * 5
     assert list(flag[5:5 + n]) == [1] * n
     assert flag[5 + n] == 0
+
+
+def test_blend_shots_mixes_goals_and_shots():
+    import pandas as pd
+
+    from futdados.model.production import blend_shots
+
+    n = 40
+    train = pd.DataFrame({"season": [2026] * n, "home_id": [f"h{i}" for i in range(n)], "away_id": [f"a{i}" for i in range(n)],
+                          "home_goals": [2] * n, "away_goals": [0] * n})
+    shots = pd.DataFrame({"season": [2026] * n, "home_id": train.home_id, "away_id": train.away_id,
+                          "sot_h": [4.0] * (n - 1) + [8.0], "sot_a": [2.0] * n})
+    out = blend_shots(train, shots, 0.5)
+    conv_h = 2 * n / (4.0 * (n - 1) + 8.0)
+    assert out.home_goals.iloc[-1] == pytest.approx(0.5 * 2 + 0.5 * conv_h * 8)
+    assert out.away_goals.sum() == pytest.approx(0)   # conversão zero quando ninguém fez gol fora
+    assert blend_shots(train, shots, 1.0) is train and blend_shots(train, None, 0.5) is train

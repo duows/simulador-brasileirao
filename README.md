@@ -62,7 +62,9 @@ cada time (a soma bate com o total) e o multiplicador correspondente.
 
 ## Limitações
 
-- **Sem xG**: o modelo usa só gols, que são poucos e têm muito acaso.
+- **Sem xG**: não há xG em fonte aberta. Na temporada com cache local do Cartola, as forças
+  usam metade gols e metade finalizações no alvo (scouts do Cartola) como aproximação; nas
+  outras, só gols. Ganho medido em 2026: RPS do conjunto 0,2009 → 0,2000 (D31).
 - **Sem escalação**: não sabe de desfalques, poupados, lesões nem suspensões.
 - **Só Série A**: jogos de Copa do Brasil, Libertadores e Sul-Americana não entram no
   descanso nem na forma. Um time que jogou no meio da semana pela copa aparece como descansado.
@@ -176,7 +178,8 @@ calcula a pontuação esperada de cada atleta (média ajustada + contexto do jog
 e monta o melhor time para o orçamento (esquema, atletas e capitão, solução exata). A página
 `/cartola` do site faz o mesmo no navegador: você digita as cartoletas e o time aparece, com os
 fatores de cada atleta. Nada do Cartola vai para o git (ver D24). Backtest em
-[reports/cartola.md](reports/cartola.md): erro 2,84 contra 2,95 da média do Cartola.
+[reports/cartola.md](reports/cartola.md): erro 2,83 contra 2,95 da média do Cartola, correlação
+de ordem 0,255 contra 0,193, melhor em 27 de 29 rodadas (D31).
 
 ## Saídas para vídeo
 

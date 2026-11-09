@@ -225,6 +225,24 @@ def export_site(repo: Repository, cfg, season: int, as_of_round: int | None = No
     _write(out, "simulador", {**base, "temporada": season, "rodada_base": based_on,
                               **simulator_data(feat, w, cfg)})
     _write(out, "historico", {**base, "temporada": season, **history_data(repo, season, max_round)})
+
+    # páginas por time: jogos restantes (com fatores), resultados, casa/fora, força e forma
+    proximos: dict[str, list] = {tid: [] for tid in stats}
+    for idx, row in feat[pending].sort_values("kickoff_utc").iterrows():
+        pay = {**match_payload(row, w, cfg["model"]["max_goals"]), "adiado": bool(postponed.loc[idx])}
+        pay["registro"] = registro.get((row["home_id"], row["away_id"]))
+        proximos[row["home_id"]].append(pay)
+        proximos[row["away_id"]].append(pay)
+    times = {}
+    for tid, s in stats.items():
+        times[tid] = {"id": tid, "nome": display_name(tid), "posicao_atual": s["posicao_atual"],
+                      "j": s["j"], "v": s["v"], "e": s["e"], "d": s["d"], "gp": s["gp"], "gc": s["gc"],
+                      "pts": s["pts"], "casa": s["casa"], "fora": s["fora"], "forca": s["forca"],
+                      "ultimos5": s["ultimos5"], "adiados": s["adiados"],
+                      "resultados": [{**r, "adversario_nome": display_name(r["adversario"])}
+                                     for r in s["resultados"][::-1]],
+                      "proximos": proximos[tid]}
+    _write(out, "times", {**base, "temporada": season, "rodada_base": based_on, "times": times})
     _write(out, "modelo", {**base, **model_data(cfg, w)})
     _write(out, "financas", {**base, **finance_data(cfg)})
     return out

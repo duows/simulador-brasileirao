@@ -133,7 +133,7 @@ def test_export_site_writes_derived_data_only(env, tmp_path):
     repo, cfg = env
     out = export_site(repo, cfg, 2026, n_sims=200, out_dir=tmp_path / "data")
     names = {p.stem for p in out.glob("*.json")}
-    assert names == {"meta", "tabela", "rodada", "simulador", "modelo", "financas", "historico"}
+    assert names == {"meta", "tabela", "rodada", "simulador", "modelo", "financas", "historico", "times"}
     for p in out.glob("*.json"):
         doc = json.loads(p.read_text(encoding="utf-8"))
         assert doc["aviso"] == AVISO
@@ -150,6 +150,8 @@ def test_export_site_writes_derived_data_only(env, tmp_path):
     linha = tab["linhas"][0]
     assert abs(sum(linha["distribuicao_posicao"]) - 1) < 1e-3 and len(linha["distribuicao_posicao"]) == 6
     assert {"posicao_atual", "ultimos5", "adiados", "v", "e", "d"} <= set(linha)
+    times = json.loads((out / "times.json").read_text(encoding="utf-8"))["times"]
+    assert len(times) == 6 and all(len(x["proximos"]) == 10 for x in times.values())
     hist = json.loads((out / "historico.json").read_text(encoding="utf-8"))
     assert hist["rodadas"] == [0]  # export ao vivo gravou a projeção da rodada-base
 

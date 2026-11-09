@@ -10,9 +10,7 @@ import numpy as np
 import pandas as pd
 
 from ..db import Repository, utc_now
-from ..model.features import build_features
-from ..model.poisson import Weights, fit
-from ..pipeline import season_features
+from ..model.poisson import Weights
 from ..teams import display_name
 from . import model as cm
 from .ingest import fetch_round_points, ingest, load_offline
@@ -30,14 +28,11 @@ def past_seasons(cfg: dict, season: int) -> list[int]:
 
 
 def backtest(repo: Repository, cfg: dict, data: dict, prev_means: dict | None) -> tuple[dict, pd.DataFrame]:
-    """Walk-forward na temporada: modelo de jogos ajustado só até a temporada anterior."""
+    """Walk-forward na temporada: contexto de cada rodada com as forças ajustadas só com jogos
+    anteriores a ela, e coeficientes só com rodadas anteriores."""
     c = cfg["cartola"]
-    w_live = Weights.load(cfg["paths"]["weights"])
-    allf = build_features(repo.matches(), cfg["model"], half_life_days=w_live.half_life_days)
     season = int(data["status"]["temporada"])
-    w_bt = fit(allf[(allf.season >= cfg["model"]["train_first_season"]) & (allf.season < season)], cfg["model"],
-               w_live.half_life_days, bootstrap=0)
-    ctx = cm.match_context(data["partidas"], allf[allf.season == season], w_bt)
+    ctx = cm.production_context(data["partidas"], repo.matches(), season)
     table = cm.training_table(data["pontos"], ctx, c["shrink"], prev_means)
     pred = cm.walk_forward(table, c["first_backtest_round"], c["alpha"])
     return cm.evaluate(pred), pred
@@ -58,10 +53,10 @@ def project(repo: Repository, cfg: dict) -> dict:
         off = load_offline(root, s)
         if off is None:
             continue
-        ctx_s = cm.match_context(off["partidas"], season_features(repo, cfg, w, s), w)
+        ctx_s = cm.production_context(off["partidas"], repo.matches(), s)
         tables.append(cm.training_table(off["pontos"], ctx_s, c["shrink"], prev_means))
         prev_means = cm.season_means(off["pontos"])
-    ctx = cm.match_context(data["partidas"], season_features(repo, cfg, w, season), w)
+    ctx = cm.production_context(data["partidas"], repo.matches(), season)
     tables.append(cm.training_table(data["pontos"], ctx, c["shrink"], prev_means))
     coefs = cm.fit_position_models(pd.concat(tables, ignore_index=True), c["alpha"])
 

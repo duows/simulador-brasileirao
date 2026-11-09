@@ -57,6 +57,12 @@ export default function MatchCard({ j, collapsible = false }) {
         <span>Gols esperados: <strong>{num(ge.mandante, 2)}</strong> x <strong>{num(ge.visitante, 2)}</strong></span>
         <span>Placar mais provável: {j.placar_mais_provavel.mandante}–{j.placar_mais_provavel.visitante} ({pct(j.placar_mais_provavel.probabilidade)})</span>
       </div>
+      {j.probabilidade_por_modelo && (
+        <p className="small muted" style={{ margin: "6px 0 0" }}>
+          {j.probabilidade_por_modelo.elo && <>Elo diz {pct(j.probabilidade_por_modelo.elo.mandante)} / {pct(j.probabilidade_por_modelo.elo.empate)} / {pct(j.probabilidade_por_modelo.elo.visitante)} · </>}
+          forças por time dizem {pct(j.probabilidade_por_modelo.forcas.mandante)} / {pct(j.probabilidade_por_modelo.forcas.empate)} / {pct(j.probabilidade_por_modelo.forcas.visitante)} · o conjunto (barra acima) combina os dois.
+        </p>
+      )}
       <Factors j={j} ge={ge} scale={scale} collapsible={collapsible} />
       <RegistryNote j={j} />
     </article>

@@ -93,6 +93,8 @@ def split_remaining(season_feat: pd.DataFrame, w: Weights):
     for c in ("forma", "tecnico_novo"):
         todo.loc[later, [f"{c}_h", f"{c}_a"]] = 0.0
     lh, la = expected_goals(todo, w)
+    if "lh_prod" in todo.columns and todo.lh_prod.notna().all():  # motor de produção (forças por time)
+        lh, la = todo.lh_prod.to_numpy(float), todo.la_prod.to_numpy(float)
     return played, todo, lh, la
 
 

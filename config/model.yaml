@@ -77,6 +77,12 @@ preseason:
   start_date: "04-11"          # mês-dia da 1ª rodada; uma rodada por semana, aos sábados
   kickoff_hour_utc: 22
 
+production:
+  # Motor de produção dos jogos: gols esperados pelas forças por time, probabilidade pelo conjunto
+  # forças + Elo (pesos do backtest). false = volta ao Poisson de 7 fatores.
+  enabled: true
+  half_life_days: 365
+
 cartola:
   # Estudo de caso pessoal (só local): pontuação esperada no Cartola FC e time por orçamento.
   season: 2026

@@ -75,7 +75,12 @@ def season_features(repo: Repository, cfg, w: Weights, season: int,
         matches = matches[matches.season <= season]
     feat = build_features(matches, cfg["model"], coach_extra(repo, cfg["paths"]["coach_changes"]),
                           half_life_days=w.half_life_days)
-    return feat[feat.season == season].reset_index(drop=True)
+    feat = feat[feat.season == season].reset_index(drop=True)
+    if cfg.get("production", {}).get("enabled", True):
+        from .model.production import attach
+
+        feat = attach(feat, matches, cfg, repo.get_json("elo_params"))
+    return feat
 
 
 def last_complete_round(feat: pd.DataFrame) -> int:

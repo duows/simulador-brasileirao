@@ -49,7 +49,24 @@ def _side(row: pd.Series, side: str) -> np.ndarray:
 
 
 def match_payload(row: pd.Series, w: Weights, max_goals: int = 10) -> dict:
-    """Probabilidades, gols esperados e fatores de um jogo."""
+    """Probabilidades, gols esperados e fatores de um jogo (motor de produção, se houver)."""
+    if "lh_prod" in row and pd.notna(row.get("lh_prod")):
+        from .production import payload
+
+        p = payload(row, 0.0, max_goals)
+        return {
+            "mandante": {"id": row["home_id"], "nome": display_name(row["home_id"])},
+            "visitante": {"id": row["away_id"], "nome": display_name(row["away_id"])},
+            "rodada": None if pd.isna(row["round"]) else int(row["round"]),
+            "inicio_utc": pd.Timestamp(row["kickoff_utc"]).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            **p,
+            "contexto": {
+                "pontos_por_jogo_ultimos": {"mandante": round(float(row["raw_ppg_h"]), 2),
+                                            "visitante": round(float(row["raw_ppg_a"]), 2)},
+                "elo": None if pd.isna(row.get("elo_h")) else {"mandante": round(float(row["elo_h"])),
+                                                               "visitante": round(float(row["elo_a"]))},
+            },
+        }
     lh, la = (float(v[0]) for v in expected_goals(row.to_frame().T, w))
     m = score_matrix(lh, la, w.rho, max_goals)
     p_home, p_draw, p_away = float(np.tril(m, -1).sum()), float(np.trace(m)), float(np.triu(m, 1).sum())

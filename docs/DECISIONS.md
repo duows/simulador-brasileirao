@@ -354,3 +354,15 @@ rodada 35.
   configurável: não gasta cartoletas e custa no máximo o titular mais barato da posição (**TODO:
   confirmar a regra vigente**). Vale chance de algum titular faltar × esperado do reserva. Reserva
   de luxo: não implementada.
+
+## D26 · 2026-11-09 · Motor de produção trocado para o conjunto forças + Elo
+- Pelo placar do D23, o Poisson de 7 fatores perdia do Elo puro em todas as temporadas. Agora
+  (`config: production.enabled`): **gols esperados** = modelo de forças por time (ataque e defesa
+  com prior gaussiano, mando comum, média da liga, decaimento de 365 dias, últimas 3 temporadas),
+  usados na simulação, no simulador, nas páginas e no contexto do Cartola. **Probabilidade
+  mostrada e registrada** = conjunto forças + Elo com os pesos do backtest (59% / 41%).
+- Fatores explicáveis por jogo: média de gols da liga, mando, ataque do time e defesa do
+  adversário (decomposição exata na escala log). O card mostra também o que cada modelo diz.
+- No Cartola, o contexto de cada rodada passada é recalculado com as forças daquele momento
+  (sem vazamento). O erro ficou igual (2,84): o ganho do motor novo está nos jogos e na simulação.
+- O Poisson de 7 fatores continua no código (backtest e `production.enabled: false`).

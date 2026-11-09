@@ -1,7 +1,7 @@
 {
  "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
  "atribuicao": "Football data provided by the Football-Data.org API",
- "gerado_em": "2026-11-09T02:36:41Z",
+ "gerado_em": "2026-11-09T18:19:52Z",
  "versao_modelo": "futdados-0.1.0+21d22b71",
  "temporada": 2026,
  "rodadas": [
@@ -13,16 +13,16 @@
     0.0
    ],
    "g4": [
-    0.1222
+    0.1304
    ],
    "g6": [
-    0.8659
+    0.8738
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    59.3092
+    59.3973
    ]
   },
   "atletico-mg": {
@@ -30,16 +30,16 @@
     0.0
    ],
    "g4": [
-    0.014
+    0.0156
    ],
    "g6": [
-    0.3169
+    0.3023
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    55.7922
+    55.7115
    ]
   },
   "bahia": {
@@ -47,16 +47,16 @@
     0.0
    ],
    "g4": [
-    0.0827
+    0.0898
    ],
    "g6": [
-    0.715
+    0.7331
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    58.7476
+    58.8443
    ]
   },
   "botafogo": {
@@ -70,10 +70,10 @@
     0.0001
    ],
    "rebaixamento": [
-    0.019
+    0.0119
    ],
    "pontos_esperados": [
-    47.4143
+    47.8926
    ]
   },
   "bragantino": {
@@ -81,16 +81,16 @@
     0.0
    ],
    "g4": [
-    0.0004
+    0.0012
    ],
    "g6": [
-    0.0544
+    0.0513
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    52.6959
+    52.6183
    ]
   },
   "chapecoense": {
@@ -107,7 +107,7 @@
     1.0
    ],
    "pontos_esperados": [
-    25.4463
+    24.867
    ]
   },
   "corinthians": {
@@ -121,10 +121,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.445
+    0.4584
    ],
    "pontos_esperados": [
-    42.5598
+    42.5085
    ]
   },
   "coritiba": {
@@ -138,10 +138,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.0446
+    0.0636
    ],
    "pontos_esperados": [
-    45.9266
+    45.4635
    ]
   },
   "cruzeiro": {
@@ -149,7 +149,7 @@
     0.0
    ],
    "g4": [
-    0.9763
+    0.9805
    ],
    "g6": [
     1.0
@@ -158,12 +158,12 @@
     0.0
    ],
    "pontos_esperados": [
-    65.9594
+    66.0669
    ]
   },
   "flamengo": {
    "titulo": [
-    0.8506
+    0.851
    ],
    "g4": [
     1.0
@@ -175,7 +175,7 @@
     0.0
    ],
    "pontos_esperados": [
-    83.5859
+    83.9533
    ]
   },
   "fluminense": {
@@ -183,16 +183,16 @@
     0.0
    ],
    "g4": [
-    0.8041
+    0.7823
    ],
    "g6": [
-    0.9938
+    0.9941
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    62.9675
+    62.8949
    ]
   },
   "gremio": {
@@ -206,10 +206,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.5311
+    0.5524
    ],
    "pontos_esperados": [
-    42.2567
+    42.1369
    ]
   },
   "internacional": {
@@ -223,10 +223,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.3755
+    0.3421
    ],
    "pontos_esperados": [
-    43.2781
+    43.4434
    ]
   },
   "mirassol": {
@@ -240,15 +240,15 @@
     0.0
    ],
    "rebaixamento": [
-    0.137
+    0.1249
    ],
    "pontos_esperados": [
-    45.3041
+    45.5163
    ]
   },
   "palmeiras": {
    "titulo": [
-    0.1494
+    0.149
    ],
    "g4": [
     1.0
@@ -260,7 +260,7 @@
     0.0
    ],
    "pontos_esperados": [
-    80.2402
+    80.7337
    ]
   },
   "remo": {
@@ -274,10 +274,10 @@
     0.0
    ],
    "rebaixamento": [
-    1.0
+    0.9995
    ],
    "pontos_esperados": [
-    34.1488
+    33.9638
    ]
   },
   "santos": {
@@ -285,16 +285,16 @@
     0.0
    ],
    "g4": [
-    0.0003
+    0.0002
    ],
    "g6": [
-    0.0493
+    0.0411
    ],
    "rebaixamento": [
     0.0
    ],
    "pontos_esperados": [
-    53.148
+    52.9473
    ]
   },
   "sao-paulo": {
@@ -305,13 +305,13 @@
     0.0
    ],
    "g6": [
-    0.003
+    0.0029
    ],
    "rebaixamento": [
-    0.0
+    0.0004
    ],
    "pontos_esperados": [
-    49.4405
+    49.3663
    ]
   },
   "vasco": {
@@ -322,13 +322,13 @@
     0.0
    ],
    "g6": [
-    0.0016
+    0.0013
    ],
    "rebaixamento": [
-    0.0183
+    0.0219
    ],
    "pontos_esperados": [
-    48.0808
+    47.9128
    ]
   },
   "vitoria": {
@@ -342,10 +342,10 @@
     0.0
    ],
    "rebaixamento": [
-    0.4295
+    0.4249
    ],
    "pontos_esperados": [
-    42.6989
+    42.6666
    ]
   }
  }

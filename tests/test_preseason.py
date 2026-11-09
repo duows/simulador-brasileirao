@@ -71,3 +71,23 @@ def test_preseason_requires_calendar_or_teams(env):  # noqa: F811
     repo, cfg = env
     with pytest.raises(ValueError):
         simulate_preseason(repo, cfg, 2031)
+
+
+def test_production_engine_attaches_and_sums(env):  # noqa: F811
+    import math
+
+    from futdados.model.production import attach, payload
+
+    repo, cfg = env
+    from futdados.pipeline import load_weights, season_features
+
+    cfg["production"] = {"enabled": False}
+    feat = season_features(repo, cfg, load_weights(cfg), 2026)
+    out = attach(feat, repo.matches(), cfg, None)
+    pend = out[out.status != "FINISHED"]
+    assert pend.lh_prod.notna().all() and (pend.lh_prod > 0).all()
+    probs = pend[["p_conj_h", "p_conj_d", "p_conj_a"]].sum(axis=1)
+    assert probs.round(6).eq(1).all()
+    p = payload(pend.iloc[0])
+    efeito = sum(f["mandante"]["efeito_gols"] for f in p["fatores"])
+    assert math.isclose(p["gols_base"] + efeito, p["gols_esperados"]["mandante"], abs_tol=0.01)

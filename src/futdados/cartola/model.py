@@ -141,3 +141,30 @@ def evaluate(pred: pd.DataFrame) -> dict:
                    "mae_media": float((g.media_previa - g.pontos).abs().mean()), "n": len(g)},
         include_groups=False).to_dict()
     return res
+
+
+def production_context(partidas: pd.DataFrame, matches: pd.DataFrame, season: int, half_life: float = 365) -> pd.DataFrame:
+    """Contexto por time e rodada com o motor de produção (forças por time), reajustado antes de
+    cada rodada com os jogos anteriores a ela: sem vazamento, igual para treino e previsão."""
+    from ..model.poisson import outcome_probs
+    from ..model.production import fit_strengths, lambdas
+
+    rows = []
+    season_m = matches[matches.season == season]
+    for rnd, g in partidas.dropna(subset=["home_id", "away_id"]).groupby("rodada"):
+        keys = g.merge(season_m[["home_id", "away_id", "kickoff_utc"]], on=["home_id", "away_id"], how="left")
+        start = pd.to_datetime(keys.kickoff_utc, utc=True).min()
+        if pd.isna(start):
+            start = pd.Timestamp(g.data.min(), tz="America/Sao_Paulo").tz_convert("UTC")
+        s = fit_strengths(matches, start, half_life=half_life)
+        lh, la = lambdas(s, g.home_id, g.away_id)
+        p = outcome_probs(lh, la)
+        for (h, a, v), x, y, ph, pa in zip(g[["home_id", "away_id", "valida"]].itertuples(index=False), lh, la,
+                                           p[:, 0], p[:, 2], strict=True):
+            rows.append({"rodada": rnd, "team_id": h, "adversario": a, "valida": v, "gols_time": x, "gols_adv": y,
+                         "p_vitoria": ph, "mando": 1})
+            rows.append({"rodada": rnd, "team_id": a, "adversario": h, "valida": v, "gols_time": y, "gols_adv": x,
+                         "p_vitoria": pa, "mando": 0})
+    ctx = pd.DataFrame(rows)
+    ctx["p_sg"] = np.exp(-ctx.gols_adv)
+    return ctx

@@ -294,3 +294,28 @@ class Repository:
             run_id = self.conn.execute("SELECT run_id FROM projections WHERE id=?", (int(r.last_id),)).fetchone()[0]
             rows.append(pd.read_sql_query("SELECT * FROM projections WHERE run_id=?", self.conn, params=(run_id,)))
         return pd.concat(rows, ignore_index=True).sort_values(["based_on_round", "team_id"])
+
+    # ------------------------------------------------- tabelas derivadas
+    DERIVED = {"team_round_stats", "team_season_stats", "league_season_stats", "elo_ratings", "kv_store"}
+
+    def replace_table(self, name: str, df: pd.DataFrame) -> int:
+        """Regrava uma tabela DERIVADA (recalculável a partir de matches). Nunca as imutáveis."""
+        if name not in self.DERIVED:
+            raise ValueError(f"{name} não é uma tabela derivada")
+        df.to_sql(name, self.conn, if_exists="replace", index=False)
+        return len(df)
+
+    def table(self, name: str) -> pd.DataFrame:
+        if name not in self.DERIVED:
+            raise ValueError(f"{name} não é uma tabela derivada")
+        return pd.read_sql_query(f"SELECT * FROM {name}", self.conn)
+
+    def put_json(self, key: str, value) -> None:
+        self.conn.execute("CREATE TABLE IF NOT EXISTS kv_store (key TEXT PRIMARY KEY, value TEXT)")
+        with self.conn:
+            self.conn.execute("INSERT OR REPLACE INTO kv_store VALUES (?, ?)", (key, json.dumps(value, default=float)))
+
+    def get_json(self, key: str, default=None):
+        self.conn.execute("CREATE TABLE IF NOT EXISTS kv_store (key TEXT PRIMARY KEY, value TEXT)")
+        row = self.conn.execute("SELECT value FROM kv_store WHERE key=?", (key,)).fetchone()
+        return json.loads(row[0]) if row else default

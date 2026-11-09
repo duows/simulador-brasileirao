@@ -225,6 +225,20 @@ def cmd_coverage(args, cfg) -> None:
         raise SystemExit(1)
 
 
+def cmd_metrics(args, cfg) -> None:
+    """Recalcula o catálogo de métricas (tabelas derivadas no banco)."""
+    from .metrics import build_all
+
+    repo = _repo(cfg)
+    out = build_all(repo.matches())
+    for name in ("team_round_stats", "team_season_stats", "league_season_stats"):
+        n = repo.replace_table(name, out[name].astype({c: "string" for c in out[name].columns if out[name][c].dtype == object}))
+        print(f"{name}: {n} linhas")
+    repo.put_json("pitagorico", out["pitagorico"])
+    p = out["pitagorico"]
+    print(f"Pitagórico: expoente {p['expoente']:.2f} (pontos/jogo = {p['intercepto']:.2f} + {p['inclinacao']:.2f} × fração)")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -255,6 +269,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--season", type=int, required=True)
     s.add_argument("--round", type=int, required=True)
     sub.add_parser("verify-registry", help="confere a cadeia de hashes das previsões")
+    sub.add_parser("metrics", help="recalcula o catálogo de métricas (tabelas derivadas)")
     s = sub.add_parser("coverage", help="cobertura 2006-2026, qualidade e divergências entre fontes")
     s.add_argument("--current-season", type=int, default=2026, help="temporada em andamento")
     s.add_argument("--strict", action="store_true", help="sai com erro se houver problema de qualidade")
@@ -283,6 +298,7 @@ COMMANDS = {
     "simulate-season": cmd_simulate_season,
     "export-site": cmd_export_site,
     "coverage": cmd_coverage,
+    "metrics": cmd_metrics,
 }
 
 

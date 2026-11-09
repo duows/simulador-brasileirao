@@ -259,3 +259,18 @@ rodada 35.
   Não há `make` nesta máquina Windows; o script roda direto.
 - Os pesos atuais foram ajustados antes de 2006-2009 entrarem no banco; a reestimação fica para
   a Fase D (modelos), junto com o backtest novo.
+
+## D21 · 2026-11-09 · Fase B: catálogo de métricas
+- `futdados metrics` recalcula três tabelas derivadas (regraváveis; as imutáveis nunca são
+  tocadas): `team_round_stats` (tabela acumulada depois de cada rodada, posição, distância para
+  líder/G4/G6/Z4, médias móveis de 5 e 10 jogos), `team_season_stats` (resultados, casa/fora,
+  ataque e defesa por jogo, clean sheets, ambos marcam, 3+ gols, placar mais comum, maiores e
+  atuais sequências, força relativa à média, Pitagórico) e `league_season_stats` (pontos do
+  campeão, vice, G4, G6, 16º, 17º e último, gols por jogo, empates, mando, desvio e Gini dos
+  pontos, times na briga pelo título 5 rodadas antes do fim).
+- Posição nas métricas históricas: pontos, vitórias, saldo, gols pró; o resto do desempate
+  (confronto direto, cartões) fica de fora e empates totais caem em ordem alfabética.
+- **Pitagórico**: pontos/jogo = a + b · GP^k/(GP^k + GC^k), com k, a e b estimados por mínimos
+  quadrados em todos os time-temporadas 2006-2026 (k = 1,38). "Pontos menos Pitagóricos" é o
+  indicador de sorte/azar (positivo = mais pontos do que o saldo sugere).
+- Gols por tempo não existem nas fontes: a métrica fica fora.

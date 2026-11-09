@@ -239,6 +239,41 @@ def cmd_metrics(args, cfg) -> None:
     print(f"Pitagórico: expoente {p['expoente']:.2f} (pontos/jogo = {p['intercepto']:.2f} + {p['inclinacao']:.2f} × fração)")
 
 
+def cmd_build_ratings(args, cfg) -> None:
+    """Calibra o Elo (K, regressão, promovidos; mando pelos dados) e grava a série de ratings."""
+    from dataclasses import asdict
+
+    from .ratings.elo import EloParams, calibrate, ratings_table, run_elo
+
+    repo = _repo(cfg)
+    m = repo.matches()
+    best, table = calibrate(m, cfg["elo"]["tune_seasons"])
+    repo.put_json("elo_params", {**asdict(best), "rps_ajuste": float(table.rps.iloc[0]),
+                                 "temporadas_ajuste": cfg["elo"]["tune_seasons"]})
+    r = run_elo(m, EloParams(**asdict(best)))
+    n = repo.replace_table("elo_ratings", ratings_table(r))
+    print(f"Elo: K={best.k:.0f}, mando={best.home:.0f}, regressão={best.regression:.2f}, "
+          f"promovido={best.promoted:+.0f} (RPS no ajuste {table.rps.iloc[0]:.4f}); {n} linhas de rating")
+
+
+def cmd_trends(args, cfg) -> None:
+    """Tendências da liga e dos times (Theil-Sen, Mann-Kendall, LOESS, ponto de mudança, eras)."""
+    from .reports import trends_markdown, write
+    from .trends import league_trends, team_trends
+
+    repo = _repo(cfg)
+    lss, tss, elo = repo.table("league_season_stats"), repo.table("team_season_stats"), repo.table("elo_ratings")
+    closed = lss[lss.encerrada.astype(bool)].season.astype(int).tolist()
+    elo_end = elo.sort_values("kickoff_utc").groupby(["season", "team_id"]).tail(1)[["season", "team_id", "elo"]]
+    lt = league_trends(lss)
+    tt = team_trends(tss, elo_end, closed)
+    repo.put_json("trends", {"liga": lt, "times": tt})
+    write(f"{cfg['paths']['reports']}/tendencias.md", trends_markdown(lt))
+    for _k, v in lt.items():
+        print(f"{v['nome']:<45} {v['rotulo']:<20} Theil-Sen {v['theil_sen']['inclinacao']:+.3f}/ano  p={v['mann_kendall']['p']:.3f}")
+    print("Relatório: reports/tendencias.md")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -269,6 +304,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--season", type=int, required=True)
     s.add_argument("--round", type=int, required=True)
     sub.add_parser("verify-registry", help="confere a cadeia de hashes das previsões")
+    sub.add_parser("build-ratings", help="calibra o Elo e grava a série de ratings")
+    sub.add_parser("trends", help="tendências da liga e dos times (precisa de metrics e build-ratings)")
     sub.add_parser("metrics", help="recalcula o catálogo de métricas (tabelas derivadas)")
     s = sub.add_parser("coverage", help="cobertura 2006-2026, qualidade e divergências entre fontes")
     s.add_argument("--current-season", type=int, default=2026, help="temporada em andamento")
@@ -299,6 +336,8 @@ COMMANDS = {
     "export-site": cmd_export_site,
     "coverage": cmd_coverage,
     "metrics": cmd_metrics,
+    "build-ratings": cmd_build_ratings,
+    "trends": cmd_trends,
 }
 
 

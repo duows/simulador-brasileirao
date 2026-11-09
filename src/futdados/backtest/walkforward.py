@@ -26,6 +26,16 @@ def brier(p: np.ndarray, y: np.ndarray) -> float:
     return float(np.mean(np.sum((p - onehot) ** 2, axis=1)))
 
 
+def rps(p: np.ndarray, y: np.ndarray) -> float:
+    """Ranked probability score para resultado ordenado (mandante < empate < visitante).
+
+    Média de ((F1 - O1)^2 + (F2 - O2)^2) / 2, com F e O acumulados. 0 = perfeito.
+    """
+    onehot = np.eye(3)[y]
+    cp, co = np.cumsum(p, axis=1)[:, :2], np.cumsum(onehot, axis=1)[:, :2]
+    return float(np.mean(np.sum((cp - co) ** 2, axis=1) / 2))
+
+
 def log_loss(p: np.ndarray, y: np.ndarray, eps: float = 1e-15) -> float:
     return float(-np.mean(np.log(np.clip(p[np.arange(len(y)), y], eps, 1))))
 
@@ -94,10 +104,10 @@ def score(pred: pd.DataFrame) -> dict[str, dict[str, float]]:
     f = pred[["f_h", "f_d", "f_a"]].to_numpy()
     h = baseline_home(len(pred))
     return {
-        "modelo": {"brier": brier(p, y), "log_loss": log_loss(p, y), "acerto": accuracy(p, y)},
-        "frequencia_historica": {"brier": brier(f, y), "log_loss": log_loss(f, y),
+        "modelo": {"brier": brier(p, y), "log_loss": log_loss(p, y), "rps": rps(p, y), "acerto": accuracy(p, y)},
+        "frequencia_historica": {"brier": brier(f, y), "log_loss": log_loss(f, y), "rps": rps(f, y),
                                  "acerto": accuracy(f, y)},
-        "sempre_mandante": {"brier": brier(h, y), "log_loss": log_loss(h, y),
+        "sempre_mandante": {"brier": brier(h, y), "log_loss": log_loss(h, y), "rps": rps(h, y),
                             "acerto": accuracy(h, y)},
     }
 

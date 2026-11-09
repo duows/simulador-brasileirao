@@ -274,3 +274,20 @@ rodada 35.
   quadrados em todos os time-temporadas 2006-2026 (k = 1,38). "Pontos menos Pitagóricos" é o
   indicador de sorte/azar (positivo = mais pontos do que o saldo sugere).
 - Gols por tempo não existem nas fontes: a métrica fica fora.
+
+## D22 · 2026-11-09 · Fase C: Elo e tendências
+- **Elo** (`futdados build-ratings`): multiplicador por saldo de gols (1; 1,5; (11+saldo)/8),
+  regressão parcial à média entre temporadas e entrada de promovidos com deslocamento. K,
+  regressão e promovido calibrados por **RPS** nas temporadas 2008-2014 (2006-2007 aquecem):
+  K = 10, regressão = 0,30, promovido = -25. A superfície é plana (RPS 0,2067 a 0,2089 em
+  toda a grade).
+- **Mando do Elo estimado dos dados** (≈ 97 pontos): calibrado por RPS ele crescia sem limite
+  (até 300) com ganho de 0,00007, porque a regressão ordinal que transforma diferença de
+  rating em V/E/D já absorve o efeito médio do mando. Fixamos o valor que faz a pontuação
+  esperada do mandante (ratings iguais) igual à média histórica.
+- V/E/D a partir do Elo: regressão logística ordinal (1 coeficiente, 2 cortes).
+- **Tendências** (`futdados trends`): Theil-Sen com IC 90%, Mann-Kendall, LOESS com faixa por
+  bootstrap de resíduos, média móvel de 3 anos, um ponto de mudança na média (penalidade tipo
+  BIC) e comparação de eras (Kruskal-Wallis). Rótulo só com p < 0,05. Resultado em
+  `reports/tendencias.md`: liga mais desigual (Gini e desvio dos pontos em alta), menos gols
+  por jogo e vantagem de mando em queda; pontos do campeão sem tendência clara.

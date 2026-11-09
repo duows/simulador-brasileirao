@@ -1,0 +1,1 @@
+"""Ratings de força (Elo)."""

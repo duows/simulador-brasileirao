@@ -7,6 +7,7 @@ from futdados.backtest.walkforward import (
     calibration_table,
     log_loss,
     outcome_index,
+    rps,
 )
 
 
@@ -33,3 +34,11 @@ def test_calibration_table_counts():
     t = calibration_table(p, y, 10)
     row = t[(t.resultado == "mandante")].iloc[0]
     assert row.n == 10 and np.isclose(row.observado, 0.6)
+
+
+def test_rps_rewards_near_misses():
+    y = np.array([0])
+    assert rps(np.array([[1.0, 0, 0]]), y) == 0
+    near = rps(np.array([[0.0, 1.0, 0.0]]), y)   # errou por "uma casa"
+    far = rps(np.array([[0.0, 0.0, 1.0]]), y)    # errou feio
+    assert near < far and far == 1.0

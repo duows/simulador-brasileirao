@@ -232,3 +232,20 @@ def divergence_markdown(div: pd.DataFrame, summary: list[str]) -> str:
         for r in div.itertuples():
             lines.append(f"| {r.season} | {r.home_id} | {r.away_id} | {r.tipo} | {r.banco} | {r.outra} | {r.fonte_comparada} |")
     return "\n".join(lines) + "\n"
+
+
+def trends_markdown(lt: dict) -> str:
+    lines = ["# Tendências do Brasileirão (temporadas encerradas desde 2006)", "",
+             "São no máximo 20 temporadas: tendências curtas são frágeis. O rótulo só diz \"em alta\" ou \"em queda\" "
+             "quando o teste de Mann-Kendall tem p < 0,05; senão, \"sem tendência clara\". A inclinação robusta (Theil-Sen) "
+             "vem com intervalo de 90%. Ponto de mudança = ano em que a média muda, se a mudança compensar a penalidade.", "",
+             "| Série | Rótulo | Inclinação por ano (IC 90%) | p (Mann-Kendall) | Mudança de média | Médias por era | Eras diferem? |",
+             "|---|---|---|---|---|---|---|"]
+    for v in lt.values():
+        ts = v["theil_sen"]
+        mud = v.get("mudanca")
+        mud_txt = f"{mud['ano']}: {num(mud['media_antes'], 2)} → {num(mud['media_depois'], 2)}" if mud else "—"
+        eras = " · ".join(f"{k}: {num(x, 2)}" for k, x in v["eras"]["medias"].items())
+        lines.append(f"| {v['nome']} | {v['rotulo']} | {num(ts['inclinacao'], 3)} ({num(ts['ic90'][0], 3)} a {num(ts['ic90'][1], 3)}) | "
+                     f"{num(v['mann_kendall']['p'], 3)} | {mud_txt} | {eras} | {'sim' if v['eras']['diferenca_clara'] else 'não'} (p={num(v['eras']['kruskal_p'], 3)}) |")
+    return "\n".join(lines) + "\n"

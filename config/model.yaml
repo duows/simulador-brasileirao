@@ -92,12 +92,12 @@ cartola:
   shrink: 5                 # jogos fictícios na média da posição (pouca amostra puxa para a média)
   alpha: 10                 # ridge leve dos coeficientes por posição
   first_backtest_round: 6
-  captain_multiplier: 1.5   # TODO: confirmar a regra vigente do capitão no Cartola
+  captain_multiplier: 1.5   # capitão ×1,5 desde 2023 (imprensa); vice herda se o capitão não jogar
   registro_orcamentos: [100, 120, 140, 160]   # times sugeridos gravados a cada rodada
   reservas:                 # banco: 1 por posição (sem técnico); entra se um titular da posição não jogar
     ativo: true
     preco_maximo: titular_mais_barato   # TODO confirmar a regra vigente; "livre" = sem limite de preço
-    # reserva de luxo (substitui mesmo quem jogou) ainda não implementada
+    reserva_de_luxo: true     # 1 reserva indicado substitui o titular da posição que pontuou menos, se fizer mais
   p_jogar:                  # chance de jogar pelo status do mercado (não estimada: sem histórico de status)
     provavel: 0.95
     duvida: 0.5

@@ -98,7 +98,8 @@ def project(repo: Repository, cfg: dict) -> dict:
         "aviso": cfg["output"]["aviso"], "atribuicao": cfg["output"]["atribuicao"], "gerado_em": utc_now(),
         "versao_modelo": w.model_version, "temporada": season, "rodada": rnd, "mercado_aberto": status.get("status_mercado") == 1,
         "fechamento": fech, "fechamento_utc": fech_utc, "cartoletas_iniciais": status.get("cartoleta_inicial"),
-        "multiplicador_capitao": c["captain_multiplier"], "p_jogar": c["p_jogar"], "reservas": c["reservas"],
+        "multiplicador_capitao": c["captain_multiplier"], "p_jogar": c["p_jogar"],
+        "reservas": {**c["reservas"], "desvio_por_posicao": played.groupby("posicao").pontos.std().round(2).to_dict()},
         "esquemas": schemes, "atletas": sorted(players, key=lambda x: -x["esperado"]),
         "escudos": data["escudos"],
         "coeficientes": {pos: dict(zip(["base", *cm.FEATURES], map(float, v), strict=True)) for pos, v in coefs.items()},
@@ -121,7 +122,7 @@ def register(repo: Repository, cfg: dict, doc: dict) -> str | None:
     pf = players_frame(doc)
     times = {}
     for b in cfg["cartola"]["registro_orcamentos"]:
-        res = best_team(pf, float(b), doc["esquemas"], doc["multiplicador_capitao"], reserves=cfg["cartola"]["reservas"])
+        res = best_team(pf, float(b), doc["esquemas"], doc["multiplicador_capitao"], reserves=doc["reservas"])
         if res["ok"]:
             t, rv = res["time"], res["reservas"]
             times[str(b)] = {"esquema": res["esquema"],
@@ -129,7 +130,9 @@ def register(repo: Repository, cfg: dict, doc: dict) -> str | None:
                              "custo": res["custo"], "atletas": t.id.astype(int).tolist(),
                              "capitao": int(t[t.capitao].id.iloc[0]),
                              "posicoes": dict(zip(t.id.astype(int).astype(str), t.posicao, strict=True)),
-                             "reservas": {r.posicao: int(r.id) for r in rv.itertuples()} if len(rv) else {}}
+                             "reservas": {r.posicao: int(r.id) for r in rv.itertuples()} if len(rv) else {},
+                             "vice": res.get("vice"),
+                             "luxo": int(rv[rv.luxo].id.iloc[0]) if len(rv) and "luxo" in rv and rv.luxo.any() else None}
     atletas = [{k: p[k] for k in ("id", "posicao", "status", "preco", "media_cartola", "esperado", "previsto_se_jogar", "p_jogar")}
                for p in doc["atletas"]]
     return repo.insert_cartola_prediction({"season": doc["temporada"], "rodada": doc["rodada"],
@@ -170,19 +173,36 @@ def live_record(repo: Repository, cfg: dict, season: int, current_round: int) ->
 
 
 def team_real_points(t: dict, real: pd.DataFrame, mult: float) -> float:
-    """Pontos reais do time sugerido com a regra do banco: o reserva da posição entra se algum
-    titular dela não jogou (e o reserva jogou). Capitão que não jogou não multiplica nada."""
+    """Pontos reais do time sugerido com as regras do Cartola (imprensa, ver D29):
+    - capitão ×mult; se não jogou, o vice herda;
+    - banco: o reserva entra no lugar de um titular da posição que não jogou, se jogou e não
+      pontuou negativo;
+    - Reserva de Luxo: se não foi usado no banco, substitui o titular da posição que pontuou menos,
+      se pontuou mais que ele."""
     def played(aid: int) -> bool:
-        return aid in real.index and bool(real.jogou.get(aid, False))
+        return aid is not None and aid in real.index and bool(real.jogou.get(aid, False))
 
     def pts(aid: int) -> float:
         return float(real.pontos.get(aid, 0.0)) if played(aid) else 0.0
 
-    total = sum(pts(a) for a in t["atletas"]) + (mult - 1) * pts(t["capitao"])
+    lineup = {int(a): pts(int(a)) for a in t["atletas"]}
+    pos_of = {int(a): p for a, p in (t.get("posicoes") or {}).items()}
+    used = set()
     for pos, rid in (t.get("reservas") or {}).items():
-        starters = [int(a) for a, p in (t.get("posicoes") or {}).items() if p == pos]
-        if any(not played(a) for a in starters) and played(rid):
-            total += pts(rid)
+        missing = [a for a in lineup if pos_of.get(a) == pos and not played(a)]
+        if missing and played(rid) and pts(rid) >= 0:
+            lineup[missing[0]] = pts(rid)
+            used.add(rid)
+    lux = t.get("luxo")
+    if lux is not None and lux not in used and played(lux):
+        pos = next((p for p, r in (t.get("reservas") or {}).items() if r == lux), None)
+        cands = [a for a in lineup if pos_of.get(a) == pos and played(a)]
+        if cands:
+            low = min(cands, key=lambda a: lineup[a])
+            if pts(lux) > lineup[low]:
+                lineup[low] = pts(lux)
+    cap = t["capitao"] if played(t["capitao"]) else t.get("vice")
+    total = sum(lineup.values()) + ((mult - 1) * lineup.get(int(cap), 0.0) if cap is not None else 0.0)
     return round(float(total), 1)
 
 
@@ -234,10 +254,14 @@ def describe_team(res: dict) -> str:
         lines.append(f"  {r.posicao.upper():<4} {r.apelido:<22}{cap:<4} {r.time_nome:<14} C$ {r.preco:>6.2f}  esperado {r.esperado:>5.2f}")
     rv = res.get("reservas")
     if rv is not None and len(rv):
-        lines.append(f"  Banco (+{res['valor_reservas']:.2f} de pontuação esperada com os reservas):")
+        lines.append(f"  Banco (+{res['valor_reservas']:.2f} de pontuação esperada com os reservas e o Reserva de Luxo):")
         for r in rv.itertuples():
-            lines.append(f"  {r.posicao.upper():<4} {r.apelido:<26} {r.time_nome:<14} C$ {r.preco:>6.2f}  "
-                         f"entra em {r.chance_de_entrar:.0%} dos casos, esperado {r.esperado:.2f}")
+            luxo = " (LUXO)" if getattr(r, "luxo", False) else ""
+            lines.append(f"  {r.posicao.upper():<4} {r.apelido + luxo:<26} {r.time_nome:<14} C$ {r.preco:>6.2f}  "
+                         f"vale {r.valor_reserva:+.2f} no banco" + (f", {r.valor_luxo:+.2f} como luxo" if luxo else ""))
+    if res.get("vice") is not None:
+        vice = res["time"][res["time"].atleta_id == res["vice"]].apelido.iloc[0]
+        lines.append(f"  Vice-capitão: {vice} (herda o ×1,5 se o capitão não jogar)")
     return "\n".join(lines)
 
 

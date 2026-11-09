@@ -389,3 +389,19 @@ rodada 35.
   fixa de 180 dias, qualidade, métricas, Elo, tendências, registro da rodada, Cartola, site) e
   segue em frente se uma etapa opcional falhar. `ATUALIZAR_E_ABRIR.bat` chama essa rotina e
   abre o site.
+
+## D29 · 2026-11-09 · Regras do Cartola revisadas (imprensa) e chave pelo .env
+- Não há regulamento oficial público encontrado; as regras vêm da imprensa (Goal, 2022/2023/2025,
+  e cobertura de 2026 dizendo que banco, capitão e Reserva de Luxo seguem iguais):
+  - **capitão ×1,5** (desde 2023; antes ×2) e **vice-capitão**, que herda se o capitão não jogar;
+  - **banco**: o reserva entra no lugar de um titular da posição que não jogou; desde 2022, se o
+    reserva pontuar negativo ele não entra (o titular fica com 0);
+  - **Reserva de Luxo** (desde 2025): um reserva indicado substitui o titular da posição que
+    pontuou menos, se fizer mais que ele.
+- Implementado no Python e no site: vice = melhor titular de linha depois do capitão; valores do
+  banco e do luxo por simulação (Normal(previsto, desvio da posição) e chance de jogar); o luxo
+  vai para a posição em que mais rende. Pontos reais das rodadas registradas seguem as mesmas regras.
+- **Ainda sem confirmação**: se o reserva gasta cartoletas e qual o limite de preço dele (usamos
+  "no máximo o titular mais barato da posição"). Conferir no app.
+- **Chave da API**: `futdados` lê o arquivo `.env` da raiz (fora do git) e usa as variáveis que
+  ainda não existirem no ambiente. Modelo em `.env.example`.

@@ -329,7 +329,7 @@ def cmd_cartola(args, cfg) -> None:
         print("Jogos fora da rodada (não pontuam):", ", ".join(doc["jogos_fora_da_rodada"]))
     budget = args.budget if args.budget is not None else float(doc["cartoletas_iniciais"] or 100)
     res = best_team(players_frame(doc), budget, doc["esquemas"], doc["multiplicador_capitao"], args.esquema,
-                    reserves=cfg["cartola"]["reservas"])
+                    reserves=doc["reservas"])
     print(describe_team(res))
     print(f"Página /cartola atualizada (local, fora do git): {path}")
 

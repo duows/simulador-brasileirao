@@ -90,7 +90,8 @@ def test_reserves_respect_price_rule_and_skip_tecnico():
         assert r.preco <= t[t.posicao == r.posicao].preco.min() + 1e-9
         n = (t.posicao == r.posicao).sum()
         assert r.chance_de_entrar == pytest.approx(1 - 0.95**n)
-    assert res["pontos_esperados_com_reservas"] == pytest.approx(res["pontos_esperados"] + rv.valor_reserva.sum())
+    assert res["pontos_esperados_com_reservas"] == pytest.approx(
+        res["pontos_esperados"] + res.get("valor_vice", 0) + res["valor_reservas"])
     # esquema sem laterais: não há reserva de lateral
     t352 = best_team(pl, 120, SCHEMES, 1.5, only="3-5-2")["time"]
     assert "lat" not in set(add_reserves(t352, pl, {"ativo": True, "preco_maximo": "livre"}).posicao)
@@ -105,3 +106,28 @@ def test_team_real_points_with_bench_and_captain():
     assert team_real_points(t, real, 1.5) == pytest.approx(25.0)
     t["capitao"] = 2  # capitão que não jogou não multiplica nada
     assert team_real_points(t, real, 1.5) == pytest.approx(20.0)
+
+
+def test_real_points_vice_negative_reserve_and_luxury():
+    from futdados.cartola.project import team_real_points
+
+    real = pd.DataFrame({"pontos": [10.0, 0.0, 6.0, -2.0, 1.0, 9.0], "jogou": [False, False, True, True, True, True]},
+                        index=[1, 2, 3, 4, 5, 6])
+    # 1 capitão (não jogou), 2 vice? não: 3 é o vice; 1 e 5 atacantes; 3 meia; reserva do ataque 4 (negativo)
+    t = {"atletas": [1, 3, 5], "capitao": 1, "vice": 3, "posicoes": {"1": "ata", "3": "mei", "5": "ata"},
+         "reservas": {"ata": 4, "mei": 6}, "luxo": 6}
+    # banco do ataque: reserva 4 jogou mas fez -2 → não entra (titular 1 fica com 0)
+    # luxo no meio: reserva 6 (9) > titular 3 (6) → troca, meia vale 9
+    # capitão 1 não jogou → vice 3 herda; vice (posição de meia) agora vale 9 → +0,5×9
+    total = 0 + 9 + 1 + 0.5 * 9
+    assert team_real_points(t, real, 1.5) == pytest.approx(total)
+
+
+def test_bench_simulation_luxury_has_value():
+    from futdados.cartola.optimize import bench_simulation
+
+    team = pd.DataFrame({"posicao": ["ata", "ata"], "p_jogar": [1.0, 1.0], "previsto_se_jogar": [5.0, 5.0]})
+    res = pd.DataFrame({"posicao": ["ata"], "p_jogar": [1.0], "previsto_se_jogar": [5.0]})
+    sim = bench_simulation(team, res, n=4000)
+    assert sim["ata"]["banco"] == 0  # ninguém falta: o banco nunca entra
+    assert sim["ata"]["luxo"] > 1    # mas o luxo substitui o pior titular com frequência

@@ -1,7 +1,7 @@
 "use client";
 // Monta o melhor time do Cartola para o orçamento digitado, no navegador.
 import { useMemo, useState } from "react";
-import { addReserves, bestTeam } from "../lib/cartola.mjs";
+import { addReserves, bestTeam, viceCaptain } from "../lib/cartola.mjs";
 import { num, pct, signed } from "../lib/format";
 
 const POS = { gol: "Goleiro", lat: "Lateral", zag: "Zagueiro", mei: "Meia", ata: "Atacante", tec: "Técnico" };
@@ -37,7 +37,10 @@ export default function CartolaBuilder({ data, photos = false }) {
     const r = bestTeam(players, b, data.esquemas, data.multiplicador_capitao, scheme || null);
     if (!r.ok) return r;
     const bench = addReserves(r.time, players, data.reservas);
-    return { ...r, reservas: bench.reservas, valor_reservas: bench.valor };
+    const vice = viceCaptain(r.time);
+    const cap = r.time.find((p) => p.capitao);
+    const valorVice = vice && cap ? (data.multiplicador_capitao - 1) * (1 - (cap.p_jogar ?? 1)) * vice.esperado : 0;
+    return { ...r, reservas: bench.reservas, valor_reservas: bench.valor, vice: vice?.id, valor_vice: valorVice };
   }, [players, budget, scheme, data]);
 
   return (
@@ -59,8 +62,8 @@ export default function CartolaBuilder({ data, photos = false }) {
       {!res.ok ? <p className="lead">{res.motivo}</p> : (
         <>
           <div className="tiles">
-            <div className="card tile"><div className="label">Pontuação esperada</div><div className="value">{num(res.pontos_esperados + res.valor_reservas, 1)}</div>
-              <div className="sub">titulares {num(res.pontos_esperados, 1)} + banco {num(res.valor_reservas, 1)} · capitão ×{num(data.multiplicador_capitao, 1)}</div></div>
+            <div className="card tile"><div className="label">Pontuação esperada</div><div className="value">{num(res.pontos_esperados + res.valor_reservas + res.valor_vice, 1)}</div>
+              <div className="sub">titulares {num(res.pontos_esperados, 1)} + banco e luxo {num(res.valor_reservas, 1)} + vice {num(res.valor_vice, 1)} · capitão ×{num(data.multiplicador_capitao, 1)}</div></div>
             <div className="card tile"><div className="label">Custo</div><div className="value">C$ {num(res.custo, 2)}</div>
               <div className="sub">sobram C$ {num(Number(budget) - res.custo, 2)}</div></div>
             <div className="card tile"><div className="label">Esquema</div><div className="value">{res.esquema}</div><div className="sub">{scheme ? "escolhido por você" : "o que rende mais"}</div></div>
@@ -72,7 +75,7 @@ export default function CartolaBuilder({ data, photos = false }) {
                 {res.time.map((p) => (
                   <tr key={p.id}>
                     <td className="l">{POS[p.posicao]}</td>
-                    <td className="l">{photos && p.foto && <img className="player-photo" src={p.foto} alt="" loading="lazy" />}<strong>{p.apelido}</strong>{p.capitao && <span className="tag">capitão</span>}{p.status === "duvida" && <span className="tag">dúvida</span>}
+                    <td className="l">{photos && p.foto && <img className="player-photo" src={p.foto} alt="" loading="lazy" />}<strong>{p.apelido}</strong>{p.capitao && <span className="tag">capitão</span>}{p.id === res.vice && <span className="tag">vice</span>}{p.status === "duvida" && <span className="tag">dúvida</span>}
                       <div className="small muted">{p.time_nome}</div></td>
                     <td className="l small">{p.mando ? "x" : "@"} {p.adversario}<div className="muted">SG {pct(p.contexto.p_sg)} · vitória {pct(p.contexto.p_vitoria)}</div></td>
                     <td>C$ {num(p.preco, 2)}</td><td>{num(p.media_cartola, 2)}</td>
@@ -93,19 +96,19 @@ export default function CartolaBuilder({ data, photos = false }) {
               <h3 style={{ marginTop: 18 }}>Banco de reservas</h3>
               <div className="table-scroll">
                 <table>
-                  <thead><tr><th className="l">Posição</th><th className="l">Atleta</th><th className="l">Jogo</th><th>Preço</th><th>Esperado se entrar</th><th>Chance de entrar</th><th>Vale</th></tr></thead>
+                  <thead><tr><th className="l">Posição</th><th className="l">Atleta</th><th className="l">Jogo</th><th>Preço</th><th>Esperado se jogar</th><th>Vale no banco</th><th>Vale como luxo</th></tr></thead>
                   <tbody>
                     {res.reservas.map((p) => (
                       <tr key={p.id}>
                         <td className="l">{POS[p.posicao]}</td>
-                        <td className="l"><strong>{p.apelido}</strong><div className="small muted">{p.time_nome}</div></td>
+                        <td className="l"><strong>{p.apelido}</strong>{p.luxo && <span className="tag">Reserva de Luxo</span>}<div className="small muted">{p.time_nome}</div></td>
                         <td className="l small">{p.mando ? "x" : "@"} {p.adversario}</td>
-                        <td>C$ {num(p.preco, 2)}</td><td>{num(p.esperado, 2)}</td><td>{pct(p.chance_de_entrar)}</td>
-                        <td><strong>{num(p.valor_reserva, 2)}</strong></td>
+                        <td>C$ {num(p.preco, 2)}</td><td>{num(p.previsto_se_jogar, 2)}</td><td>{num(p.valor_reserva, 2)}</td>
+                        <td>{p.luxo ? <strong>{num(p.valor_luxo, 2)}</strong> : <span className="muted">{num(p.valor_luxo, 2)}</span>}</td>
                       </tr>
                     ))}
                   </tbody>
-                  <caption>O reserva entra no lugar de um titular da mesma posição que não jogar. Regra usada: não gasta cartoletas e custa no máximo o mesmo que o titular mais barato da posição (a confirmar no regulamento do Cartola). Técnico não tem reserva.</caption>
+                  <caption>Banco: o reserva entra no lugar de um titular da posição que não jogar, se ele jogar e não pontuar negativo. Reserva de Luxo (um só): substitui o titular da posição que pontuou menos, se fizer mais que ele; o sistema indica a posição onde ele mais rende. Vice-capitão herda o ×1,5 se o capitão não jogar. Valores por simulação. Preço do reserva: no máximo o do titular mais barato da posição (a confirmar no Cartola).</caption>
                 </table>
               </div>
             </>

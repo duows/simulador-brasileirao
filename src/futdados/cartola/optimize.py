@@ -53,11 +53,27 @@ def best_team(players: pd.DataFrame, budget: float, schemes: dict[str, dict[str,
     total = float(team.esperado.sum() + (captain_mult - 1) * team[team.capitao].esperado.sum())
     res = {"ok": True, "esquema": scheme, "custo": float(team.preco.sum()), "orcamento": budget,
            "pontos_esperados": total, "time": team, "reservas": pd.DataFrame()}
+    # vice-capitão: herda o ×multiplicador se o capitão não jogar
+    vice = vice_captain(team) if "p_jogar" in team else None
+    vice_value = 0.0
+    if vice is not None:
+        cap = team[team.capitao].iloc[0]
+        vice_value = (captain_mult - 1) * (1 - float(cap.p_jogar)) * float(vice.esperado)
+        res["vice"] = int(vice.atleta_id)
+        res["valor_vice"] = vice_value
     if reserves and reserves.get("ativo"):
         rv = add_reserves(team, players, reserves)
+        if len(rv) and "previsto_se_jogar" in rv:
+            sim = bench_simulation(team, rv, reserves.get("desvio_por_posicao"))
+            rv["valor_reserva"] = rv.posicao.map(lambda q: sim[q]["banco"])
+            rv["valor_luxo"] = rv.posicao.map(lambda q: sim[q]["luxo"])
+            rv["luxo"] = False
+            if reserves.get("reserva_de_luxo", True):
+                rv.loc[rv.valor_luxo.idxmax(), "luxo"] = True
         res["reservas"] = rv
-        res["valor_reservas"] = float(rv.valor_reserva.sum()) if len(rv) else 0.0
-        res["pontos_esperados_com_reservas"] = total + res["valor_reservas"]
+        lux = float(rv[rv.luxo].valor_luxo.sum()) if len(rv) and "luxo" in rv else 0.0
+        res["valor_reservas"] = (float(rv.valor_reserva.sum()) if len(rv) else 0.0) + lux
+        res["pontos_esperados_com_reservas"] = total + vice_value + res["valor_reservas"]
     return res
 
 
@@ -87,3 +103,39 @@ def add_reserves(team: pd.DataFrame, players: pd.DataFrame, rules: dict) -> pd.D
         best["valor_reserva"] = q * float(best.esperado)
         rows.append(best)
     return pd.DataFrame(rows)
+
+
+DEFAULT_SD = {"gol": 4.0, "lat": 4.0, "zag": 3.6, "mei": 3.7, "ata": 4.4}
+
+
+def vice_captain(team: pd.DataFrame) -> pd.Series | None:
+    """Vice: o melhor titular de linha depois do capitão; herda a braçadeira se o capitão não jogar."""
+    cand = team[(team.posicao != "tec") & ~team.capitao]
+    return None if cand.empty else cand.loc[cand.esperado.idxmax()]
+
+
+def bench_simulation(team: pd.DataFrame, reserves: pd.DataFrame, sd: dict | None = None, n: int = 4000,
+                     seed: int = 0) -> dict[str, dict[str, float]]:
+    """Valor esperado do banco por posição, simulando quem joga e quanto pontua.
+
+    Regras: o reserva entra no lugar de um titular da posição que não jogou, se o reserva jogou e
+    não pontuou negativo (banco). Se ele não foi usado no banco e for o Reserva de Luxo, substitui o
+    titular da posição que pontuou menos, se pontuou mais que ele. Pontos ~ Normal(previsto, desvio
+    da posição); jogar ~ Bernoulli(chance de jogar).
+    """
+    sd = {**DEFAULT_SD, **(sd or {})}
+    rng = np.random.default_rng(seed)
+    out = {}
+    for r in reserves.itertuples():
+        st = team[team.posicao == r.posicao]
+        s_play = rng.random((n, len(st))) < st.p_jogar.to_numpy(float)
+        s_pts = rng.normal(st.previsto_se_jogar.to_numpy(float), sd.get(r.posicao, 4.0), (n, len(st))) * s_play
+        r_play = rng.random(n) < r.p_jogar
+        r_pts = rng.normal(r.previsto_se_jogar, sd.get(r.posicao, 4.0), n) * r_play
+        bench_used = (~s_play).any(axis=1) & r_play & (r_pts >= 0)
+        bench_gain = np.where(bench_used, r_pts, 0.0)
+        low = np.where(s_play, s_pts, np.inf).min(axis=1)  # titular que jogou e pontuou menos
+        lux = ~bench_used & r_play & np.isfinite(low) & (r_pts > low)
+        lux_gain = np.where(lux, r_pts - np.where(np.isfinite(low), low, 0), 0.0)
+        out[r.posicao] = {"banco": float(bench_gain.mean()), "luxo": float(lux_gain.mean())}
+    return out

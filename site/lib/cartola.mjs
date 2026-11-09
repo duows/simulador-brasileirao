@@ -120,11 +120,55 @@ export function bestTeam(players, budget, schemes, mult = 1.5, onlyScheme = null
 }
 
 const RESERVE_POSITIONS = ["gol", "lat", "zag", "mei", "ata"];
+const DEFAULT_SD = { gol: 4.0, lat: 4.0, zag: 3.6, mei: 3.7, ata: 4.4 };
+
+function seeded(seed) {
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6d2b79f5) >>> 0; let t = Math.imul(a ^ (a >>> 15), a | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+function normal(r) { // Box-Muller
+  const u = Math.max(r(), 1e-12), v = r();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+/** Vice: o melhor titular de linha depois do capitão (herda a braçadeira se o capitão não jogar). */
+export function viceCaptain(team) {
+  const cand = team.filter((p) => p.posicao !== "tec" && !p.capitao);
+  return cand.length ? cand.reduce((a, b) => (b.esperado > a.esperado ? b : a)) : null;
+}
+
+/** Valor do banco e do Reserva de Luxo por posição, por simulação (mesmas regras do Python). */
+export function benchSimulation(team, reservas, sd = {}, n = 4000, seed = 0) {
+  const r = seeded(seed + 1);
+  const out = {};
+  for (const res of reservas) {
+    const st = team.filter((p) => p.posicao === res.posicao);
+    const s = { ...DEFAULT_SD, ...sd }[res.posicao] || 4;
+    let bench = 0, lux = 0;
+    for (let k = 0; k < n; k++) {
+      let anyMissing = false, low = Infinity;
+      for (const p of st) {
+        const plays = r() < (p.p_jogar ?? 1);
+        if (!plays) { anyMissing = true; continue; }
+        const pts = p.previsto_se_jogar + s * normal(r);
+        if (pts < low) low = pts;
+      }
+      const rPlays = r() < (res.p_jogar ?? 1);
+      const rPts = rPlays ? res.previsto_se_jogar + s * normal(r) : 0;
+      const usedBench = anyMissing && rPlays && rPts >= 0;
+      if (usedBench) bench += rPts;
+      else if (rPlays && Number.isFinite(low) && rPts > low) lux += rPts - low;
+    }
+    out[res.posicao] = { banco: bench / n, luxo: lux / n };
+  }
+  return out;
+}
 
 /**
- * Banco de reservas: um por posição (técnico não tem), escolhido depois dos titulares.
- * Regra configurável (TODO confirmar no Cartola): não gasta cartoletas e custa no máximo o mesmo
- * que o titular mais barato da posição. Vale chance(algum titular faltar) × esperado do reserva.
+ * Banco de reservas: um por posição (técnico não tem), escolhido depois dos titulares, e o Reserva
+ * de Luxo na posição em que ele mais rende. Regra de preço configurável (a confirmar no Cartola):
+ * custa no máximo o mesmo que o titular mais barato da posição.
  */
 export function addReserves(team, players, rules = { ativo: true, preco_maximo: "titular_mais_barato" }) {
   if (!rules || !rules.ativo) return { reservas: [], valor: 0 };
@@ -138,7 +182,16 @@ export function addReserves(team, players, rules = { ativo: true, preco_maximo: 
     if (!cand.length) continue;
     const best = cand.reduce((a, b) => (b.esperado > a.esperado ? b : a));
     const q = 1 - starters.reduce((acc, p) => acc * (p.p_jogar ?? 1), 1);
-    reservas.push({ ...best, chance_de_entrar: q, valor_reserva: q * best.esperado });
+    reservas.push({ ...best, chance_de_entrar: q, valor_reserva: q * best.esperado, valor_luxo: 0, luxo: false });
   }
-  return { reservas, valor: reservas.reduce((s, r) => s + r.valor_reserva, 0) };
+  if (reservas.length && reservas.every((x) => x.previsto_se_jogar != null)) {
+    const sim = benchSimulation(team, reservas, rules.desvio_por_posicao);
+    for (const x of reservas) { x.valor_reserva = sim[x.posicao].banco; x.valor_luxo = sim[x.posicao].luxo; }
+    if (rules.reserva_de_luxo !== false) {
+      const best = reservas.reduce((a, b) => (b.valor_luxo > a.valor_luxo ? b : a));
+      best.luxo = true;
+    }
+  }
+  const valor = reservas.reduce((s, x) => s + x.valor_reserva + (x.luxo ? x.valor_luxo : 0), 0);
+  return { reservas, valor };
 }

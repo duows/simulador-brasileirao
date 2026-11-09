@@ -79,3 +79,16 @@ def test_load_footballcsv_season(tmp_path):
     r = rows[0]
     assert (r["home_id"], r["away_id"], r["home_goals"], r["away_goals"]) == ("sao-paulo", "botafogo", 1, 0)
     assert r["kickoff_utc"] == "2016-05-15T00:00:00Z" and r["source"] == "footballcsv"
+
+
+def test_load_dotenv_does_not_override(tmp_path, monkeypatch):
+    import os
+
+    from futdados.config import load_dotenv
+
+    f = tmp_path / ".env"
+    f.write_text('# comentário\nFUTDADOS_X="abc"\nFUTDADOS_Y=ja-existe\n', encoding="utf-8")
+    monkeypatch.delenv("FUTDADOS_X", raising=False)
+    monkeypatch.setenv("FUTDADOS_Y", "original")
+    assert load_dotenv(f) == ["FUTDADOS_X"]
+    assert os.environ["FUTDADOS_X"] == "abc" and os.environ["FUTDADOS_Y"] == "original"

@@ -147,6 +147,14 @@ docs/           DECISIONS.md (termos de uso, licenças e escolhas), exemplos/
 O acesso a dados fica todo em `src/futdados/db.py` (`Repository`), para migrar para
 Postgres depois sem mexer no resto.
 
+## Finanças
+
+`data/finance/spfc.csv` e `data/finance/comparativo_clubes.csv` trazem receita, dívida,
+resultado, passivo a descoberto, venda de atletas, despesa do futebol, FIDC e dívida com
+empresários (2023-2025), cada número com URL, página do PDF e data de consulta. Fontes que
+divergem ficam registradas lado a lado como conflito. Resumo, lacunas e perguntas em aberto em
+[reports/spfc_financas.md](reports/spfc_financas.md).
+
 ## Fontes
 
 - Temporada corrente: [football-data.org](https://www.football-data.org), plano grátis (ver D02 em DECISIONS.md).

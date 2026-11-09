@@ -10,3 +10,5 @@ data/*.sqlite-*
 .env
 src/*.egg-info/
 out/videos/*.json
+# PDFs de balanço baixados (reprodutíveis pelas URLs dos CSVs)
+data/finance/pdfs/

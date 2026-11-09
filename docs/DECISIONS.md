@@ -122,3 +122,19 @@ fonte. Interinos e grafias diferentes do mesmo nome contam como troca (limitaç�
 - `--as-of-round` reconstitui uma projeção histórica escondendo os resultados
   seguintes. Os pesos usados são os atuais (podem ter sido ajustados com dados daquela
   temporada), então serve para demonstração, não para avaliação.
+
+## D13 · 2026-11-08 · Dataset financeiro
+- Formato longo (uma linha por clube, ano, campo e fonte), em R$ mil, com o sinal do balanço.
+  Colunas: definição usada, tipo de fonte, URL, página do PDF, data de consulta, status.
+- "Página do PDF" é o índice da página no arquivo (o rodapé impresso pode ser outro número).
+- Status: `confirmado`, `conflito` (duas ou mais linhas para o mesmo campo), `nao_confirmado`
+  (imprensa ou pista sem conferência no PDF), `lacuna`, `nao_aplicavel`. O validador em
+  `futdados.finance` impede número sem fonte e conflito com uma fonte só.
+- As pistas do pedido entram como `pista_usuario` e nunca como confirmadas.
+- Quando o clube reapresenta um ano, os dois valores ficam registrados como conflito.
+- Os PDFs baixados não são versionados (`data/finance/pdfs/` no .gitignore); a URL está em
+  cada linha.
+- Flamengo e Corinthians: PDF anual auditado não localizado nesta rodada; números da imprensa
+  marcados como `nao_confirmado`.
+- Campos extras além dos pedidos (`receita_estadio`, `obrigacoes_totais`, `passivo_total`,
+  `patrimonio_liquido`) existem para explicar diferenças de definição de dívida e o Morumbis.

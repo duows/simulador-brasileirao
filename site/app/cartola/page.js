@@ -32,7 +32,36 @@ export default function Cartola() {
       </p>
       <CartolaBuilder data={d} photos={process.env.CRESTS === "local"} />
 
-      <h2>Quanto o modelo erra</h2>
+      <h2>Ao vivo: previsto x real</h2>
+      {d.ao_vivo && d.ao_vivo.length > 0 ? (
+        <div className="table-scroll">
+          <table>
+            <thead><tr><th className="l">Rodada</th><th>Erro do modelo</th><th>Erro da média do Cartola</th><th>Prováveis que jogaram</th>
+              {Object.keys(d.ao_vivo[d.ao_vivo.length - 1].times).map((b) => <th key={b}>Time C$ {b}: esperado → real</th>)}</tr></thead>
+            <tbody>
+              {d.ao_vivo.map((x) => (
+                <tr key={x.rodada}>
+                  <td className="l">{x.rodada}</td>
+                  <td className={x.erro_modelo < x.erro_media_cartola ? "delta-pos" : "delta-neg"}>{num(x.erro_modelo, 2)}</td>
+                  <td>{num(x.erro_media_cartola, 2)}</td>
+                  <td>{x.provaveis_que_jogaram == null ? "—" : `${Math.round(x.provaveis_que_jogaram * 100)}%`}</td>
+                  {Object.keys(d.ao_vivo[d.ao_vivo.length - 1].times).map((b) => (
+                    <td key={b}>{x.times[b] ? `${num(x.times[b].esperado, 1)} → ${num(x.times[b].real, 1)}` : "—"}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+            <caption>Previsões gravadas antes do fechamento do mercado (registro que não pode ser alterado) e comparadas depois com a pontuação oficial. Verde: o modelo errou menos que a média do Cartola naquela rodada.</caption>
+          </table>
+        </div>
+      ) : (
+        <p className="lead">
+          Ainda nenhuma rodada registrada terminou. As previsões da rodada {d.rodada} já estão gravadas; depois que ela acabar,
+          rode a atualização de novo e aqui aparece quanto o modelo errou e quantos pontos os times sugeridos fizeram de verdade.
+        </p>
+      )}
+
+      <h2>Quanto o modelo erra (teste nas rodadas passadas)</h2>
       <p className="lead">
         Testado rodada a rodada nesta temporada, sempre só com as rodadas anteriores: erro médio de {num(bt.mae_modelo, 2)} pontos
         por atleta, contra {num(bt.mae_media, 2)} da média que o próprio Cartola mostra; errou menos em {bt.rodadas_modelo_melhor} de {bt.rodadas} rodadas.

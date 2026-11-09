@@ -334,6 +334,26 @@ def cmd_cartola(args, cfg) -> None:
     print(f"Página /cartola atualizada (local, fora do git): {path}")
 
 
+def cmd_backtest_sim(args, cfg) -> None:
+    """Backtest da simulação de campeonato nas rodadas de corte 10, 20 e 30."""
+    import json
+
+    from .reports import write
+    from .simulate.backtest_sim import markdown, run, summarize
+
+    seasons = list(range(args.first, args.last + 1))
+    df = run(_repo(cfg), cfg, seasons, [10, 20, 30], n_sims=args.sims)
+    summ = summarize(df)
+    write(f"{cfg['paths']['reports']}/backtest_simulacao.md", markdown(summ, seasons))
+    Path(cfg["paths"]["weights"]).with_name("backtest_simulacao.json").write_text(
+        json.dumps(summ, ensure_ascii=False, indent=1), encoding="utf-8")
+    for r in summ["por_corte"]:
+        print(f"Rodada {r['corte']}: Brier título {r['brier_titulo']:.3f} (base {r['brier_base_titulo']:.3f}), "
+              f"G4 {r['brier_g4']:.3f} (base {r['brier_base_g4']:.3f}), rebaixamento {r['brier_rebaixamento']:.3f} "
+              f"(base {r['brier_base_rebaixamento']:.3f}); faixa p10-p90 acertou {r['dentro_da_faixa']:.0%}")
+    print("Relatório: reports/backtest_simulacao.md")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -370,6 +390,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--budget", type=float, help="cartoletas disponíveis (padrão: as iniciais do jogo)")
     s.add_argument("--esquema", help="fixa o esquema, ex.: 4-3-3 (padrão: o melhor)")
     s.add_argument("--no-register", action="store_true", help="não grava as previsões no registro")
+    s = sub.add_parser("backtest-sim", help="backtest da simulação de campeonato (rodadas 10, 20 e 30)")
+    s.add_argument("--first", type=int, default=2015)
+    s.add_argument("--last", type=int, default=2025)
+    s.add_argument("--sims", type=int, default=4000)
     sub.add_parser("metrics", help="recalcula o catálogo de métricas (tabelas derivadas)")
     s = sub.add_parser("coverage", help="cobertura 2006-2026, qualidade e divergências entre fontes")
     s.add_argument("--current-season", type=int, default=2026, help="temporada em andamento")
@@ -403,6 +427,7 @@ COMMANDS = {
     "build-ratings": cmd_build_ratings,
     "trends": cmd_trends,
     "cartola": cmd_cartola,
+    "backtest-sim": cmd_backtest_sim,
 }
 
 

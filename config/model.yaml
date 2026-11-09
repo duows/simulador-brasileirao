@@ -59,7 +59,8 @@ backtest:
   calibration_bins: 10
 
 simulation:
-  n_sims: 10000
+  n_sims: 20000
+  parameter_uncertainty: true   # sorteia ataque/defesa de cada time em cada simulação (erro de Laplace)
   seed: 20260101
   # Critérios de desempate, em ordem. Fonte: imprensa sobre o Regulamento
   # Específico da Série A 2026 (Art. 15). TODO: confirmar no PDF oficial da CBF.

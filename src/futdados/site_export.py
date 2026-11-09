@@ -100,11 +100,13 @@ def model_data(cfg, w) -> dict:
             "estimavel": estimable,
             "distinguivel_de_zero": bool(estimable and lo is not None and not (lo <= 0 <= hi)),
         })
+    sim_path = Path(cfg["paths"]["weights"]).with_name("backtest_simulacao.json")
     bt_path = Path(cfg["paths"]["weights"]).with_name("backtest.json")
     backtest = json.loads(bt_path.read_text(encoding="utf-8")) if bt_path.exists() else None
     return {"meia_vida_dias": w.half_life_days, "intercepto": w.intercept,
             "temporadas_treino": [w.train_seasons[0], w.train_seasons[-1]], "jogos_treino": w.n_matches,
-            "fatores": fatores, "backtest": backtest}
+            "fatores": fatores, "backtest": backtest,
+            "backtest_simulacao": json.loads(sim_path.read_text(encoding="utf-8")) if sim_path.exists() else None}
 
 
 def finance_data(cfg) -> dict:
@@ -215,8 +217,12 @@ def export_site(repo: Repository, cfg, season: int, as_of_round: int | None = No
         "gp": stats[r.team_id]["gp"], "gc": stats[r.team_id]["gc"],
         "ultimos5": stats[r.team_id]["ultimos5"], "adiados": stats[r.team_id]["adiados"],
     } for r in table.itertuples()]
+    decis = [{**g, "mandante_nome": display_name(g["mandante"]), "visitante_nome": display_name(g["visitante"]),
+              "time_nome": display_name(g["time"])} for g in table.attrs.get("jogos_decisivos", [])]
     _write(out, "tabela", {**base, "temporada": season, "rodada_base": based_on,
-                           "simulacoes": int(n_sims or cfg["simulation"]["n_sims"]), "linhas": linhas})
+                           "simulacoes": int(n_sims or cfg["simulation"]["n_sims"]), "linhas": linhas,
+                           "pontos_necessarios": table.attrs.get("pontos_necessarios"), "jogos_decisivos": decis,
+                           "incerteza_parametros": table.attrs.get("incerteza_parametros", False)})
 
     rnd, postponed = round_plan(feat)
     pending = feat.status != "FINISHED"

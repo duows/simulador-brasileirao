@@ -366,3 +366,16 @@ rodada 35.
 - No Cartola, o contexto de cada rodada passada é recalculado com as forças daquele momento
   (sem vazamento). O erro ficou igual (2,84): o ganho do motor novo está nos jogos e na simulação.
 - O Poisson de 7 fatores continua no código (backtest e `production.enabled: false`).
+
+## D27 · 2026-11-09 · Simulação: incerteza, pontos necessários, jogos decisivos e backtest
+- **20 mil simulações** por padrão (1,7 s para o restante de 2026).
+- **Incerteza dos parâmetros**: em cada simulação, ataque e defesa de cada time são sorteados em
+  torno da estimativa com o erro-padrão de Laplace (diagonal da informação de Fisher + prior;
+  0,09 a 0,25 em 2026). A aproximação da hessiana do L-BFGS foi descartada (dava ~1 para todos).
+- **Pontos necessários**: menor pontuação final que, nas simulações, garantiu cada objetivo em
+  90% dos casos (2026: título 84, G4 62, G6 57, permanência 40).
+- **Jogos decisivos**: para cada jogo restante, a diferença na chance de título, G4 ou
+  rebaixamento do time mais afetado entre vitória do mandante e do visitante.
+- **Backtest da simulação** (`futdados backtest-sim`, 2015-2025, cortes nas rodadas 10/20/30):
+  Brier de título, G4 e rebaixamento sempre abaixo do baseline (mesma chance para todos); a
+  posição final caiu na faixa p10–p90 em 89% dos casos (ideal ~80%: a faixa é conservadora).

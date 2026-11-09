@@ -87,3 +87,22 @@ def test_round_plan_skips_rounds_with_a_postponed_game():
     nxt, postponed = round_plan(df)
     assert nxt == 3
     assert list(postponed) == [False, True, False, False, False, True]
+
+
+def test_points_needed_and_decisive_games():
+    from futdados.simulate.montecarlo import decisive_games, points_needed
+
+    rng = np.random.default_rng(0)
+    pts = rng.integers(30, 90, size=(2000, 20))
+    pos = np.argsort(np.argsort(-pts, axis=1), axis=1) + 1  # posição pela pontuação
+    zones = {"titulo": [1, 1], "g4": [1, 4], "g6": [1, 6], "rebaixamento": [17, 20]}
+    need = points_needed(pts.astype(float), pos, zones)
+    assert need["g4"] is not None and need["titulo"] >= need["g4"] >= need["g6"] >= need["permanencia"]
+    # um jogo em que o vencedor sempre termina em 1º: diferença máxima para o título
+    todo = pd.DataFrame({"round": [38], "home_id": ["a"], "away_id": ["b"]})
+    outcomes = rng.integers(0, 3, size=(2000, 1)).astype(np.int8)
+    p2 = np.full((2000, 2), 2)
+    p2[outcomes[:, 0] == 0, 0] = 1
+    p2[outcomes[:, 0] == 2, 1] = 1
+    res = decisive_games(todo, outcomes, p2, {"a": 0, "b": 1}, zones)
+    assert res and abs(res[0]["diferenca"]) == 1.0

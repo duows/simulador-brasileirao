@@ -61,11 +61,16 @@ def fit_strengths(matches: pd.DataFrame, before: pd.Timestamp, seasons_back: int
 
     res = minimize(nll, np.zeros(2 * T + 2), jac=True, method="L-BFGS-B")
     th = res.x
-    # incerteza (Laplace): diagonal da inversa da hessiana aproximada pelo L-BFGS
-    try:
-        se = np.sqrt(np.clip(np.diag(res.hess_inv.todense()), 0, None))
-    except Exception:  # noqa: BLE001
-        se = np.full_like(th, np.nan)
+    # incerteza (Laplace, diagonal): informação de Fisher de cada ataque/defesa + prior
+    atk_, dfn_, mu_, home_ = th[:T], th[T:2 * T], th[2 * T], th[2 * T + 1]
+    lh_ = wt * np.exp(mu_ + home_ + atk_[hi] + dfn_[ai])
+    la_ = wt * np.exp(mu_ + atk_[ai] + dfn_[hi])
+    info = np.full(2 * T + 2, 1 / prior_sd**2)
+    np.add.at(info, hi, lh_)
+    np.add.at(info, ai, la_)
+    np.add.at(info, T + ai, lh_)
+    np.add.at(info, T + hi, la_)
+    se = 1 / np.sqrt(info)
     return {"teams": teams, "atk": dict(zip(teams, th[:T], strict=True)), "def": dict(zip(teams, th[T:2 * T], strict=True)),
             "atk_se": dict(zip(teams, se[:T], strict=True)), "def_se": dict(zip(teams, se[T:2 * T], strict=True)),
             "mu": float(th[2 * T]), "home": float(th[2 * T + 1]), "jogos": len(train),
@@ -122,6 +127,9 @@ def attach(feat: pd.DataFrame, matches: pd.DataFrame, cfg: dict, elo_params: dic
     out.loc[pending, "def_h"] = [s["def"].get(t, 0) for t in rows.home_id]
     out.loc[pending, "def_a"] = [s["def"].get(t, 0) for t in rows.away_id]
     out.loc[pending, "mu_prod"], out.loc[pending, "home_prod"] = s["mu"], s["home"]
+    for side, ids in (("h", rows.home_id), ("a", rows.away_id)):
+        out.loc[pending, f"atk_se_{side}"] = [s["atk_se"].get(t, 0.3) for t in ids]
+        out.loc[pending, f"def_se_{side}"] = [s["def_se"].get(t, 0.3) for t in ids]
     w = ensemble_weights(cfg)
     if elo_params:
         params = EloParams(**{k: elo_params[k] for k in ("k", "home", "regression", "promoted")})

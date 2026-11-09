@@ -127,6 +127,31 @@ export default function Modelo() {
         </>
       )}
 
+      {m.backtest_simulacao && (
+        <>
+          <h2>A simulação do campeonato acerta?</h2>
+          <p className="lead">
+            Para cada temporada de 2015 a 2025, a projeção foi refeita como se estivéssemos nas rodadas 10, 20 e 30 e comparada
+            com a classificação final. Brier menor é melhor; entre parênteses, o de dar a mesma chance para todos os times.
+            A posição final caiu dentro da faixa p10–p90 em {pct(m.backtest_simulacao.faixa_p10_p90)} dos casos (o ideal seria perto de 80%: a faixa é um pouco conservadora).
+          </p>
+          <div className="table-scroll">
+            <table>
+              <thead><tr><th className="l">Rodada de corte</th><th>Título</th><th>G4</th><th>Rebaixamento</th><th>Dentro da faixa</th></tr></thead>
+              <tbody>
+                {m.backtest_simulacao.por_corte.map((r) => (
+                  <tr key={r.corte}><td className="l">{r.corte}</td>
+                    <td>{num(r.brier_titulo, 3)} ({num(r.brier_base_titulo, 3)})</td>
+                    <td>{num(r.brier_g4, 3)} ({num(r.brier_base_g4, 3)})</td>
+                    <td>{num(r.brier_rebaixamento, 3)} ({num(r.brier_base_rebaixamento, 3)})</td>
+                    <td>{pct(r.dentro_da_faixa)}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
       <h2>Pesos do Poisson de 7 fatores</h2>
       <div className="table-scroll">
         <table>

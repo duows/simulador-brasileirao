@@ -137,8 +137,26 @@ def simulate_season(season_feat: pd.DataFrame, w: Weights, cfg: dict, target_rou
         hg, ag = np.full(n, int(r.home_goals)), np.full(n, int(r.away_goals))
         add(final, h2h_final, tix[r.home_id], tix[r.away_id], hg, ag)
         add(at_x, h2h_x, tix[r.home_id], tix[r.away_id], hg, ag)
+    # Incerteza dos parâmetros: em cada simulação, o ataque e a defesa de cada time são sorteados
+    # em torno da estimativa (erro-padrão de Laplace). Sem isso a dispersão fica subestimada.
+    uncertain = bool(scfg.get("parameter_uncertainty", True)) and "atk_se_h" in todo.columns \
+        and todo.atk_se_h.notna().all() and len(todo)
+    if uncertain:
+        se_atk, se_def = np.full(T, 0.0), np.full(T, 0.0)
+        for r in todo.itertuples():
+            se_atk[tix[r.home_id]], se_atk[tix[r.away_id]] = r.atk_se_h, r.atk_se_a
+            se_def[tix[r.home_id]], se_def[tix[r.away_id]] = r.def_se_h, r.def_se_a
+        z_atk = rng.normal(0, 1, (n, T)) * se_atk
+        z_def = rng.normal(0, 1, (n, T)) * se_def
+    outcomes = np.zeros((n, len(todo)), np.int8)  # 0 mandante, 1 empate, 2 visitante (jogos decisivos)
     for k, r in enumerate(todo.itertuples()):
-        hg, ag = _sample_scores(lh[k], la[k], w.rho, mcfg["max_goals"], n, rng)
+        if uncertain:
+            hi_, ai_ = tix[r.home_id], tix[r.away_id]
+            hg = rng.poisson(lh[k] * np.exp(z_atk[:, hi_] + z_def[:, ai_]))
+            ag = rng.poisson(la[k] * np.exp(z_atk[:, ai_] + z_def[:, hi_]))
+        else:
+            hg, ag = _sample_scores(lh[k], la[k], w.rho, mcfg["max_goals"], n, rng)
+        outcomes[:, k] = np.where(hg > ag, 0, np.where(hg == ag, 1, 2))
         add(final, h2h_final, tix[r.home_id], tix[r.away_id], hg, ag)
         if r.round <= target_round:
             add(at_x, h2h_x, tix[r.home_id], tix[r.away_id], hg, ag)
@@ -183,7 +201,62 @@ def simulate_season(season_feat: pd.DataFrame, w: Weights, cfg: dict, target_rou
         "p_g6": zone(pos_final, "g6"),
         "p_rebaixamento": zone(pos_final, "rebaixamento"),
     })
+    table.attrs["pontos_necessarios"] = points_needed(final["pts"], pos_final, zones)
+    table.attrs["jogos_decisivos"] = decisive_games(todo, outcomes, pos_final, tix, zones)
+    table.attrs["incerteza_parametros"] = bool(uncertain)
     # distribuição da posição final: dist[k] = P(terminar em k+1º)
     counts = np.stack([(pos_final == k).mean(axis=0) for k in range(1, T + 1)], axis=1)
     table["dist"] = [counts[i].tolist() for i in range(T)]
     return table.sort_values(["exp_points", "pontos_atuais"], ascending=False).reset_index(drop=True)
+
+
+def points_needed(pts: np.ndarray, pos: np.ndarray, zones: dict, level: float = 0.9) -> dict:
+    """Pontos finais que bastaram em `level` das simulações para cada objetivo (todos os times juntos).
+
+    Ex.: g4 = 65 quer dizer que, nas simulações, quem terminou com 65 pontos ou mais ficou no G4
+    em pelo menos 90% dos casos. Permanência usa a zona de rebaixamento ao contrário.
+    """
+    p, q = pts.ravel(), pos.ravel()
+    out = {}
+    goals = {"titulo": lambda x: x <= zones["titulo"][1], "g4": lambda x: x <= zones["g4"][1],
+             "g6": lambda x: x <= zones["g6"][1], "permanencia": lambda x: x < zones["rebaixamento"][0]}
+    for name, ok in goals.items():
+        hit = ok(q)
+        best = None
+        for v in np.arange(int(p.min()), int(p.max()) + 1):
+            sel = p >= v
+            if sel.sum() >= 50 and hit[sel].mean() >= level:
+                best = int(v)
+                break
+        out[name] = best
+    out["nivel"] = level
+    return out
+
+
+def decisive_games(todo: pd.DataFrame, outcomes: np.ndarray, pos: np.ndarray, tix: dict, zones: dict,
+                   top: int = 10) -> list[dict]:
+    """Jogos que mais mexem nas chances: diferença entre vitória do mandante e do visitante na
+    chance de título, G4 ou permanência do time mais afetado (condicionando as simulações)."""
+    if not len(todo):
+        return []
+    goals = {"titulo": (zones["titulo"][0], zones["titulo"][1]), "g4": (zones["g4"][0], zones["g4"][1]),
+             "rebaixamento": (zones["rebaixamento"][0], zones["rebaixamento"][1])}
+    res = []
+    for k, r in enumerate(todo.itertuples()):
+        o = outcomes[:, k]
+        if (o == 0).sum() < 30 or (o == 2).sum() < 30:
+            continue
+        best = None
+        for team in (r.home_id, r.away_id):
+            col = pos[:, tix[team]]
+            for g, (lo, hi) in goals.items():
+                inz = (col >= lo) & (col <= hi)
+                diff = float(inz[o == 0].mean() - inz[o == 2].mean())
+                if best is None or abs(diff) > abs(best["diferenca"]):
+                    best = {"rodada": int(r.round), "mandante": r.home_id, "visitante": r.away_id, "time": team,
+                            "objetivo": g, "diferenca": diff,
+                            "se_mandante_vence": float(inz[o == 0].mean()), "se_visitante_vence": float(inz[o == 2].mean()),
+                            "se_empate": float(inz[o == 1].mean()) if (o == 1).sum() >= 30 else None}
+        if best:
+            res.append(best)
+    return sorted(res, key=lambda x: -abs(x["diferenca"]))[:top]

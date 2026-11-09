@@ -42,5 +42,6 @@ ignore = ["E702", "E731", "B905"]
 "src/futdados/reports.py" = ["E501"]
 "src/futdados/cartola/project.py" = ["E501"]
 "src/futdados/cli.py" = ["E501"]
+"src/futdados/simulate/backtest_sim.py" = ["E501"]
 # funções objetivo definidas e usadas dentro da mesma iteração do laço
 "src/futdados/backtest/models.py" = ["B023"]

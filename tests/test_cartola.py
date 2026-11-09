@@ -81,7 +81,7 @@ def test_reserves_respect_price_rule_and_skip_tecnico():
     from futdados.cartola.optimize import add_reserves
 
     pl = _players(5, per_pos=6).assign(p_jogar=0.95)
-    res = best_team(pl, 120, SCHEMES, 1.5, reserves={"ativo": True, "preco_maximo": "titular_mais_barato"})
+    res = best_team(pl, 120, SCHEMES, 1.5, reserves={"ativo": True, "preco_maximo": "titular_mais_barato"}, vice=True)
     assert res["ok"]
     t, rv = res["time"], res["reservas"]
     assert "tec" not in set(rv.posicao)
@@ -131,3 +131,9 @@ def test_bench_simulation_luxury_has_value():
     sim = bench_simulation(team, res, n=4000)
     assert sim["ata"]["banco"] == 0  # ninguém falta: o banco nunca entra
     assert sim["ata"]["luxo"] > 1    # mas o luxo substitui o pior titular com frequência
+
+
+def test_vice_off_by_default():
+    pl = _players(5, per_pos=6).assign(p_jogar=0.95)
+    res = best_team(pl, 120, SCHEMES, 1.5, reserves={"ativo": True})
+    assert "vice" not in res and res.get("valor_vice", 0) == 0

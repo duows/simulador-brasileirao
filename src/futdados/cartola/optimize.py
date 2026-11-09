@@ -16,7 +16,8 @@ POSITIONS = ["gol", "lat", "zag", "mei", "ata", "tec"]
 
 
 def best_team(players: pd.DataFrame, budget: float, schemes: dict[str, dict[str, int]],
-              captain_mult: float = 1.5, only: str | None = None, reserves: dict | None = None) -> dict:
+              captain_mult: float = 1.5, only: str | None = None, reserves: dict | None = None,
+              vice: bool = False) -> dict:
     """players: colunas atleta_id, apelido, posicao, preco, esperado (> 0 para entrar)."""
     p = players[players.esperado > 0].reset_index(drop=True)
     names = [only] if only else list(schemes)
@@ -54,7 +55,7 @@ def best_team(players: pd.DataFrame, budget: float, schemes: dict[str, dict[str,
     res = {"ok": True, "esquema": scheme, "custo": float(team.preco.sum()), "orcamento": budget,
            "pontos_esperados": total, "time": team, "reservas": pd.DataFrame()}
     # vice-capitão: herda o ×multiplicador se o capitão não jogar
-    vice = vice_captain(team) if "p_jogar" in team else None
+    vice = vice_captain(team) if vice and "p_jogar" in team else None
     vice_value = 0.0
     if vice is not None:
         cap = team[team.capitao].iloc[0]

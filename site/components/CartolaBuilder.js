@@ -37,7 +37,7 @@ export default function CartolaBuilder({ data, photos = false }) {
     const r = bestTeam(players, b, data.esquemas, data.multiplicador_capitao, scheme || null);
     if (!r.ok) return r;
     const bench = addReserves(r.time, players, data.reservas);
-    const vice = viceCaptain(r.time);
+    const vice = data.vice_capitao ? viceCaptain(r.time) : null;
     const cap = r.time.find((p) => p.capitao);
     const valorVice = vice && cap ? (data.multiplicador_capitao - 1) * (1 - (cap.p_jogar ?? 1)) * vice.esperado : 0;
     return { ...r, reservas: bench.reservas, valor_reservas: bench.valor, vice: vice?.id, valor_vice: valorVice };
@@ -63,7 +63,7 @@ export default function CartolaBuilder({ data, photos = false }) {
         <>
           <div className="tiles">
             <div className="card tile"><div className="label">Pontuação esperada</div><div className="value">{num(res.pontos_esperados + res.valor_reservas + res.valor_vice, 1)}</div>
-              <div className="sub">titulares {num(res.pontos_esperados, 1)} + banco e luxo {num(res.valor_reservas, 1)} + vice {num(res.valor_vice, 1)} · capitão ×{num(data.multiplicador_capitao, 1)}</div></div>
+              <div className="sub">titulares {num(res.pontos_esperados, 1)} + banco e luxo {num(res.valor_reservas, 1)}{data.vice_capitao ? ` + vice ${num(res.valor_vice, 1)}` : ""} · capitão ×{num(data.multiplicador_capitao, 1)}</div></div>
             <div className="card tile"><div className="label">Custo</div><div className="value">C$ {num(res.custo, 2)}</div>
               <div className="sub">sobram C$ {num(Number(budget) - res.custo, 2)}</div></div>
             <div className="card tile"><div className="label">Esquema</div><div className="value">{res.esquema}</div><div className="sub">{scheme ? "escolhido por você" : "o que rende mais"}</div></div>
@@ -108,7 +108,7 @@ export default function CartolaBuilder({ data, photos = false }) {
                       </tr>
                     ))}
                   </tbody>
-                  <caption>Banco: o reserva entra no lugar de um titular da posição que não jogar, se ele jogar e não pontuar negativo. Reserva de Luxo (um só): substitui o titular da posição que pontuou menos, se fizer mais que ele; o sistema indica a posição onde ele mais rende. Vice-capitão herda o ×1,5 se o capitão não jogar. Valores por simulação. Preço do reserva: no máximo o do titular mais barato da posição (a confirmar no Cartola).</caption>
+                  <caption>Banco: o reserva entra no lugar de um titular da posição que não jogar, se ele jogar e não pontuar negativo. Reserva de Luxo (um só): substitui o titular da posição que pontuou menos, se fizer mais que ele; o sistema indica a posição onde ele mais rende. Valores por simulação. Preço do reserva: no máximo o do titular mais barato da posição (a confirmar no Cartola).</caption>
                 </table>
               </div>
             </>

@@ -92,7 +92,8 @@ cartola:
   shrink: 5                 # jogos fictícios na média da posição (pouca amostra puxa para a média)
   alpha: 10                 # ridge leve dos coeficientes por posição
   first_backtest_round: 6
-  captain_multiplier: 1.5   # capitão ×1,5 desde 2023 (imprensa); vice herda se o capitão não jogar
+  captain_multiplier: 1.5   # capitão ×1,5 desde 2023 (imprensa)
+  vice_capitao: false       # matéria de 2023 citava vice; no app atual não existe (relato do usuário, 2026-11-09)
   registro_orcamentos: [100, 120, 140, 160]   # times sugeridos gravados a cada rodada
   reservas:                 # banco: 1 por posição (sem técnico); entra se um titular da posição não jogar
     ativo: true

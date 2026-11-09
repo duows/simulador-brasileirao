@@ -405,3 +405,13 @@ rodada 35.
   "no máximo o titular mais barato da posição"). Conferir no app.
 - **Chave da API**: `futdados` lê o arquivo `.env` da raiz (fora do git) e usa as variáveis que
   ainda não existirem no ambiente. Modelo em `.env.example`.
+
+- **Correção (2026-11-09)**: o vice-capitão citado na matéria de 2023 não existe no app atual
+  (relato do usuário, que joga). Ficou desligado (`cartola.vice_capitao: false`); o código continua
+  disponível caso a regra volte.
+- **Tabela de pontos por scout** (2026-11-09): conferimos a tabela do cartolafcbrasil.com.br
+  (tutorial "como funciona o sistema de pontuação") contra as 10.093 pontuações de jogadores da
+  API em 2026. Com a tabela da página, só 42% batem; ajustando os pesos pelos próprios dados, a
+  API usa **desarme (DS) +1,5** e **defesa difícil (DE) +1,3** (a página diz 1,2 e 1,0), e o
+  scout "passe incompleto" (PE) não aparece mais. Com esses valores, 100% batem. O modelo prevê a
+  pontuação direto, então não depende dessa tabela, mas fica registrada a versão que vale.

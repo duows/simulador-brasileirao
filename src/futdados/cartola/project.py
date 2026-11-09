@@ -98,7 +98,8 @@ def project(repo: Repository, cfg: dict) -> dict:
         "aviso": cfg["output"]["aviso"], "atribuicao": cfg["output"]["atribuicao"], "gerado_em": utc_now(),
         "versao_modelo": w.model_version, "temporada": season, "rodada": rnd, "mercado_aberto": status.get("status_mercado") == 1,
         "fechamento": fech, "fechamento_utc": fech_utc, "cartoletas_iniciais": status.get("cartoleta_inicial"),
-        "multiplicador_capitao": c["captain_multiplier"], "p_jogar": c["p_jogar"],
+        "multiplicador_capitao": c["captain_multiplier"], "vice_capitao": bool(c.get("vice_capitao", False)),
+        "p_jogar": c["p_jogar"],
         "reservas": {**c["reservas"], "desvio_por_posicao": played.groupby("posicao").pontos.std().round(2).to_dict()},
         "esquemas": schemes, "atletas": sorted(players, key=lambda x: -x["esperado"]),
         "escudos": data["escudos"],
@@ -122,7 +123,8 @@ def register(repo: Repository, cfg: dict, doc: dict) -> str | None:
     pf = players_frame(doc)
     times = {}
     for b in cfg["cartola"]["registro_orcamentos"]:
-        res = best_team(pf, float(b), doc["esquemas"], doc["multiplicador_capitao"], reserves=doc["reservas"])
+        res = best_team(pf, float(b), doc["esquemas"], doc["multiplicador_capitao"], reserves=doc["reservas"],
+                        vice=doc["vice_capitao"])
         if res["ok"]:
             t, rv = res["time"], res["reservas"]
             times[str(b)] = {"esquema": res["esquema"],
@@ -201,7 +203,7 @@ def team_real_points(t: dict, real: pd.DataFrame, mult: float) -> float:
             low = min(cands, key=lambda a: lineup[a])
             if pts(lux) > lineup[low]:
                 lineup[low] = pts(lux)
-    cap = t["capitao"] if played(t["capitao"]) else t.get("vice")
+    cap = t["capitao"] if played(t["capitao"]) else t.get("vice")  # vice só existe se estiver ligado
     total = sum(lineup.values()) + ((mult - 1) * lineup.get(int(cap), 0.0) if cap is not None else 0.0)
     return round(float(total), 1)
 

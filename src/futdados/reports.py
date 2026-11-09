@@ -87,3 +87,74 @@ def weights_markdown(w: Weights, tune: pd.DataFrame | None = None) -> str:
 def write(path: str | Path, text: str) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     Path(path).write_text(text, encoding="utf-8")
+
+
+def p1(x: float) -> str:
+    return f"{x:.1%}".replace(".", ",")
+
+
+def backtest_markdown(scores: dict, per_season: pd.DataFrame, calib: pd.DataFrame,
+                      half_life: float, seasons: list[int], n: int, draw_rate: tuple[float, float]) -> str:
+    m, f, h = scores["modelo"], scores["frequencia_historica"], scores["sempre_mandante"]
+    beats_freq = m["brier"] < f["brier"] and m["log_loss"] < f["log_loss"]
+    gain_b = (f["brier"] - m["brier"]) / f["brier"]
+    gain_l = (f["log_loss"] - m["log_loss"]) / f["log_loss"]
+    worse = per_season[per_season.brier_modelo >= per_season.brier_freq].temporada.tolist()
+    verdict = (
+        f"O modelo **supera os dois baselines** no Brier e no log loss. A vantagem sobre a "
+        f"frequência histórica é de {p1(gain_b)} no Brier e {p1(gain_l)} no log loss: real, mas "
+        "pequena. Futebol tem muito acaso e um modelo sem escalação e sem xG não vai muito além disso."
+        if beats_freq else
+        "O modelo **não supera** a frequência histórica em todas as métricas. Ver detalhes abaixo."
+    )
+    lines = [
+        "# Backtest walk-forward",
+        "",
+        f"Temporadas de teste: {seasons[0]}–{seasons[-1]} ({n} jogos). Para prever a temporada S, os "
+        "pesos foram ajustados só com temporadas anteriores a S, e os fatores de cada jogo usam só "
+        "resultados anteriores àquele jogo. A meia-vida "
+        f"({half_life:.0f} dias) foi escolhida em temporadas anteriores ao período de teste.",
+        "",
+        "## Resultado",
+        "",
+        verdict,
+        "",
+        "| Método | Brier (menor é melhor) | Log loss (menor é melhor) | Acerto do resultado mais provável |",
+        "|---|---|---|---|",
+        f"| Modelo | {num(m['brier'], 4)} | {num(m['log_loss'], 4)} | {p1(m['acerto'])} |",
+        f"| Frequência histórica (mandante/empate/visitante) | {num(f['brier'], 4)} | {num(f['log_loss'], 4)} | {p1(f['acerto'])} |",
+        f"| Sempre mandante (100% vitória do mandante) | {num(h['brier'], 4)} | {num(h['log_loss'], 2)}* | {p1(h['acerto'])} |",
+        "",
+        "\* \"Sempre mandante\" dá probabilidade zero a empates e derrotas, então o log loss é "
+        "enorme (limitado numericamente). Ele serve de referência de acerto, não de probabilidade.",
+        "",
+        "Brier multiclasse: soma dos erros quadráticos nas três classes (0 = perfeito, 2 = pior "
+        "possível; chutar 1/3 para tudo dá 0,667).",
+        "",
+        "## Por temporada",
+        "",
+        "| Temporada | Jogos | Brier modelo | Brier frequência | Log loss modelo | Log loss frequência |",
+        "|---|---|---|---|---|---|",
+    ]
+    for r in per_season.itertuples():
+        lines.append(f"| {r.temporada} | {r.n} | {num(r.brier_modelo, 4)} | {num(r.brier_freq, 4)} | "
+                     f"{num(r.ll_modelo, 4)} | {num(r.ll_freq, 4)} |")
+    if worse:
+        lines += ["", f"Temporadas em que o modelo **não** bateu a frequência histórica no Brier: "
+                      f"{', '.join(map(str, worse))}."]
+    lines += [
+        "",
+        "## Calibração",
+        "",
+        "Se o modelo diz 40%, o evento deveria acontecer perto de 40% das vezes.",
+        f"Empates: o modelo estimou em média {p1(draw_rate[0])} e aconteceram {p1(draw_rate[1])}.",
+        "",
+        "| Resultado | Faixa estimada | Jogos | Estimado (média) | Observado |",
+        "|---|---|---|---|---|",
+    ]
+    for r in calib.itertuples():
+        if r.n < 20:
+            continue
+        lines.append(f"| {r.resultado} | {r.faixa} | {r.n} | {p1(r.estimado)} | {p1(r.observado)} |")
+    lines += ["", "Faixas com menos de 20 jogos foram omitidas.", ""]
+    return "\n".join(lines)

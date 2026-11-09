@@ -70,6 +70,41 @@ def cmd_project(args, cfg) -> None:
     print(f"JSON: {projection_json(cfg, table, meta)}")
 
 
+def cmd_backtest(args, cfg) -> None:
+    import pandas as pd
+
+    from .backtest.walkforward import (brier, calibration_table, log_loss, outcome_index, score,
+                                       walk_forward)
+    from .model.predict import features_for
+    from .model.poisson import Weights
+    from .reports import backtest_markdown, write
+
+    repo = _repo(cfg)
+    try:
+        hl = Weights.load(cfg["paths"]["weights"]).half_life_days
+    except FileNotFoundError:
+        hl = cfg["model"]["half_life_days"]
+    seasons = cfg["backtest"]["test_seasons"]
+    feat = features_for(repo, cfg, hl)
+    pred = walk_forward(repo.matches(), cfg, seasons, hl, feat=feat)
+    sc = score(pred)
+    rows = []
+    for s, g in pred.groupby("season"):
+        y = outcome_index(g.home_goals, g.away_goals)
+        p, f = g[["p_h", "p_d", "p_a"]].to_numpy(), g[["f_h", "f_d", "f_a"]].to_numpy()
+        rows.append({"temporada": s, "n": len(g), "brier_modelo": brier(p, y), "brier_freq": brier(f, y),
+                     "ll_modelo": log_loss(p, y), "ll_freq": log_loss(f, y)})
+    y = outcome_index(pred.home_goals, pred.away_goals)
+    p = pred[["p_h", "p_d", "p_a"]].to_numpy()
+    calib = calibration_table(p, y, cfg["backtest"]["calibration_bins"])
+    md = backtest_markdown(sc, pd.DataFrame(rows), calib, hl, seasons, len(pred),
+                           (float(p[:, 1].mean()), float((y == 1).mean())))
+    write(f"{cfg['paths']['reports']}/backtest.md", md)
+    for k, v in sc.items():
+        print(f"{k:<22} Brier {v['brier']:.4f}  log loss {v['log_loss']:.4f}  acerto {v['acerto']:.1%}")
+    print("Relatório: reports/backtest.md")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -86,6 +121,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--as-of-round", type=int,
                    help="reconstitui a projeção escondendo resultados depois desta rodada (demonstração)")
     s.add_argument("--sims", type=int, help="número de simulações (padrão no YAML)")
+    sub.add_parser("backtest", help="walk-forward por temporada e reports/backtest.md")
     return p
 
 
@@ -94,6 +130,7 @@ COMMANDS = {
     "ingest-api": cmd_ingest_api,
     "fit": cmd_fit,
     "project": cmd_project,
+    "backtest": cmd_backtest,
 }
 
 

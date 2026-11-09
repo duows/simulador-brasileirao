@@ -133,7 +133,7 @@ def test_export_site_writes_derived_data_only(env, tmp_path):
     repo, cfg = env
     out = export_site(repo, cfg, 2026, n_sims=200, out_dir=tmp_path / "data")
     names = {p.stem for p in out.glob("*.json")}
-    assert names == {"meta", "tabela", "rodada", "simulador", "modelo", "financas"}
+    assert names == {"meta", "tabela", "rodada", "simulador", "modelo", "financas", "historico"}
     for p in out.glob("*.json"):
         doc = json.loads(p.read_text(encoding="utf-8"))
         assert doc["aviso"] == AVISO
@@ -146,3 +146,14 @@ def test_export_site_writes_derived_data_only(env, tmp_path):
     assert len(sim["restantes"]) == 30 and "jogos" not in sim
     rodada = json.loads((out / "rodada.json").read_text(encoding="utf-8"))
     assert rodada["rodada"] == 1 and "adiados" in rodada
+    tab = json.loads((out / "tabela.json").read_text(encoding="utf-8"))
+    linha = tab["linhas"][0]
+    assert abs(sum(linha["distribuicao_posicao"]) - 1) < 1e-3 and len(linha["distribuicao_posicao"]) == 6
+    assert {"posicao_atual", "ultimos5", "adiados", "v", "e", "d"} <= set(linha)
+    hist = json.loads((out / "historico.json").read_text(encoding="utf-8"))
+    assert hist["rodadas"] == [0]  # export ao vivo gravou a projeção da rodada-base
+
+    # reconstituição (--as-of-round) não entra no histórico
+    before = len(repo.projection_history(2022, 10))
+    export_site(repo, cfg, 2022, as_of_round=5, n_sims=100, out_dir=tmp_path / "demo")
+    assert len(repo.projection_history(2022, 10)) == before == 0

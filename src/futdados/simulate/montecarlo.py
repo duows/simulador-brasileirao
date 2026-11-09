@@ -182,4 +182,7 @@ def simulate_season(season_feat: pd.DataFrame, w: Weights, cfg: dict, target_rou
         "p_g6": zone(pos_final, "g6"),
         "p_rebaixamento": zone(pos_final, "rebaixamento"),
     })
+    # distribuição da posição final: dist[k] = P(terminar em k+1º)
+    counts = np.stack([(pos_final == k).mean(axis=0) for k in range(1, T + 1)], axis=1)
+    table["dist"] = [counts[i].tolist() for i in range(T)]
     return table.sort_values(["exp_points", "pontos_atuais"], ascending=False).reset_index(drop=True)

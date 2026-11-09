@@ -114,6 +114,60 @@ def _registry_index(repo: Repository, season: int) -> dict:
             for r in reg.itertuples()}
 
 
+def team_stats(feat: pd.DataFrame) -> dict[str, dict]:
+    """Tabela atual, últimos resultados, casa/fora, forma e força de cada time na temporada."""
+    from .simulate.montecarlo import round_plan as _rp
+
+    played = feat[(feat.status == "FINISHED") & feat.home_goals.notna()].sort_values("kickoff_utc")
+    _, postponed = _rp(feat)
+    teams = sorted(set(feat.home_id) | set(feat.away_id))
+    st = {t: {"j": 0, "v": 0, "e": 0, "d": 0, "gp": 0, "gc": 0, "pts": 0, "resultados": [],
+              "casa": {"j": 0, "pts": 0, "gp": 0, "gc": 0}, "fora": {"j": 0, "pts": 0, "gp": 0, "gc": 0}}
+          for t in teams}
+    for r in played.itertuples():
+        hg, ag = int(r.home_goals), int(r.away_goals)
+        for tid, gf, ga, side, opp in ((r.home_id, hg, ag, "casa", r.away_id), (r.away_id, ag, hg, "fora", r.home_id)):
+            s = st[tid]
+            res = "V" if gf > ga else ("E" if gf == ga else "D")
+            pts = {"V": 3, "E": 1, "D": 0}[res]
+            s["j"] += 1; s["gp"] += gf; s["gc"] += ga; s["pts"] += pts
+            s[{"V": "v", "E": "e", "D": "d"}[res]] += 1
+            s[side]["j"] += 1; s[side]["pts"] += pts; s[side]["gp"] += gf; s[side]["gc"] += ga
+            s["resultados"].append({"rodada": int(r.round), "data_utc": pd.Timestamp(r.kickoff_utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                                    "adversario": opp, "local": side, "gols_pro": gf, "gols_contra": ga, "resultado": res})
+    order = sorted(teams, key=lambda t: (-st[t]["pts"], -st[t]["v"], -(st[t]["gp"] - st[t]["gc"]), -st[t]["gp"],
+                                         display_name(t)))
+    for i, t in enumerate(order, start=1):
+        st[t]["posicao_atual"] = i
+        st[t]["ultimos5"] = [x["resultado"] for x in st[t]["resultados"][-5:]]
+        st[t]["adiados"] = int(sum(postponed[(feat.home_id == t) | (feat.away_id == t)]))
+    # força e forma no próximo jogo de cada time (ou no último, se não houver próximo)
+    for t in teams:
+        mine = feat[(feat.home_id == t) | (feat.away_id == t)].sort_values("kickoff_utc")
+        nxt = mine[mine.status != "FINISHED"]
+        row = (nxt.iloc[0] if len(nxt) else mine.iloc[-1])
+        side = "h" if row.home_id == t else "a"
+        other = "a" if side == "h" else "h"
+        st[t]["forca"] = {"ataque": float(np.exp(row[f"ataque_{side}"])),
+                          "defesa": float(np.exp(row[f"defesa_adversario_{other}"])),
+                          "pontos_por_jogo_ultimos5": float(row[f"raw_ppg_{side}"])}
+    return st
+
+
+def history_data(repo: Repository, season: int, max_round: int) -> dict:
+    hist = repo.projection_history(season, max_round)
+    if hist.empty:
+        return {"rodadas": [], "times": {}}
+    rounds = sorted(int(r) for r in hist.based_on_round.unique())
+    times = {}
+    for tid, g in hist.groupby("team_id"):
+        g = g.set_index("based_on_round")
+        times[tid] = {k: [None if r not in g.index else float(g.loc[r, col]) for r in rounds]
+                      for k, col in (("titulo", "p_titulo"), ("g4", "p_g4"), ("g6", "p_g6"),
+                                     ("rebaixamento", "p_rebaixamento"), ("pontos_esperados", "exp_points"))}
+    return {"rodadas": rounds, "times": times}
+
+
 def export_site(repo: Repository, cfg, season: int, as_of_round: int | None = None,
                 n_sims: int | None = None, out_dir: str | Path | None = None) -> Path:
     w = load_weights(cfg)
@@ -124,6 +178,10 @@ def export_site(repo: Repository, cfg, season: int, as_of_round: int | None = No
     max_round = int(feat["round"].max())
     based_on = last_complete_round(feat)
     table = simulate_season(feat, w, cfg, max_round, n_sims=n_sims)
+    if as_of_round is None:  # só projeções ao vivo entram no histórico por rodada
+        repo.insert_projection({"season": season, "based_on_round": based_on, "target_round": max_round,
+                                "model_version": w.model_version}, table.assign(exp_points=table.exp_points_final))
+    stats = team_stats(feat)
 
     meta = {**base, "temporada": season, "rodada_base": based_on, "rodadas": max_round,
             "demonstracao": as_of_round is not None,
@@ -140,6 +198,11 @@ def export_site(repo: Repository, cfg, season: int, as_of_round: int | None = No
         "faixa_posicao": {"p10": int(round(r.pos_p10)), "p90": int(round(r.pos_p90))},
         "chance_titulo": float(r.p_titulo), "chance_g4": float(r.p_g4), "chance_g6": float(r.p_g6),
         "chance_rebaixamento": float(r.p_rebaixamento),
+        "distribuicao_posicao": [round(float(x), 4) for x in r.dist],
+        "posicao_atual": stats[r.team_id]["posicao_atual"],
+        "v": stats[r.team_id]["v"], "e": stats[r.team_id]["e"], "d": stats[r.team_id]["d"],
+        "gp": stats[r.team_id]["gp"], "gc": stats[r.team_id]["gc"],
+        "ultimos5": stats[r.team_id]["ultimos5"], "adiados": stats[r.team_id]["adiados"],
     } for r in table.itertuples()]
     _write(out, "tabela", {**base, "temporada": season, "rodada_base": based_on,
                            "simulacoes": int(n_sims or cfg["simulation"]["n_sims"]), "linhas": linhas})
@@ -161,6 +224,7 @@ def export_site(repo: Repository, cfg, season: int, as_of_round: int | None = No
 
     _write(out, "simulador", {**base, "temporada": season, "rodada_base": based_on,
                               **simulator_data(feat, w, cfg)})
+    _write(out, "historico", {**base, "temporada": season, **history_data(repo, season, max_round)})
     _write(out, "modelo", {**base, **model_data(cfg, w)})
     _write(out, "financas", {**base, **finance_data(cfg)})
     return out

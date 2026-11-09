@@ -243,3 +243,17 @@ class Repository:
             return pd.DataFrame()
         return pd.read_sql_query("SELECT * FROM projections WHERE run_id=?", self.conn,
                                  params=(row[0],))
+
+    def projection_history(self, season: int, target_round: int) -> pd.DataFrame:
+        """Para cada rodada-base, a última projeção gravada (só projeções feitas ao vivo:
+        reconstituições com --as-of-round não são gravadas)."""
+        runs = pd.read_sql_query(
+            "SELECT based_on_round, MAX(id) AS last_id FROM projections WHERE season=? AND target_round=?"
+            " GROUP BY based_on_round", self.conn, params=(season, target_round))
+        if runs.empty:
+            return pd.DataFrame()
+        rows = []
+        for r in runs.itertuples():
+            run_id = self.conn.execute("SELECT run_id FROM projections WHERE id=?", (int(r.last_id),)).fetchone()[0]
+            rows.append(pd.read_sql_query("SELECT * FROM projections WHERE run_id=?", self.conn, params=(run_id,)))
+        return pd.concat(rows, ignore_index=True).sort_values(["based_on_round", "team_id"])

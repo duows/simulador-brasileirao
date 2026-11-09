@@ -1,0 +1,352 @@
+{
+ "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
+ "atribuicao": "Football data provided by the Football-Data.org API",
+ "gerado_em": "2026-11-09T02:13:08Z",
+ "versao_modelo": "futdados-0.1.0+21d22b71",
+ "temporada": 2026,
+ "rodadas": [
+  34
+ ],
+ "times": {
+  "athletico-pr": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.1216
+   ],
+   "g6": [
+    0.8664
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    59.3076
+   ]
+  },
+  "atletico-mg": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0141
+   ],
+   "g6": [
+    0.317
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    55.7928
+   ]
+  },
+  "bahia": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0824
+   ],
+   "g6": [
+    0.7145
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    58.7478
+   ]
+  },
+  "botafogo": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0001
+   ],
+   "rebaixamento": [
+    0.019
+   ],
+   "pontos_esperados": [
+    47.4151
+   ]
+  },
+  "bragantino": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0004
+   ],
+   "g6": [
+    0.0545
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    52.6972
+   ]
+  },
+  "chapecoense": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0
+   ],
+   "rebaixamento": [
+    1.0
+   ],
+   "pontos_esperados": [
+    25.4423
+   ]
+  },
+  "corinthians": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0
+   ],
+   "rebaixamento": [
+    0.4454
+   ],
+   "pontos_esperados": [
+    42.5588
+   ]
+  },
+  "coritiba": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0
+   ],
+   "rebaixamento": [
+    0.0448
+   ],
+   "pontos_esperados": [
+    45.9222
+   ]
+  },
+  "cruzeiro": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.9765
+   ],
+   "g6": [
+    1.0
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    65.9597
+   ]
+  },
+  "flamengo": {
+   "titulo": [
+    0.8511
+   ],
+   "g4": [
+    1.0
+   ],
+   "g6": [
+    1.0
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    83.59
+   ]
+  },
+  "fluminense": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.8047
+   ],
+   "g6": [
+    0.9937
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    62.9674
+   ]
+  },
+  "gremio": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0
+   ],
+   "rebaixamento": [
+    0.5309
+   ],
+   "pontos_esperados": [
+    42.2575
+   ]
+  },
+  "internacional": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0
+   ],
+   "rebaixamento": [
+    0.3753
+   ],
+   "pontos_esperados": [
+    43.2779
+   ]
+  },
+  "mirassol": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0
+   ],
+   "rebaixamento": [
+    0.1374
+   ],
+   "pontos_esperados": [
+    45.3053
+   ]
+  },
+  "palmeiras": {
+   "titulo": [
+    0.1489
+   ],
+   "g4": [
+    1.0
+   ],
+   "g6": [
+    1.0
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    80.2409
+   ]
+  },
+  "remo": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0
+   ],
+   "rebaixamento": [
+    1.0
+   ],
+   "pontos_esperados": [
+    34.1488
+   ]
+  },
+  "santos": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0003
+   ],
+   "g6": [
+    0.0494
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    53.1472
+   ]
+  },
+  "sao-paulo": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0029
+   ],
+   "rebaixamento": [
+    0.0
+   ],
+   "pontos_esperados": [
+    49.4433
+   ]
+  },
+  "vasco": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0015
+   ],
+   "rebaixamento": [
+    0.0182
+   ],
+   "pontos_esperados": [
+    48.083
+   ]
+  },
+  "vitoria": {
+   "titulo": [
+    0.0
+   ],
+   "g4": [
+    0.0
+   ],
+   "g6": [
+    0.0
+   ],
+   "rebaixamento": [
+    0.429
+   ],
+   "pontos_esperados": [
+    42.6994
+   ]
+  }
+ }
+}

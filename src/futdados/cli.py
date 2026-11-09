@@ -70,7 +70,9 @@ def cmd_project(args, cfg) -> None:
     from .teams import display_name
 
     repo = _repo(cfg)
-    table, meta = project(repo, cfg, args.season, args.round, args.as_of_round, args.sims)
+    # reconstituições (--as-of-round) usam pesos que viram o futuro: não entram no histórico
+    table, meta = project(repo, cfg, args.season, args.round, args.as_of_round, args.sims,
+                          record=args.as_of_round is None)
     _print_projection(table, meta)
     print(f"JSON: {projection_json(cfg, table, meta)}")
     if args.as_of_round is None:

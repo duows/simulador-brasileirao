@@ -1,7 +1,7 @@
 {
  "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
  "atribuicao": "Football data provided by the Football-Data.org API",
- "gerado_em": "2026-11-09T02:00:50Z",
+ "gerado_em": "2026-11-09T02:13:08Z",
  "versao_modelo": "futdados-0.1.0+21d22b71",
  "temporada": 2026,
  "rodada_base": 34,
@@ -23,7 +23,43 @@
    "chance_titulo": 0.8511,
    "chance_g4": 1.0,
    "chance_g6": 1.0,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.8511,
+    0.1489,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 1,
+   "v": 23,
+   "e": 7,
+   "d": 4,
+   "gp": 71,
+   "gc": 29,
+   "ultimos5": [
+    "V",
+    "V",
+    "V",
+    "V",
+    "V"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -41,7 +77,43 @@
    "chance_titulo": 0.1489,
    "chance_g4": 1.0,
    "chance_g6": 1.0,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.1489,
+    0.8511,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 2,
+   "v": 21,
+   "e": 10,
+   "d": 3,
+   "gp": 62,
+   "gc": 23,
+   "ultimos5": [
+    "V",
+    "V",
+    "V",
+    "E",
+    "V"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -59,7 +131,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.9765,
    "chance_g6": 1.0,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.7917,
+    0.1848,
+    0.0216,
+    0.0019,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 3,
+   "v": 18,
+   "e": 6,
+   "d": 10,
+   "gp": 55,
+   "gc": 48,
+   "ultimos5": [
+    "D",
+    "V",
+    "V",
+    "V",
+    "V"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -77,7 +185,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.8047,
    "chance_g6": 0.9937,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.1914,
+    0.6133,
+    0.1463,
+    0.0427,
+    0.006,
+    0.0003,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 4,
+   "v": 16,
+   "e": 9,
+   "d": 9,
+   "gp": 55,
+   "gc": 42,
+   "ultimos5": [
+    "D",
+    "D",
+    "D",
+    "V",
+    "V"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -95,7 +239,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.1216,
    "chance_g6": 0.8664,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0102,
+    0.1114,
+    0.4235,
+    0.3213,
+    0.1038,
+    0.0267,
+    0.0029,
+    0.0002,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 5,
+   "v": 15,
+   "e": 9,
+   "d": 10,
+   "gp": 51,
+   "gc": 43,
+   "ultimos5": [
+    "V",
+    "D",
+    "E",
+    "D",
+    "D"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -113,7 +293,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0824,
    "chance_g6": 0.7145,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0062,
+    0.0762,
+    0.2911,
+    0.341,
+    0.1964,
+    0.0713,
+    0.0156,
+    0.0021,
+    0.0001,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 6,
+   "v": 14,
+   "e": 11,
+   "d": 9,
+   "gp": 50,
+   "gc": 45,
+   "ultimos5": [
+    "V",
+    "D",
+    "E",
+    "V",
+    "D"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -131,7 +347,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0141,
    "chance_g6": 0.317,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0005,
+    0.0136,
+    0.0983,
+    0.2046,
+    0.3554,
+    0.2052,
+    0.0911,
+    0.0269,
+    0.0041,
+    0.0003,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 7,
+   "v": 14,
+   "e": 8,
+   "d": 12,
+   "gp": 44,
+   "gc": 40,
+   "ultimos5": [
+    "V",
+    "V",
+    "D",
+    "D",
+    "D"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -149,7 +401,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0003,
    "chance_g6": 0.0494,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0003,
+    0.0088,
+    0.0403,
+    0.1422,
+    0.2847,
+    0.2781,
+    0.1409,
+    0.0639,
+    0.0284,
+    0.0095,
+    0.0026,
+    0.0003,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 9,
+   "v": 12,
+   "e": 11,
+   "d": 11,
+   "gp": 50,
+   "gc": 49,
+   "ultimos5": [
+    "D",
+    "V",
+    "E",
+    "E",
+    "D"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -167,7 +455,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0004,
    "chance_g6": 0.0545,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0004,
+    0.01,
+    0.0441,
+    0.1619,
+    0.2877,
+    0.2862,
+    0.1303,
+    0.0546,
+    0.0208,
+    0.0035,
+    0.0004,
+    0.0001,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 8,
+   "v": 13,
+   "e": 8,
+   "d": 13,
+   "gp": 44,
+   "gc": 39,
+   "ultimos5": [
+    "V",
+    "E",
+    "D",
+    "V",
+    "V"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -185,7 +509,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0029,
-   "chance_rebaixamento": 0.0
+   "chance_rebaixamento": 0.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0004,
+    0.0025,
+    0.0213,
+    0.0629,
+    0.1578,
+    0.3135,
+    0.2032,
+    0.1252,
+    0.0703,
+    0.0308,
+    0.0104,
+    0.0017,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 10,
+   "v": 12,
+   "e": 8,
+   "d": 14,
+   "gp": 39,
+   "gc": 39,
+   "ultimos5": [
+    "V",
+    "V",
+    "E",
+    "D",
+    "E"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -203,7 +563,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0015,
-   "chance_rebaixamento": 0.0182
+   "chance_rebaixamento": 0.0182,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0015,
+    0.0091,
+    0.0365,
+    0.082,
+    0.1642,
+    0.2368,
+    0.1784,
+    0.1165,
+    0.0806,
+    0.0475,
+    0.0287,
+    0.015,
+    0.0032,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 13,
+   "v": 11,
+   "e": 8,
+   "d": 14,
+   "gp": 43,
+   "gc": 50,
+   "ultimos5": [
+    "E",
+    "D",
+    "V",
+    "D",
+    "V"
+   ],
+   "adiados": 1
   },
   {
    "time": {
@@ -221,7 +617,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0001,
-   "chance_rebaixamento": 0.019
+   "chance_rebaixamento": 0.019,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0001,
+    0.0033,
+    0.0202,
+    0.0588,
+    0.1302,
+    0.1925,
+    0.1999,
+    0.1617,
+    0.1079,
+    0.065,
+    0.0414,
+    0.0166,
+    0.0024,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 11,
+   "v": 11,
+   "e": 9,
+   "d": 14,
+   "gp": 46,
+   "gc": 53,
+   "ultimos5": [
+    "E",
+    "V",
+    "D",
+    "D",
+    "V"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -239,7 +671,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0,
-   "chance_rebaixamento": 0.0448
+   "chance_rebaixamento": 0.0448,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0005,
+    0.0029,
+    0.0159,
+    0.0391,
+    0.0928,
+    0.1508,
+    0.2042,
+    0.1919,
+    0.1477,
+    0.1094,
+    0.0387,
+    0.0061,
+    0.0,
+    0.0
+   ],
+   "posicao_atual": 12,
+   "v": 11,
+   "e": 9,
+   "d": 14,
+   "gp": 40,
+   "gc": 51,
+   "ultimos5": [
+    "E",
+    "D",
+    "D",
+    "V",
+    "D"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -257,7 +725,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0,
-   "chance_rebaixamento": 0.1374
+   "chance_rebaixamento": 0.1374,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0001,
+    0.0012,
+    0.0088,
+    0.0299,
+    0.0762,
+    0.1256,
+    0.1647,
+    0.1681,
+    0.1625,
+    0.1255,
+    0.0878,
+    0.0494,
+    0.0002,
+    0.0
+   ],
+   "posicao_atual": 14,
+   "v": 10,
+   "e": 10,
+   "d": 14,
+   "gp": 39,
+   "gc": 48,
+   "ultimos5": [
+    "D",
+    "V",
+    "E",
+    "D",
+    "V"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -275,7 +779,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0,
-   "chance_rebaixamento": 0.3753
+   "chance_rebaixamento": 0.3753,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0001,
+    0.0012,
+    0.0073,
+    0.0253,
+    0.0504,
+    0.0752,
+    0.1278,
+    0.1622,
+    0.1752,
+    0.2065,
+    0.1674,
+    0.0014,
+    0.0
+   ],
+   "posicao_atual": 16,
+   "v": 9,
+   "e": 11,
+   "d": 14,
+   "gp": 38,
+   "gc": 42,
+   "ultimos5": [
+    "E",
+    "D",
+    "V",
+    "D",
+    "V"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -293,7 +833,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0,
-   "chance_rebaixamento": 0.429
+   "chance_rebaixamento": 0.429,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0002,
+    0.0009,
+    0.0064,
+    0.0176,
+    0.04,
+    0.0722,
+    0.1066,
+    0.1425,
+    0.1846,
+    0.229,
+    0.1979,
+    0.0021,
+    0.0
+   ],
+   "posicao_atual": 15,
+   "v": 10,
+   "e": 8,
+   "d": 16,
+   "gp": 35,
+   "gc": 51,
+   "ultimos5": [
+    "D",
+    "E",
+    "E",
+    "D",
+    "D"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -311,7 +887,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0,
-   "chance_rebaixamento": 0.4454
+   "chance_rebaixamento": 0.4454,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0004,
+    0.0056,
+    0.0192,
+    0.0468,
+    0.0653,
+    0.0979,
+    0.1454,
+    0.174,
+    0.198,
+    0.24,
+    0.0074,
+    0.0
+   ],
+   "posicao_atual": 17,
+   "v": 9,
+   "e": 10,
+   "d": 15,
+   "gp": 36,
+   "gc": 42,
+   "ultimos5": [
+    "D",
+    "E",
+    "D",
+    "V",
+    "E"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -329,7 +941,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0,
-   "chance_rebaixamento": 0.5309
+   "chance_rebaixamento": 0.5309,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0001,
+    0.0003,
+    0.0034,
+    0.0137,
+    0.0334,
+    0.0569,
+    0.0854,
+    0.1164,
+    0.1595,
+    0.2057,
+    0.3181,
+    0.0071,
+    0.0
+   ],
+   "posicao_atual": 18,
+   "v": 9,
+   "e": 10,
+   "d": 15,
+   "gp": 38,
+   "gc": 47,
+   "ultimos5": [
+    "E",
+    "D",
+    "V",
+    "V",
+    "D"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -347,7 +995,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0,
-   "chance_rebaixamento": 1.0
+   "chance_rebaixamento": 1.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0027,
+    0.0155,
+    0.9641,
+    0.0177
+   ],
+   "posicao_atual": 19,
+   "v": 6,
+   "e": 11,
+   "d": 17,
+   "gp": 37,
+   "gc": 57,
+   "ultimos5": [
+    "E",
+    "E",
+    "D",
+    "V",
+    "D"
+   ],
+   "adiados": 0
   },
   {
    "time": {
@@ -365,7 +1049,43 @@
    "chance_titulo": 0.0,
    "chance_g4": 0.0,
    "chance_g6": 0.0,
-   "chance_rebaixamento": 1.0
+   "chance_rebaixamento": 1.0,
+   "distribuicao_posicao": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0177,
+    0.9823
+   ],
+   "posicao_atual": 20,
+   "v": 4,
+   "e": 9,
+   "d": 20,
+   "gp": 33,
+   "gc": 68,
+   "ultimos5": [
+    "D",
+    "D",
+    "V",
+    "D",
+    "D"
+   ],
+   "adiados": 1
   }
  ]
 }

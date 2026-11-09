@@ -227,3 +227,12 @@ rodada 35.
   visualização (mandante, empate, visitante), sempre com rótulo de texto ao lado.
 - Backtest agora cobre 2015-2026 (2026 só com jogos já disputados), com 2024 e 2025 completos
   vindos da API.
+
+## D19 · 2026-11-09 · Histórico de projeções por rodada (gráfico de evolução)
+- Não havia histórico salvo antes da rodada 34 de 2026. **Não reconstruímos o passado**: os
+  pesos atuais já viram os resultados seguintes, e uma projeção "da rodada 20" feita hoje
+  pareceria melhor do que o modelo teria sido. O gráfico começa na rodada 34.
+- Cada `export-site` (e `project`, `predict-round`) ao vivo grava a projeção na tabela
+  imutável `projections`. O histórico usa, para cada rodada-base, a última projeção gravada.
+- Reconstituições com `--as-of-round` não são mais gravadas (antes o `project` gravava).
+- A simulação passou a devolver a distribuição completa da posição final (heatmap 20×20).

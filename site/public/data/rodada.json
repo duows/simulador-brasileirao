@@ -1,7 +1,7 @@
 {
  "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
  "atribuicao": "Football data provided by the Football-Data.org API",
- "gerado_em": "2026-11-09T02:00:50Z",
+ "gerado_em": "2026-11-09T02:13:08Z",
  "versao_modelo": "futdados-0.1.0+21d22b71",
  "temporada": 2026,
  "rodada": 35,
@@ -167,7 +167,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "e84b6a4b1f6f1a35ebcd0fe7ae39ece711e317e99deddfdc8a452f103c27a6b6",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -321,7 +325,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "004304257a61aa0360b0438f86591084a5e610605afb7d6e6d0b90b65f264789",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -475,7 +483,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "77505d12afc0d79524fc9ae9aa845ff46ce4f248336dc39be280db11c2e91ed6",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -629,7 +641,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "37609007d356f0dfc1cb25df0b7be88ca68aed615f69b022cfd6f4d069f369a1",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -783,7 +799,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "c476b58d291b5cfcf27b2c732bb2be8513385b8f2b09c40c7b82c5fa373a3c6a",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -937,7 +957,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "3e1664e3962eb1da1f86a45359df52c9cc1f2506573ec1a8a69510bf690a26bd",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -1091,7 +1115,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "22947d78ac7cd3aa6dccb90e9e7f33131a138a7ab4ab945edbb01ca19d318a27",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -1245,7 +1273,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "122ac29c814cca22970d474946fe018e8de4bb8d8bbb134a074c883c452e3772",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -1399,7 +1431,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "09a2c641ff04bdf4fd7a311dcfd2589f73f1a69ef60c5922d4b7c61d60e0e7a2",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   },
   {
    "mandante": {
@@ -1553,7 +1589,11 @@
     }
    },
    "adiado": false,
-   "registro": null
+   "registro": {
+    "gravado_em": "2026-11-09T02:03:44Z",
+    "hash": "03abd2a4acd1ee065f522887df825893e62622e61a87037baafc1374b1dcefd1",
+    "versao_modelo": "futdados-0.1.0+21d22b71"
+   }
   }
  ],
  "adiados": [

@@ -1,10 +1,10 @@
 # Pesos do modelo
 
-- Versão do modelo: `futdados-0.1.0+27624119`
-- Ajustado em: 2026-11-09T01:39:07Z
-- Temporadas de treino: 2011–2024 (5191 jogos)
+- Versão do modelo: `futdados-0.1.0+21d22b71`
+- Ajustado em: 2026-11-09T01:50:24Z
+- Temporadas de treino: 2011–2026 (6038 jogos)
 - Meia-vida da força de longo prazo: 180 dias
-- Intercepto: -0,237 (gols esperados base = média da liga × 0,789)
+- Intercepto: -0,231 (gols esperados base = média da liga × 0,794)
 - Ajuste de placares baixos (Dixon-Coles, rho): 0,0000
 
 Fórmula: `log(gols esperados) = log(média da liga) + intercepto + Σ peso × fator`.
@@ -13,12 +13,12 @@ não permitem afirmar que o fator tem efeito.
 
 | Fator | Peso | Intervalo 95% | O que significa |
 |---|---|---|---|
-| Força de ataque (longo prazo) | 0,705 | [0,600; 0,807] | Um ataque 20% melhor que a média da liga muda os gols esperados em +13,7%. |
-| Fragilidade da defesa adversária (longo prazo) | 0,626 | [0,506; 0,729] | Um adversário que sofre 20% mais gols que a média muda os gols esperados em +12,1%. |
-| Mando de campo | 0,399 | [0,372; 0,433] | Jogar em casa muda os gols esperados em +49,1%. |
-| Forma recente (últimos 5) | 0,019 | [0,001; 0,040] | Ter 1 ponto por jogo a mais que o adversário nos últimos 5 jogos muda os gols esperados em +2,0%. |
-| Descanso | -0,001 | [-0,014; 0,011] | Ter 3 dias a mais de descanso que o adversário muda os gols esperados em -0,4%. Efeito não distinguível de zero. |
-| Jogo no meio da semana | 0,049 | [0,014; 0,091] | Jogo de terça a quinta (vale para os dois times) muda os gols esperados em +5,0%. |
+| Força de ataque (longo prazo) | 0,709 | [0,610; 0,808] | Um ataque 20% melhor que a média da liga muda os gols esperados em +13,8%. |
+| Fragilidade da defesa adversária (longo prazo) | 0,648 | [0,545; 0,771] | Um adversário que sofre 20% mais gols que a média muda os gols esperados em +12,5%. |
+| Mando de campo | 0,396 | [0,366; 0,426] | Jogar em casa muda os gols esperados em +48,6%. |
+| Forma recente (últimos 5) | 0,023 | [0,004; 0,042] | Ter 1 ponto por jogo a mais que o adversário nos últimos 5 jogos muda os gols esperados em +2,3%. |
+| Descanso | -0,002 | [-0,013; 0,008] | Ter 3 dias a mais de descanso que o adversário muda os gols esperados em -0,5%. Efeito não distinguível de zero. |
+| Jogo no meio da semana | 0,047 | [0,011; 0,089] | Jogo de terça a quinta (vale para os dois times) muda os gols esperados em +4,8%. |
 | Troca recente de técnico | 0,000 | [0,000; 0,000] | Sem dados no histórico (fator sempre 0): peso não estimável, fixado em 0. |
 
 ## Como ler

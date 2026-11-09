@@ -95,6 +95,11 @@ def write(path: str | Path, text: str) -> None:
 
 
 def p1(x: float) -> str:
+    """Percentual com 1 casa; valores raros mas possíveis não aparecem como 0% ou 100%."""
+    if 0 < x < 0.0005:
+        return "<0,1%"
+    if 0.9995 <= x < 1:
+        return ">99,9%"
     return f"{x:.1%}".replace(".", ",")
 
 
@@ -162,4 +167,33 @@ def backtest_markdown(scores: dict, per_season: pd.DataFrame, calib: pd.DataFram
             continue
         lines.append(f"| {r.resultado} | {r.faixa} | {r.n} | {p1(r.estimado)} | {p1(r.observado)} |")
     lines += ["", "Faixas com menos de 20 jogos foram omitidas.", ""]
+    return "\n".join(lines)
+
+
+def projection_markdown(table: pd.DataFrame, meta: dict, display, aviso: str, atribuicao: str,
+                        generated_at: str, pending: dict | None = None) -> str:
+    """Tabela projetada em Markdown (para ler sem abrir JSON)."""
+    target = meta["target_round"]
+    fim = target == meta["max_round"]
+    lines = [
+        f"# Tabela projetada {meta['season']} · depois da rodada {target}{' (fim do campeonato)' if fim else ''}",
+        "",
+        f"- Resultados reais até a rodada {meta['based_on_round']} (última rodada completa).",
+    ]
+    if pending:
+        lines.append(f"- Jogos que faltam: {pending['restantes']} "
+                     f"(rodadas {pending['rodadas']}{', inclui adiados: ' + pending['adiados'] if pending['adiados'] else ''}).")
+    lines += [
+        f"- {meta['n_sims']:,} simulações Monte Carlo · modelo `{meta['model_version']}` · gerado em {generated_at}.".replace(",", "."),
+        "- Ordem pelos pontos esperados no fim. Faixa = percentis 10 e 90 da posição final.",
+        "",
+        "| # | Time | J | Pts | Pts esperados | Faixa (p10–p90) | Título | G4 | G6 | Rebaixamento |",
+        "|---|---|---|---|---|---|---|---|---|---|",
+    ]
+    for i, r in enumerate(table.itertuples(), start=1):
+        lines.append(
+            f"| {i} | {display(r.team_id)} | {r.jogos} | {r.pontos_atuais} | {num(r.exp_points_final, 1)} | "
+            f"{r.pos_p10:.0f}º–{r.pos_p90:.0f}º | {p1(r.p_titulo)} | {p1(r.p_g4)} | {p1(r.p_g6)} | "
+            f"{p1(r.p_rebaixamento)} |")
+    lines += ["", f"_{aviso}_", "", f"{atribuicao}.", ""]
     return "\n".join(lines)

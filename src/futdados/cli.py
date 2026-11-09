@@ -65,9 +65,28 @@ def _print_projection(table, meta) -> None:
 def cmd_project(args, cfg) -> None:
     from .pipeline import project, projection_json
 
-    table, meta = project(_repo(cfg), cfg, args.season, args.round, args.as_of_round, args.sims)
+    from .db import utc_now
+    from .reports import projection_markdown, write
+    from .teams import display_name
+
+    repo = _repo(cfg)
+    table, meta = project(repo, cfg, args.season, args.round, args.as_of_round, args.sims)
     _print_projection(table, meta)
     print(f"JSON: {projection_json(cfg, table, meta)}")
+    if args.as_of_round is None:
+        m = repo.matches(args.season)
+        todo = m[m.status != "FINISHED"]
+        last_full = meta["based_on_round"]
+        adiados = todo[todo["round"] <= last_full]
+        pending = {"restantes": len(todo),
+                   "rodadas": f"{int(todo['round'].min())}–{int(todo['round'].max())}" if len(todo) else "—",
+                   "adiados": ", ".join(f"{display_name(r.home_id)} x {display_name(r.away_id)} (R{r.round})"
+                                        for r in adiados.itertuples())}
+        md = projection_markdown(table, meta, display_name, cfg["output"]["aviso"], cfg["output"]["atribuicao"],
+                                 utc_now(), pending)
+        out = f"{cfg['paths']['reports']}/tabela_projetada_{args.season}.md"
+        write(out, md)
+        print(f"Relatório: {out}")
 
 
 def cmd_backtest(args, cfg) -> None:

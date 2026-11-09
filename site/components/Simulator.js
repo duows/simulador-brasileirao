@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ProjectionTable from "./ProjectionTable";
+import { useMyTeam } from "./MyTeam";
 import { outcomeProbs, scoreMatrix, simulate } from "../lib/simulate.mjs";
 import { dateTimeBR, pct } from "../lib/format";
 
@@ -14,7 +15,8 @@ function toRows(res) {
   }));
 }
 
-export default function Simulator({ data, focus }) {
+export default function Simulator({ data }) {
+  const { team: focus } = useMyTeam();
   const [choices, setChoices] = useState({});
   const [nSims, setNSims] = useState(data.simulacoes_padrao);
   const [round, setRound] = useState(null); // começa mostrando todas as rodadas
@@ -60,7 +62,7 @@ export default function Simulator({ data, focus }) {
   }, [result, baseline, choices]);
 
   const games = data.restantes.filter((g) => (round == null || g.rodada === round)
-    && (!onlyFocus || g.mandante === focusIdx || g.visitante === focusIdx));
+    && (!onlyFocus || focusIdx < 0 || g.mandante === focusIdx || g.visitante === focusIdx));
   const nChosen = Object.keys(choices).length;
 
   function pick(id, value) {
@@ -82,7 +84,7 @@ export default function Simulator({ data, focus }) {
             {rounds.map((r) => <option key={r} value={r}>{r}</option>)}
           </select>
         </label>
-        <label><input type="checkbox" checked={onlyFocus} onChange={(e) => setOnlyFocus(e.target.checked)} /> só jogos do {names[focusIdx] ?? "time foco"}</label>
+        {focusIdx >= 0 && <label><input type="checkbox" checked={onlyFocus} onChange={(e) => setOnlyFocus(e.target.checked)} /> só jogos do {names[focusIdx]}</label>}
         <label>Simulações{" "}
           <select value={nSims} onChange={(e) => setNSims(Number(e.target.value))}>
             {SIMS.map((n) => <option key={n} value={n}>{n.toLocaleString("pt-BR")}</option>)}
@@ -121,7 +123,7 @@ export default function Simulator({ data, focus }) {
         continua realista); os demais seguem a probabilidade estimada pelo modelo. Entre parênteses, a variação em pontos
         percentuais em relação à projeção sem escolhas.
       </p>
-      {result && <ProjectionTable rows={rows} focus={focus}
+      {result && <ProjectionTable rows={rows}
         caption={`${nSims.toLocaleString("pt-BR")} simulações feitas no seu navegador. Faixa: percentis 10 e 90 da posição final.`} />}
     </>
   );

@@ -5,7 +5,6 @@ export const metadata = { title: "Simulador “e se” · futdados" };
 
 export default function SimuladorPage() {
   const data = load("simulador");
-  const meta = load("meta");
   return (
     <>
       <h1>Simulador “e se”</h1>
@@ -14,7 +13,7 @@ export default function SimuladorPage() {
         e as chances de título, G4, G6 e rebaixamento. Tudo é recalculado no seu navegador, com os mesmos gols esperados
         do modelo; nenhum dado é enviado a lugar nenhum. Resultados reais até a rodada {data.rodada_base}.
       </p>
-      <Simulator data={data} focus={meta.time_foco} />
+      <Simulator data={data} />
     </>
   );
 }

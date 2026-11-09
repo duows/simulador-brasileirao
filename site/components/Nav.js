@@ -2,11 +2,11 @@
 import { usePathname } from "next/navigation";
 
 const LINKS = [
-  ["/", "Tabela projetada"],
+  ["/", "Tabela"],
   ["/rodada/", "Rodada"],
-  ["/simulador/", "Simulador “e se”"],
+  ["/times/", "Times"],
+  ["/simulador/", "Simulador"],
   ["/modelo/", "Modelo"],
-  ["/spfc/", "São Paulo"],
 ];
 
 export default function Nav() {
@@ -15,7 +15,7 @@ export default function Nav() {
   return (
     <nav className="menu" aria-label="Seções">
       {LINKS.map(([href, label]) => (
-        <a key={href} href={href} aria-current={norm === href ? "page" : undefined}>{label}</a>
+        <a key={href} href={href} aria-current={(href === "/" ? norm === "/" : norm.startsWith(href)) ? "page" : undefined}>{label}</a>
       ))}
     </nav>
   );

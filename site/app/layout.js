@@ -1,23 +1,27 @@
 import "./globals.css";
 import Nav from "../components/Nav";
+import { MyTeamProvider, MyTeamSelect } from "../components/MyTeam";
 import { load } from "../lib/data";
 import { dateTimeBR } from "../lib/format";
 
 const meta = load("meta");
+const teams = load("tabela").linhas.map((l) => l.time).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
 
 export const metadata = {
   title: "futdados · Brasileirão",
-  description: "Probabilidades estimadas pelo modelo e projeções do Brasileirão Série A, com foco no São Paulo FC.",
+  description: "Probabilidades estimadas pelo modelo e projeções do Brasileirão Série A.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
       <body>
+        <MyTeamProvider>
         <header className="top">
           <div className="wrap">
             <a className="brand" href="/">futdados</a>
             <Nav />
+            <MyTeamSelect teams={teams} />
           </div>
         </header>
         {/* aviso obrigatório em todas as páginas */}
@@ -36,6 +40,7 @@ export default function RootLayout({ children }) {
             <span className="muted">{meta.linguagem}</span>
           </div>
         </footer>
+        </MyTeamProvider>
       </body>
     </html>
   );

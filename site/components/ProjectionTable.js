@@ -1,3 +1,5 @@
+"use client";
+import { useMyTeam } from "./MyTeam";
 import { num, pct } from "../lib/format";
 
 /** Régua 1..N com a faixa p10-p90 da posição final. */
@@ -24,7 +26,8 @@ function Delta({ v }) {
  * rows: [{ id, nome, jogos, pontos_atuais, pontos_esperados, p10, p90, titulo, g4, g6, rebaixamento, delta? }]
  * delta (opcional): variação das chances em relação à projeção sem escolhas.
  */
-export default function ProjectionTable({ rows, focus, caption }) {
+export default function ProjectionTable({ rows, caption }) {
+  const { team: focus } = useMyTeam();
   const n = rows.length;
   return (
     <div className="table-scroll">

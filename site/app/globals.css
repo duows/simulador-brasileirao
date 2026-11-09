@@ -125,3 +125,6 @@ footer.bottom strong { color: var(--text); }
   h1 { font-size: 22px; }
   .range { width: 80px; }
 }
+
+.myteam { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; font-size: 13px; color: var(--text-2); }
+.myteam select { padding: 4px 8px; }

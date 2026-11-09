@@ -426,8 +426,13 @@ rodada 35.
   regressão por posição (1,756), que continua em uso (`cartola.tecnico_pela_regra: false`).
 
 ## D30 · 2026-11-09 · Atualização automática e uma gravação por rodada no Cartola
-- `scripts/agendar_atualizacao.bat` cria duas tarefas agendadas do Windows (10h e 17h) que rodam
-  `futdados atualizar` sem abrir nada (log em `logs/`, fora do git). `ABRIR_SITE.bat` só abre o site.
+- Sem agendamento (o usuário prefere rodar na mão): `ATUALIZAR_E_ABRIR.bat` atualiza e abre;
+  `ABRIR_SITE.bat` só abre o site.
 - **Uma gravação de previsões do Cartola por rodada** (`--regravar` força outra): com a atualização
   automática, gravar a cada execução trocaria o time comparado depois. A página mostra os times
   gravados da rodada para a pessoa escalar exatamente o que vai ser comparado.
+
+- **Quanto o modelo de jogos ajuda o Cartola** (walk-forward 2026): sem o contexto do jogo (chance
+  de SG, gols esperados, mando e vitória), o erro sobe de 2,838 para 2,868 e a correlação de ordem
+  dentro da posição cai de 0,237 para 0,160 (a média do Cartola tem 0,193). Ou seja, o contexto é o
+  que faz o modelo ordenar melhor os atletas que a média, e é a ordem que decide a escalação.

@@ -159,3 +159,13 @@ def test_export_site_writes_derived_data_only(env, tmp_path):
     before = len(repo.projection_history(2022, 10))
     export_site(repo, cfg, 2022, as_of_round=5, n_sims=100, out_dir=tmp_path / "demo")
     assert len(repo.projection_history(2022, 10)) == before == 0
+
+
+def test_clean_json_removes_nan():
+    import math
+
+    from futdados.site_export import clean_json
+
+    out = clean_json({"a": float("nan"), "b": [1.0, math.inf], "c": {"d": 2}})
+    assert out == {"a": None, "b": [1.0, None], "c": {"d": 2}}
+    json.dumps(out, allow_nan=False)

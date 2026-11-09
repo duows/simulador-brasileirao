@@ -29,10 +29,23 @@ def _base(cfg, w, generated_at: str) -> dict:
             "gerado_em": generated_at, "versao_modelo": w.model_version}
 
 
+def clean_json(x):
+    """NaN/Infinito não existem em JSON: viram null (o navegador quebraria ao ler)."""
+    if isinstance(x, dict):
+        return {k: clean_json(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [clean_json(v) for v in x]
+    if isinstance(x, (float, np.floating)):
+        return None if not np.isfinite(x) else float(x)
+    if isinstance(x, np.integer):
+        return int(x)
+    return x
+
+
 def _write(out_dir: Path, name: str, doc: dict) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / f"{name}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1, default=float),
-                                          encoding="utf-8")
+    (out_dir / f"{name}.json").write_text(
+        json.dumps(clean_json(doc), ensure_ascii=False, indent=1, default=float, allow_nan=False), encoding="utf-8")
 
 
 def simulator_data(feat: pd.DataFrame, w, cfg) -> dict:

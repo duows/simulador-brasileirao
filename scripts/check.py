@@ -68,7 +68,7 @@ def main() -> None:
     run("testes Python", [PY, "-m", "pytest", "-q"])
     run("qualidade dos dados", [str(BIN / "futdados"), "coverage", "--strict", "--no-write"])
     run("testes do site", [NPM, "test"], cwd=ROOT / "site")
-    run("build do site", [NPM, "run", "build"], cwd=ROOT / "site")
+    run("build do site", [NPM, "run", "build"], cwd=ROOT / "site")  # falha se algum JSON for inválido
     scan()
     print("\nTudo certo.")
 

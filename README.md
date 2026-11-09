@@ -21,9 +21,8 @@ Football data provided by the Football-Data.org API.
    use **`ABRIR_SITE.bat`** (só abre, na hora). Se preferir na mão, **`ATUALIZAR_E_ABRIR.bat`** atualiza e abre.
    No Cartola, a previsão é gravada uma vez por rodada: a página mostra os times gravados para você escalar
    exatamente o que vai ser comparado.
-3. (Antigo passo 2) A cada rodada, dê **duplo clique em `ATUALIZAR_E_ABRIR.bat`**. Ele baixa os jogos, reestima o
-   modelo, recalcula métricas e Elo, grava as previsões da rodada (antes dos jogos), roda o Cartola
-   e abre o site em http://localhost:3001, com escudos e fotos (modo local).
+   A atualização baixa os jogos, reestima o modelo, recalcula métricas e Elo, grava as previsões da rodada
+   (antes dos jogos) e roda o Cartola. O site abre em http://localhost:3001, com escudos e fotos (modo local).
 3. No site: **Tabela** (projeção até o fim), **Rodada**, **Times**, **Temporadas**, **Histórico**,
    **Simulador** ("e se") e **Cartola** (digite as cartoletas e o time sai na hora).
 

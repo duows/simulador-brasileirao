@@ -1,0 +1,25 @@
+{
+ "aviso": "Projeção estatística baseada em dados históricos. Não é recomendação de aposta.",
+ "atribuicao": "Football data provided by the Football-Data.org API",
+ "gerado_em": "2026-11-09T02:00:50Z",
+ "versao_modelo": "futdados-0.1.0+21d22b71",
+ "temporada": 2026,
+ "rodada_base": 34,
+ "rodadas": 38,
+ "demonstracao": false,
+ "nota_demonstracao": null,
+ "linguagem": "Os números são probabilidades estimadas pelo modelo e projeções. Descrevem o que é provável com base no desempenho recente e no histórico; não dizem o que vai acontecer.",
+ "fontes": [
+  {
+   "nome": "football-data.org (API v4, competição BSA)",
+   "url": "https://www.football-data.org",
+   "uso": "jogos e classificação da temporada corrente"
+  },
+  {
+   "nome": "footballcsv/cache.wfb (domínio público, CC0 1.0)",
+   "url": "https://github.com/footballcsv/cache.wfb",
+   "uso": "resultados históricos 2010-2024"
+  }
+ ],
+ "time_foco": "sao-paulo"
+}

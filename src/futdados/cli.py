@@ -119,6 +119,16 @@ def cmd_backtest(args, cfg) -> None:
     md = backtest_markdown(sc, pd.DataFrame(rows), calib, hl, seasons, len(pred),
                            (float(p[:, 1].mean()), float((y == 1).mean())))
     write(f"{cfg['paths']['reports']}/backtest.md", md)
+    # versão estruturada para o site (página Modelo)
+    import json
+    from pathlib import Path
+
+    summary = {"meia_vida_dias": hl, "temporadas": seasons, "n": int(len(pred)), "metricas": sc,
+               "por_temporada": pd.DataFrame(rows).to_dict("records"),
+               "calibracao": calib.to_dict("records"),
+               "empate_estimado": float(p[:, 1].mean()), "empate_observado": float((y == 1).mean())}
+    Path(cfg["paths"]["weights"]).with_name("backtest.json").write_text(
+        json.dumps(summary, ensure_ascii=False, indent=1, default=float), encoding="utf-8")
     for k, v in sc.items():
         print(f"{k:<22} Brier {v['brier']:.4f}  log loss {v['log_loss']:.4f}  acerto {v['acerto']:.1%}")
     print("Relatório: reports/backtest.md")
@@ -177,6 +187,13 @@ def cmd_simulate_season(args, cfg) -> None:
     print(f"JSON: {preseason_json(cfg, table, meta)}")
 
 
+def cmd_export_site(args, cfg) -> None:
+    from .site_export import export_site
+
+    out = export_site(_repo(cfg), cfg, args.season, args.as_of_round, args.sims)
+    print(f"Dados do site em {out}. Para ver: cd site && npm run dev")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -207,6 +224,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--season", type=int, required=True)
     s.add_argument("--round", type=int, required=True)
     sub.add_parser("verify-registry", help="confere a cadeia de hashes das previsões")
+    s = sub.add_parser("export-site", help="gera os dados do site estático em site/public/data")
+    s.add_argument("--season", type=int, required=True)
+    s.add_argument("--as-of-round", type=int, help="demonstração: reconstitui a temporada nesta rodada")
+    s.add_argument("--sims", type=int, help="simulações da tabela projetada (padrão no YAML)")
     s = sub.add_parser("simulate-season", help="projeção de pré-temporada (campeonato inteiro)")
     s.add_argument("--season", type=int, required=True)
     s.add_argument("--teams", help="times separados por vírgula, se a API ainda não tem o calendário")
@@ -225,6 +246,7 @@ COMMANDS = {
     "post-round": cmd_post_round,
     "verify-registry": cmd_verify,
     "simulate-season": cmd_simulate_season,
+    "export-site": cmd_export_site,
 }
 
 

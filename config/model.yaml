@@ -11,6 +11,8 @@ paths:
   reports: reports
   teams: config/teams.csv
   coach_changes: config/coach_changes.csv
+  site_data: site/public/data   # JSONs lidos pelo site estático (futdados export-site)
+  finance: data/finance
 
 api:
   base_url: https://api.football-data.org/v4
@@ -50,7 +52,7 @@ model:
 
 backtest:
   tune_seasons: [2012, 2013, 2014]   # escolha da meia-vida
-  test_seasons: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+  test_seasons: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]  # 2026: só jogos já disputados
   calibration_bins: 10
 
 simulation:

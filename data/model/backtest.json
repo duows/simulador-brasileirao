@@ -1,0 +1,256 @@
+{
+ "meia_vida_dias": 180.0,
+ "temporadas": [
+  2015,
+  2016,
+  2017,
+  2018,
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025,
+  2026
+ ],
+ "n": 4518,
+ "metricas": {
+  "modelo": {
+   "brier": 0.6121867635294683,
+   "log_loss": 1.0210023372657753,
+   "acerto": 0.4953519256308101
+  },
+  "frequencia_historica": {
+   "brier": 0.6332321959311981,
+   "log_loss": 1.0510937209522324,
+   "acerto": 0.48295706064630367
+  },
+  "sempre_mandante": {
+   "brier": 1.0340858787073925,
+   "log_loss": 17.858030468904683,
+   "acerto": 0.48295706064630367
+  }
+ },
+ "por_temporada": [
+  {
+   "temporada": 2015,
+   "n": 380,
+   "brier_modelo": 0.6007293150255844,
+   "brier_freq": 0.6128912742382271,
+   "ll_modelo": 1.0056915244133107,
+   "ll_freq": 1.0230255296825872
+  },
+  {
+   "temporada": 2016,
+   "n": 379,
+   "brier_modelo": 0.5979191004512655,
+   "brier_freq": 0.608197526659309,
+   "ll_modelo": 0.9993266097835091,
+   "ll_freq": 1.0161200566157085
+  },
+  {
+   "temporada": 2017,
+   "n": 380,
+   "brier_modelo": 0.6539759840679814,
+   "brier_freq": 0.6569828571956672,
+   "ll_modelo": 1.08164174863961,
+   "ll_freq": 1.0846479686575534
+  },
+  {
+   "temporada": 2018,
+   "n": 380,
+   "brier_modelo": 0.5805644684445005,
+   "brier_freq": 0.6076506391218472,
+   "ll_modelo": 0.9758935429179033,
+   "ll_freq": 1.0143996585295993
+  },
+  {
+   "temporada": 2019,
+   "n": 380,
+   "brier_modelo": 0.5899680788205297,
+   "brier_freq": 0.6333859271803883,
+   "ll_modelo": 0.9887864519358719,
+   "ll_freq": 1.0516856415192586
+  },
+  {
+   "temporada": 2020,
+   "n": 380,
+   "brier_modelo": 0.6343595516919492,
+   "brier_freq": 0.6495972148501602,
+   "ll_modelo": 1.0510216685861065,
+   "ll_freq": 1.0738355305333107
+  },
+  {
+   "temporada": 2021,
+   "n": 380,
+   "brier_modelo": 0.6267922838675547,
+   "brier_freq": 0.6442129180832693,
+   "ll_modelo": 1.040572424050107,
+   "ll_freq": 1.0658237721845478
+  },
+  {
+   "temporada": 2022,
+   "n": 380,
+   "brier_modelo": 0.6236965262726506,
+   "brier_freq": 0.652493831844471,
+   "ll_modelo": 1.039663580986307,
+   "ll_freq": 1.0780702192446285
+  },
+  {
+   "temporada": 2023,
+   "n": 380,
+   "brier_modelo": 0.623197638527495,
+   "brier_freq": 0.6405887896029634,
+   "ll_modelo": 1.0381747046023901,
+   "ll_freq": 1.061876693033461
+  },
+  {
+   "temporada": 2024,
+   "n": 380,
+   "brier_modelo": 0.6152846135674553,
+   "brier_freq": 0.6374727377806081,
+   "ll_modelo": 1.025615661956433,
+   "ll_freq": 1.0571645596575416
+  },
+  {
+   "temporada": 2025,
+   "n": 380,
+   "brier_modelo": 0.5959451764258293,
+   "brier_freq": 0.623918381639167,
+   "ll_modelo": 0.9972376132261181,
+   "ll_freq": 1.038020850607213
+  },
+  {
+   "temporada": 2026,
+   "n": 339,
+   "brier_modelo": 0.6027530283325278,
+   "brier_freq": 0.6310981163106264,
+   "ll_modelo": 1.006814703715168,
+   "ll_freq": 1.0480317664246206
+  }
+ ],
+ "calibracao": [
+  {
+   "resultado": "mandante",
+   "faixa": "10%-20%",
+   "n": 2,
+   "estimado": 0.19352287904251378,
+   "observado": 0.0
+  },
+  {
+   "resultado": "mandante",
+   "faixa": "20%-30%",
+   "n": 74,
+   "estimado": 0.27238012357163777,
+   "observado": 0.1891891891891892
+  },
+  {
+   "resultado": "mandante",
+   "faixa": "30%-40%",
+   "n": 740,
+   "estimado": 0.3628304347684299,
+   "observado": 0.3162162162162162
+  },
+  {
+   "resultado": "mandante",
+   "faixa": "40%-50%",
+   "n": 1847,
+   "estimado": 0.4540178552812939,
+   "observado": 0.4482945316729832
+  },
+  {
+   "resultado": "mandante",
+   "faixa": "50%-60%",
+   "n": 1436,
+   "estimado": 0.5436439747976038,
+   "observado": 0.575208913649025
+  },
+  {
+   "resultado": "mandante",
+   "faixa": "60%-70%",
+   "n": 393,
+   "estimado": 0.633612980866478,
+   "observado": 0.6590330788804071
+  },
+  {
+   "resultado": "mandante",
+   "faixa": "70%-80%",
+   "n": 25,
+   "estimado": 0.7234935515851874,
+   "observado": 0.8
+  },
+  {
+   "resultado": "mandante",
+   "faixa": "80%-90%",
+   "n": 1,
+   "estimado": 0.8109985486295762,
+   "observado": 1.0
+  },
+  {
+   "resultado": "empate",
+   "faixa": "10%-20%",
+   "n": 69,
+   "estimado": 0.18591213902679357,
+   "observado": 0.18840579710144928
+  },
+  {
+   "resultado": "empate",
+   "faixa": "20%-30%",
+   "n": 4144,
+   "estimado": 0.2635980579694243,
+   "observado": 0.26375482625482627
+  },
+  {
+   "resultado": "empate",
+   "faixa": "30%-40%",
+   "n": 305,
+   "estimado": 0.30970155666396443,
+   "observado": 0.3540983606557377
+  },
+  {
+   "resultado": "visitante",
+   "faixa": "0%-10%",
+   "n": 12,
+   "estimado": 0.08596184636502774,
+   "observado": 0.16666666666666666
+  },
+  {
+   "resultado": "visitante",
+   "faixa": "10%-20%",
+   "n": 1052,
+   "estimado": 0.1679764752089597,
+   "observado": 0.1473384030418251
+  },
+  {
+   "resultado": "visitante",
+   "faixa": "20%-30%",
+   "n": 2379,
+   "estimado": 0.24816398117906463,
+   "observado": 0.23455233291298866
+  },
+  {
+   "resultado": "visitante",
+   "faixa": "30%-40%",
+   "n": 954,
+   "estimado": 0.336718483764877,
+   "observado": 0.36792452830188677
+  },
+  {
+   "resultado": "visitante",
+   "faixa": "40%-50%",
+   "n": 114,
+   "estimado": 0.43122490036244454,
+   "observado": 0.45614035087719296
+  },
+  {
+   "resultado": "visitante",
+   "faixa": "50%-60%",
+   "n": 7,
+   "estimado": 0.5227279973452988,
+   "observado": 0.5714285714285714
+  }
+ ],
+ "empate_estimado": 0.2655239629483516,
+ "empate_observado": 0.2687029659141213
+}

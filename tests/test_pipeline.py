@@ -125,3 +125,24 @@ def test_postponed_game_is_handled_separately(env):
     _, rep = predict_round(repo, cfg, 2026, round_=1, now=now + pd.Timedelta(hours=1), repeat=True)
     assert rep["registered"] == 1 and len(repo.predictions(2026)) == 5
     assert repo.verify_prediction_chain()
+
+
+def test_export_site_writes_derived_data_only(env, tmp_path):
+    from futdados.site_export import export_site
+
+    repo, cfg = env
+    out = export_site(repo, cfg, 2026, n_sims=200, out_dir=tmp_path / "data")
+    names = {p.stem for p in out.glob("*.json")}
+    assert names == {"meta", "tabela", "rodada", "simulador", "modelo", "financas"}
+    for p in out.glob("*.json"):
+        doc = json.loads(p.read_text(encoding="utf-8"))
+        assert doc["aviso"] == AVISO
+        assert doc["atribuicao"] == "Football data provided by the Football-Data.org API"
+        assert doc["gerado_em"]
+        assert not any(w in p.read_text(encoding="utf-8").lower() for w in FORBIDDEN)
+    sim = json.loads((out / "simulador.json").read_text(encoding="utf-8"))
+    # jogos disputados entram só agregados (tabela atual e confronto direto), nunca como lista
+    assert set(sim["atual"]) == {"pts", "j", "v", "gp", "gc"}
+    assert len(sim["restantes"]) == 30 and "jogos" not in sim
+    rodada = json.loads((out / "rodada.json").read_text(encoding="utf-8"))
+    assert rodada["rodada"] == 1 and "adiados" in rodada

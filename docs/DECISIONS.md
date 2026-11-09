@@ -209,3 +209,21 @@ rodada 35.
   apagar a antiga. O registro imutável existente (1 linha, de 2026-11-09) não foi tocado.
 - Na projeção, forma e técnico novo valem para a próxima rodada **e** para os adiados (jogos
   próximos); antes, o adiado fazia a forma valer só para ele.
+
+## D18 · 2026-11-09 · Site estático (Next.js)
+- Next 16.4.2 com React 19.3.1 (versões publicadas há mais de duas semanas), `output: "export"`:
+  o build gera HTML puro em `site/out/`, sem servidor e sem chamadas à API por visitante.
+- `futdados export-site --season S` grava em `site/public/data` seis JSONs derivados: meta,
+  tabela, rodada (com adiados), simulador, modelo (pesos + `data/model/backtest.json`) e
+  finanças (o dataset curado, com fonte por número). Todos têm `aviso`, `atribuicao` e
+  `gerado_em`. Jogos disputados entram só agregados (tabela atual e confronto direto), nunca
+  como lista de partidas: nada de dados brutos de terceiros. Os JSONs são versionados para o
+  site compilar a partir de um clone.
+- O simulador “e se” roda no navegador (`site/lib/simulate.mjs`) com o mesmo algoritmo do
+  Python: matriz de Poisson, sorteio do placar e desempate com confronto direto só entre dois.
+  Jogo com resultado escolhido é sorteado só entre placares compatíveis, para o saldo continuar
+  realista. Um teste confere que, sem escolhas, os pontos esperados batem com o Python (±0,6).
+- Tema escuro único. Cores das séries: slots 1-3 da paleta de referência da skill de
+  visualização (mandante, empate, visitante), sempre com rótulo de texto ao lado.
+- Backtest agora cobre 2015-2026 (2026 só com jogos já disputados), com 2024 e 2025 completos
+  vindos da API.

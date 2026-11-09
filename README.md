@@ -136,6 +136,26 @@ uma restrição recusa previsões gravadas depois do início do jogo, e cada lin
 hash da anterior (cadeia SHA-256). O `post-round` usa a última previsão gravada antes de
 cada jogo. Para auditoria pública, vale publicar o hash da última linha junto com o vídeo.
 
+## Site (dashboard)
+
+Site estático em Next.js (pasta `site/`), escuro, em português, que lê só os arquivos de
+`site/public/data` gerados pelo pipeline. Nenhuma chamada à API por visitante, sem escudos,
+fotos ou odds. Páginas: Tabela projetada, Rodada (com adiados à parte), Simulador “e se”
+(recalcula no navegador), Modelo (pesos, backtest, limitações) e São Paulo (posição, chances,
+jogos que faltam e finanças com fonte). Todas mostram o aviso, a atribuição e a data da última
+atualização.
+
+```bash
+futdados export-site --season 2026
+```
+
+```bash
+cd site && npm install && npm run dev
+```
+
+Abra http://localhost:3000. Para gerar o HTML estático: `npm run build` (sai em `site/out/`),
+e `npm start` serve essa pasta em http://localhost:4173.
+
 ## Saídas para vídeo
 
 Exemplos reais em [docs/exemplos](docs/exemplos). Todo JSON tem `tipo`, `gerado_em`,

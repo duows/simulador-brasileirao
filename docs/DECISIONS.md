@@ -64,3 +64,47 @@ empatados), cartões vermelhos, cartões amarelos, sorteio. **TODO: confirmar no
 oficial da CBF.** Houve polêmica pública sobre a leitura do § 2º do Art. 15. Cartões
 não estão no plano grátis da API, então na simulação esses critérios caem no sorteio.
 Configurável em `simulation.tiebreakers`.
+
+## D07 · 2026-11-08 · Forma do modelo
+Regressão de Poisson para os gols de cada time em cada jogo (duas linhas por jogo),
+com `log(média da liga)` como offset. Sete fatores, exatamente os pedidos (força de
+ataque, fragilidade da defesa adversária, mando, forma, descanso, meio de semana,
+técnico novo). Força de longo prazo virou **dois** fatores (ataque próprio e defesa do
+adversário) porque gols marcados e sofridos são informações diferentes; continuam sendo
+"o fator a". Descanso e calendário viraram dois fatores (diferença de dias de descanso e
+jogo de terça a quinta). Forma, descanso e técnico novo entram como **diferença** entre
+os times para usar um único peso por fator. Nenhum fator extra foi adicionado.
+
+## D08 · 2026-11-08 · Força de longo prazo
+- Taxa de gols com decaimento exponencial no calendário (meia-vida configurável).
+- Gols ajustados pela força do adversário no momento do jogo (`opponent_adjust`),
+  senão quem enfrentou tabela mais difícil seria subestimado.
+- Puxão para a média com 5 jogos fictícios. Time sem histórico recente começa com
+  ataque 0,85 e defesa 1,15 vezes a média: times recém-promovidos costumam ser mais
+  fracos e a média da liga seria um ponto de partida otimista. Os valores 0,85/1,15 são
+  um padrão simples, não estimado. **TODO:** estimar a partir dos promovidos 2006-2025.
+- Meia-vida escolhida no walk-forward 2010-2014 (antes das temporadas de teste): 365
+  dias. A curva é plana entre 180 e 730 dias.
+- Treino a partir de 2006: 2003-2005 (24 e 22 clubes) só aquecem as forças.
+
+## D09 · 2026-11-08 · Regularização, incerteza e Dixon-Coles
+- Ridge na escala padronizada (`ridge_alpha` = 1). Com 7 pesos e ~15 mil linhas a
+  penalidade quase não muda nada; fica como proteção se fatores forem adicionados.
+- Intervalo de incerteza: bootstrap de 200 reamostragens de **jogos** (as duas linhas
+  de um jogo juntas), percentis 2,5 e 97,5.
+- O ajuste de Dixon-Coles (um parâmetro na matriz de placares, não é fator) foi
+  implementado, mas o rho estimado foi -0,01, efeito desprezível. Desligado por
+  simplicidade (`dixon_coles: false`). Pode ser religado no YAML.
+
+## D10 · 2026-11-08 · Decomposição dos fatores
+A contribuição de cada fator em gols usa a média logarítmica (LMDI): soma exatamente
+`gols esperados - gols base`. O JSON traz também o multiplicador `exp(peso × fator)`,
+mais fácil de narrar ("o mando multiplica por 1,5").
+
+## D11 · 2026-11-08 · Técnico novo
+Técnico é "novo" nos primeiros 5 jogos dele no clube. No histórico, troca = nome do
+técnico diferente do jogo anterior (só existe a partir de 2014; antes o fator vale 0, o
+que atenua um pouco o peso estimado). Na temporada corrente o plano grátis da API não
+traz técnico por jogo: o comando de ingestão guarda o técnico de cada time e marca a
+troca quando ele muda; `config/coach_changes.csv` permite registrar a troca à mão com
+fonte. Interinos e grafias diferentes do mesmo nome contam como troca (limitação).

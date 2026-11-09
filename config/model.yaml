@@ -25,8 +25,8 @@ historical:
 
 model:
   # a. Força de longo prazo (ataque e defesa) com decaimento temporal.
-  half_life_days: 180          # escolhida no backtest (ver reports/backtest.md)
-  half_life_grid: [90, 180, 365, 730]
+  half_life_days: 365          # escolhida no walk-forward 2010-2014 (ver reports/pesos.md)
+  half_life_grid: [60, 90, 180, 365, 730, 1460]
   prior_matches: 5             # jogos "fictícios" que puxam a força para o valor a priori
   prior_attack_ratio: 0.85     # time sem histórico recente: ataque 15% abaixo da média da liga
   prior_defense_ratio: 1.15    # ... e sofre 15% a mais que a média
@@ -38,11 +38,12 @@ model:
   # e. Troca de técnico
   new_coach_matches: 5         # técnico é "novo" nos primeiros N jogos dele no clube
   # Estimação
+  opponent_adjust: true        # gols ajustados pela força do adversário
   ridge_alpha: 1.0             # força da regularização (escala padronizada)
   train_first_season: 2006     # 2003-2005 servem só de aquecimento das forças
   bootstrap: 200               # reamostragens para o intervalo de incerteza
   max_goals: 10                # tamanho da matriz de placares
-  dixon_coles: true            # ajuste de placares baixos (ver DECISIONS.md)
+  dixon_coles: false           # ajuste de placares baixos; rho estimado ~ -0,01 (ver DECISIONS.md D09)
 
 backtest:
   tune_seasons: [2010, 2011, 2012, 2013, 2014]   # escolha da meia-vida

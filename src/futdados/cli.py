@@ -29,6 +29,27 @@ def cmd_ingest_api(args, cfg) -> None:
         print(f"  Troca de técnico detectada: {tid} -> {coach}")
 
 
+def cmd_fit(args, cfg) -> None:
+    from .backtest.walkforward import tune_half_life
+    from .model.poisson import fit
+    from .model.predict import features_for
+    from .reports import weights_markdown, write
+
+    repo = _repo(cfg)
+    tune = None
+    if args.half_life:
+        hl = args.half_life
+    else:
+        hl, tune = tune_half_life(repo.matches(), cfg)
+        print(f"Meia-vida escolhida no walk-forward: {hl:.0f} dias")
+    feat = features_for(repo, cfg, hl)
+    train = feat[feat.season >= cfg["model"]["train_first_season"]]
+    w = fit(train, cfg["model"], hl, seed=cfg["simulation"]["seed"])
+    w.save(cfg["paths"]["weights"])
+    write(f"{cfg['paths']['reports']}/pesos.md", weights_markdown(w, tune))
+    print(f"Pesos salvos ({w.model_version}) em {cfg['paths']['weights']} e reports/pesos.md")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futdados", description=__doc__)
     p.add_argument("--config", help="caminho do model.yaml")
@@ -37,12 +58,15 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("ingest-historical", help="carrega 2003-2025 do dataset adaoduque")
     s = sub.add_parser("ingest-api", help="baixa a temporada do football-data.org")
     s.add_argument("--season", type=int, required=True)
+    s = sub.add_parser("fit", help="estima os pesos e gera reports/pesos.md")
+    s.add_argument("--half-life", type=float, help="pula a escolha automática da meia-vida")
     return p
 
 
 COMMANDS = {
     "ingest-historical": cmd_ingest_historical,
     "ingest-api": cmd_ingest_api,
+    "fit": cmd_fit,
 }
 
 
